@@ -1,0 +1,50 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "sample-specialist",
+        "active": true,
+        "name": [
+          {
+            "given": ["Hospital"],
+            "family": "Specialist"
+          }
+        ],
+        "birthDate": "1992-11-02",
+        "gender": "male"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Practitioner/sample-specialist"
+      }
+    },
+    {
+      "resource": {
+        "id": "sample-specialist-role",
+        "resourceType": "PractitionerRole",
+        "active": true,
+        "code": [
+          {
+            "coding": [
+              {
+                "code": "super-admin",
+                "system": "https://terminology.midas.iisc.ac.in/CodeSystem/user-type",
+                "display": "Super Admin"
+              }
+            ]
+          }
+        ],
+        "practitioner": {
+          "reference": "Practitioner/sample-specialist"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "PractitionerRole/sample-specialist-role"
+      }
+    }
+  ]
+}

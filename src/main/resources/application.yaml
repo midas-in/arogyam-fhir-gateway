@@ -1,0 +1,115 @@
+hapi:
+  fhir:
+    gateway:
+      enabled: false
+      multi-tenant: false
+      targets:
+        - name: Local
+          id: tg1
+          base-url: https://fhir-temp.aicoe.triveous.tech/fhir
+          headers-to-forward:
+            - content-type
+            - accept-encoding
+            - last-modified
+            - etag
+            - prefer
+            - fhirVersion
+            - if-none-exist
+            - if-match
+            - if-none-match
+            - if-modified-since
+            - if-unmodified-since
+            - if-range
+            - x-request-id
+            - x-correlation-id
+            - x-forwarded-for
+            - x-forwarded-host
+          header-to-return:
+            - last-modified
+            - date
+            - expires
+            - etag
+            - x-progress
+            - x-request-id
+            - x-correlation-id
+    security:
+      inbound:
+        authentication:
+          enabled: false
+          proceed-to-authorization-on-failure: false
+          proceed-to-authorization-on-no-auth: true
+          keycloak:
+            base-uri: ${AUTHENTICATION_KEYCLOAK_BASE_URI}
+            management-realm: ${AUTHENTICATION_KEYCLOAK_MANAGEMENT_REALM}
+            client-id: ${AUTHENTICATION_KEYCLOAK_CLIENT_ID}
+            username: ${AUTHENTICATION_KEYCLOAK_USERNAME}
+            password: ${AUTHENTICATION_KEYCLOAK_PASSWORD}
+            user-realm: ${AUTHENTICATION_KEYCLOAK_USER_REALM}
+        authorization:
+          enabled: false
+          allow-anonymous-access: true
+          anonymous-access-permission:
+            - name: fhir_read_all_of_type
+              arguments:
+                - Binary
+                - Composition
+            - name: fhir_transaction
+            - name: fhir_capabilities
+            - name: fhir_batch
+
+project:
+  arogyam:
+    opensrp:
+      whitelist:
+        - method: get
+          path: Questionnaire
+          query-params:
+            _id: "*"
+        - method: get
+          path: StructureMap
+          query-params:
+            _id: "*"
+        - method: get
+          path: List
+          query-params:
+            _id: "*"
+        - method: get
+          path: PlanDefinition
+          query-params:
+            _id: "*"
+        - method: get
+          path: Library
+          query-params:
+            _id: "*"
+        - method: get
+          path: Measure
+          query-params:
+            _id: "*"
+        - method: get
+          path: LocationHierarchy
+          query-params:
+            keycloak-uuid: "*"
+        - method: get
+          path: PractitionerDetails
+          query-params:
+            userId: "*"
+        - method: get
+          path: ActivityDefinition
+          query-params:
+            _id: "*"
+        - method: get
+          path: CodeSystem
+          query-params:
+            _id: "*"
+        - method: get
+          path: ConceptMap
+          query-params:
+            _id: "*"
+        - method: get
+          path: Device
+          query-params:
+            _id: "*"
+        - method: get
+          path: StructureDefinition
+          query-params:
+            _id: "*"

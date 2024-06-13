@@ -1,0 +1,160 @@
+{
+  "resourceType" : "StructureMap",
+  "id" : "OralCancerLabelImageTask",
+  "text" : {
+    "status" : "additional",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/StructureMap/OralCancerLabelImageTask&quot; = 'OralCancerLabelImageTask'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/Task&quot; as source\n\n\ngroup OralCancerLabelImageTask(source src : Task, target bundle: Bundle) {\n    src -&gt; bundle.entry as entry, entry.resource = src as task then TransformTask(src, task) &quot;rule_transform_task&quot; ;\n}\n\ngroup TransformTask(source input: Task , target task: Task) {\n    input -&gt; task.id = uuid(),\n            task.status = 'requested',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = 'Task for reader to label image',\n            task.authoredOn = evaluate(input ,now()),\n            task.lastModified = evaluate(input ,now()) &quot;rule_task_map&quot;;\n}</pre></div>"
+  },
+  "url" : "https://midas.iisc.ac.in/StructureMap/OralCancerLabelImageTask",
+  "name" : "OralCancerLabelImageTask",
+  "structure" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/Bundle",
+    "mode" : "target"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/Task",
+    "mode" : "source"
+  }],
+  "group" : [{
+    "name" : "OralCancerLabelImageTask",
+    "typeMode" : "none",
+    "input" : [{
+      "name" : "src",
+      "type" : "Task",
+      "mode" : "source"
+    },
+    {
+      "name" : "bundle",
+      "type" : "Bundle",
+      "mode" : "target"
+    }],
+    "rule" : [{
+      "name" : "rule_transform_task",
+      "source" : [{
+        "context" : "src"
+      }],
+      "target" : [{
+        "context" : "bundle",
+        "contextType" : "variable",
+        "element" : "entry",
+        "variable" : "entry"
+      },
+      {
+        "context" : "entry",
+        "contextType" : "variable",
+        "element" : "resource",
+        "variable" : "task",
+        "transform" : "copy",
+        "parameter" : [{
+          "valueId" : "src"
+        }]
+      }],
+      "dependent" : [{
+        "name" : "TransformTask",
+        "variable" : ["src",
+        "task"]
+      }]
+    }]
+  },
+  {
+    "name" : "TransformTask",
+    "typeMode" : "none",
+    "input" : [{
+      "name" : "input",
+      "type" : "Task",
+      "mode" : "source"
+    },
+    {
+      "name" : "task",
+      "type" : "Task",
+      "mode" : "target"
+    }],
+    "rule" : [{
+      "name" : "rule_task_map",
+      "source" : [{
+        "context" : "input"
+      }],
+      "target" : [{
+        "context" : "task",
+        "contextType" : "variable",
+        "element" : "id",
+        "transform" : "uuid"
+      },
+      {
+        "context" : "task",
+        "contextType" : "variable",
+        "element" : "status",
+        "transform" : "copy",
+        "parameter" : [{
+          "valueString" : "requested"
+        }]
+      },
+      {
+        "context" : "task",
+        "contextType" : "variable",
+        "element" : "intent",
+        "transform" : "copy",
+        "parameter" : [{
+          "valueString" : "order"
+        }]
+      },
+      {
+        "context" : "task",
+        "contextType" : "variable",
+        "element" : "priority",
+        "transform" : "copy",
+        "parameter" : [{
+          "valueString" : "routine"
+        }]
+      },
+      {
+        "context" : "task",
+        "contextType" : "variable",
+        "element" : "code",
+        "transform" : "cc",
+        "parameter" : [{
+          "valueString" : "http://hl7.org/fhir/CodeSystem/task-code"
+        },
+        {
+          "valueString" : "fulfill"
+        },
+        {
+          "valueString" : "Fulfill the focal request"
+        }]
+      },
+      {
+        "context" : "task",
+        "contextType" : "variable",
+        "element" : "description",
+        "transform" : "copy",
+        "parameter" : [{
+          "valueString" : "Task for reader to label image"
+        }]
+      },
+      {
+        "context" : "task",
+        "contextType" : "variable",
+        "element" : "authoredOn",
+        "transform" : "evaluate",
+        "parameter" : [{
+          "valueId" : "input"
+        },
+        {
+          "valueString" : "now()"
+        }]
+      },
+      {
+        "context" : "task",
+        "contextType" : "variable",
+        "element" : "lastModified",
+        "transform" : "evaluate",
+        "parameter" : [{
+          "valueId" : "input"
+        },
+        {
+          "valueString" : "now()"
+        }]
+      }]
+    }]
+  }]
+}

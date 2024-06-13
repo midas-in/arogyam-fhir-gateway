@@ -1,0 +1,20 @@
+map "https://midas.iisc.ac.in/StructureMap/OralCancerScreeningTask" = 'OralCancerScreeningTask'
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" as target
+uses "http://hl7.org/fhir/StructureDefinition/Task" as source
+
+
+group OralCancerScreeningTask(source src : Task, target bundle: Bundle) {
+    src -> bundle.entry as entry, entry.resource = src as task then TransformTask(src, task) "rule_transform_task" ;
+}
+
+group TransformTask(source input: Task , target task: Task) {
+    input -> task.id = uuid(),
+            task.status = 'requested',
+            task.intent = 'order',
+            task.priority = 'routine',
+            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),
+            task.description = 'Task for specialist to screen patient',
+            task.authoredOn = evaluate(input ,now()),
+            task.lastModified = evaluate(input ,now()) "rule_task_map";
+}

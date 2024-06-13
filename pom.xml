@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>in.ac.iisc.midas.fhir</groupId>
+    <artifactId>gateway</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>fhir-gateway</name>
+    <description>fhir-gateway</description>
+    <properties>
+        <java.version>17</java.version>
+        <hapi-fhir.version>7.2.0</hapi-fhir.version>
+        <keycloak.version>24.0.4</keycloak.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-server</artifactId>
+            <version>${hapi-fhir.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-client</artifactId>
+            <version>${hapi-fhir.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-structures-r4</artifactId>
+            <version>${hapi-fhir.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.12</version>
+        </dependency>
+
+
+        <!-- Used for validation  -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-validation-resources-r4</artifactId>
+            <version>${hapi-fhir.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.phloc</groupId>
+            <artifactId>phloc-schematron</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>info.cqframework</groupId>
+            <artifactId>cql-to-elm</artifactId>
+            <version>3.10.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/info.cqframework/elm-jackson -->
+        <dependency>
+            <groupId>info.cqframework</groupId>
+            <artifactId>elm-jackson</artifactId>
+            <version>2.10.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+<!--        <dependency>-->
+<!--            <groupId>javax.xml.bind</groupId>-->
+<!--            <artifactId>jaxb-api</artifactId>-->
+<!--            <version>2.3.1</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/info.cqframework/model-jackson &ndash;&gt;-->
+        <dependency>
+            <groupId>info.cqframework</groupId>
+            <artifactId>model-jackson</artifactId>
+            <version>3.10.0</version>
+        </dependency>
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/info.cqframework/engine-fhir &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>info.cqframework</groupId>-->
+<!--            <artifactId>engine-fhir</artifactId>-->
+<!--            <version>3.10.0</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/info.cqframework/fhir-r4 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>info.cqframework</groupId>-->
+<!--            <artifactId>fhir-r4</artifactId>-->
+<!--            <version>2.1.0</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/info.cqframework/engine-fhir &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>info.cqframework</groupId>-->
+<!--            <artifactId>engine-fhir</artifactId>-->
+<!--            <version>3.10.0</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/info.cqframework/model &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>info.cqframework</groupId>-->
+<!--            <artifactId>model</artifactId>-->
+<!--            <version>3.10.0</version>-->
+<!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.opencds.cqf.cql/engine.fhir -->
+        <dependency>
+            <groupId>org.opencds.cqf.cql</groupId>
+            <artifactId>engine.fhir</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+
+
+
+
+
+
+
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/info.cqframework/engine-fhir &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>info.cqframework</groupId>-->
+<!--            <artifactId>engine-fhir</artifactId>-->
+<!--            <version>3.10.0</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/info.cqframework/cqf-fhir &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>info.cqframework</groupId>-->
+<!--            <artifactId>cqf-fhir</artifactId>-->
+<!--            <version>3.10.0</version>-->
+<!--        </dependency>-->
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
