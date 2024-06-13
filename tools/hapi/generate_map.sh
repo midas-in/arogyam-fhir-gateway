@@ -1,0 +1,1 @@
+java -jar hapi_cli.jar  -ig <FHIR Mapping File> -compile <URL of Final Structure Map>  -version 4.0 -output <OutputPath JSON FIle>

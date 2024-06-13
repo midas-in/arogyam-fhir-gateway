@@ -1,0 +1,1 @@
+java -jar ~/Public//triveous/artpark/aicoe/temp2/fhir-gateway/tools/fct/fct.jar convert -t cql --input $1

@@ -31,4 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
-/tools/
+/tools/fct/fct.jar
+/tools/hapi_cli.jar
