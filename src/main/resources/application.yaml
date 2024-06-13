@@ -4,9 +4,6 @@ hapi:
       enabled: false
       multi-tenant: false
       targets:
-        - name: Local
-          id: tg1
-          base-url: https://fhir-temp.aicoe.triveous.tech/fhir
     security:
       inbound:
         authentication:
