@@ -7,46 +7,21 @@ hapi:
         - name: Local
           id: tg1
           base-url: https://fhir-temp.aicoe.triveous.tech/fhir
-          headers-to-forward:
-            - content-type
-            - accept-encoding
-            - last-modified
-            - etag
-            - prefer
-            - fhirVersion
-            - if-none-exist
-            - if-match
-            - if-none-match
-            - if-modified-since
-            - if-unmodified-since
-            - if-range
-            - x-request-id
-            - x-correlation-id
-            - x-forwarded-for
-            - x-forwarded-host
-          header-to-return:
-            - last-modified
-            - date
-            - expires
-            - etag
-            - x-progress
-            - x-request-id
-            - x-correlation-id
     security:
       inbound:
         authentication:
-          enabled: false
+          enabled: true
           proceed-to-authorization-on-failure: false
           proceed-to-authorization-on-no-auth: true
           keycloak:
-            base-uri: ${AUTHENTICATION_KEYCLOAK_BASE_URI}
-            management-realm: ${AUTHENTICATION_KEYCLOAK_MANAGEMENT_REALM}
-            client-id: ${AUTHENTICATION_KEYCLOAK_CLIENT_ID}
-            username: ${AUTHENTICATION_KEYCLOAK_USERNAME}
-            password: ${AUTHENTICATION_KEYCLOAK_PASSWORD}
-            user-realm: ${AUTHENTICATION_KEYCLOAK_USER_REALM}
+            base-uri: http://localhost:8090
+            management-realm: master
+            client-id: admin-cli
+            username: admin
+            password: some-password
+            user-realm: arogyam
         authorization:
-          enabled: false
+          enabled: true
           allow-anonymous-access: true
           anonymous-access-permission:
             - name: fhir_read_all_of_type
@@ -113,3 +88,5 @@ project:
           path: StructureDefinition
           query-params:
             _id: "*"
+
+
