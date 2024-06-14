@@ -14,7 +14,7 @@ on:
       - "tools/**"
 env:
   IMAGES: docker.io/iisc/arogyam-fhir-gateway
-  PLATFORMS: linux/amd64,linux/arm64/v8
+  PLATFORMS: linux/amd64
 
 jobs:
   build:
@@ -72,15 +72,3 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
           platforms: ${{ env.PLATFORMS }}
           target: default
-
-      - name: Build and push tomcat image
-        id: docker_build_tomcat
-        uses: docker/build-push-action@v5
-        with:
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.docker_tomcat_meta.outputs.tags }}
-          labels: ${{ steps.docker_tomcat_meta.outputs.labels }}
-          platforms: ${{ env.PLATFORMS }}
-          target: tomcat
