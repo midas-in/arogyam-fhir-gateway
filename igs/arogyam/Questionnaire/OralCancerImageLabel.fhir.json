@@ -1,0 +1,97 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "OralCancerImageLabel",
+  "url": "https://midas.iisc.ac.in/Questionnaire/OralCancerLabelImage",
+  "title": "Label Oral Cavity Image",
+  "name": "Label Oral Cavity Image",
+  "subjectType": "Media",
+  "status": "active",
+  "item": [
+    {
+      "type": "choice",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "radio-button",
+                "display": "Radio Button"
+              }
+            ]
+          }
+        }
+      ],
+      "linkId": "provisional-diagnosis",
+      "text": "Provisional Diagnosis",
+      "required": true,
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "30807003",
+            "display": "Benign"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "95269005",
+            "display": "Tobacco Pouch Keratosis"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "235027002",
+            "display": "Homogenous Oral leukoplakia"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "32883009",
+            "display": "Oral submucosal fibrosis"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "235049008",
+            "display": "Oral lichen planus"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "235032001",
+            "display": "Syphilitic oral leukoplakia"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "1240414004",
+            "display": "Malignant neoplasm"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "103694001",
+            "display": " Finding related to non-diagnostic procedure"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "162010006",
+            "display": "No mouth problem"
+          }
+        }
+      ]
+    }
+  ]
+}

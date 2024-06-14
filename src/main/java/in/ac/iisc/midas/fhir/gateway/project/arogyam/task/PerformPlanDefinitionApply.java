@@ -32,7 +32,7 @@ public class PerformPlanDefinitionApply {
     private final StructureMapUtilities structureMapUtilities;
     private final IWorkerContext workerContext;
 
-    @GetMapping(value = "/api/process-message/encounter-created/{encId}/{planDefinitionId}", produces = "application/json")
+    @GetMapping(value = "/api/incoming-webhook/encounter-created/{encId}/{planDefinitionId}", produces = "application/json")
     public String onEncounterCreate(@PathVariable String encId, @PathVariable String planDefinitionId) {
         var requestDetails = new SystemRequestDetails();
         var encounter = fetchEncounter(requestDetails, encId);
@@ -50,7 +50,7 @@ public class PerformPlanDefinitionApply {
         );
     }
 
-    @GetMapping(value = "/api/process-message/media-created/{mediaId}/{planDefinitionId}", produces = "application/json")
+    @GetMapping(value = "/api/incoming-webhook/media-created/{mediaId}/{planDefinitionId}", produces = "application/json")
     public String trigger(@PathVariable String mediaId, @PathVariable String planDefinitionId) {
         var requestDetails = new SystemRequestDetails();
 
