@@ -7,7 +7,7 @@ hapi:
     security:
       inbound:
         authentication:
-          enabled: true
+          enabled: false
           proceed-to-authorization-on-failure: false
           proceed-to-authorization-on-no-auth: true
           keycloak:
@@ -18,7 +18,7 @@ hapi:
             password: some-password
             user-realm: arogyam
         authorization:
-          enabled: true
+          enabled: false
           allow-anonymous-access: true
           anonymous-access-permission:
             - name: fhir_read_all_of_type

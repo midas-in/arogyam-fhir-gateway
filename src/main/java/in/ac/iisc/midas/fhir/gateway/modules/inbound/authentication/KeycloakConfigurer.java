@@ -5,10 +5,8 @@ import in.ac.iisc.midas.fhir.gateway.modules.inbound.shared.Permission;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.RoleRepresentation;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -18,9 +16,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class KeycloakConfigurer {
     private final RealmResource realm;
-    private final Keycloak keycloak;
-    private final AuthenticationProperties.Keycloak keycloakConfig;
-    private final RestTemplate restTemplate;
 
     @PostConstruct
     void configure() {

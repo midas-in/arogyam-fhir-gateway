@@ -4,7 +4,6 @@ import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -47,8 +46,8 @@ public class AuthenticationConfig {
 	}
 
 	@Bean
-	KeycloakConfigurer keycloakConfigurer(Keycloak keycloak, RealmResource resource, AuthenticationProperties properties) {
-		return new KeycloakConfigurer(resource, keycloak, properties.getKeycloak(), new RestTemplateBuilder().build());
+	KeycloakConfigurer keycloakConfigurer( RealmResource resource) {
+		return new KeycloakConfigurer(resource);
 	}
 
 	@Bean
