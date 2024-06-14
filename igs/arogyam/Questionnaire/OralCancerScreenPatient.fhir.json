@@ -1,0 +1,240 @@
+{
+  "resourceType": "Questionnaire",
+  "title": "Screen Oral Cancer Patient",
+  "name": "Screen Oral Cancer Patient",
+  "status": "active",
+  "id": "OralCancerScreenPatient",
+  "url": "https://midas.iisc.ac.in/Questionnaire/OralCancerScreenPatient",
+  "subjectType": "Media",
+  "item": [
+    {
+      "type": "choice",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ]
+          }
+        }
+      ],
+      "linkId": "provisional-diagnosis",
+      "text": "Provisional Diagnosis",
+      "required": true,
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "30807003",
+            "display": "Benign"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "95269005",
+            "display": "Tobacco Pouch Keratosis"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "235027002",
+            "display": "Homogenous Oral leukoplakia"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "32883009",
+            "display": "Oral submucosal fibrosis"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "235049008",
+            "display": "Oral lichen planus"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "235032001",
+            "display": "Syphilitic oral leukoplakia"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "1240414004",
+            "display": "Malignant neoplasm"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "103694001",
+            "display": " Finding related to non-diagnostic procedure"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "162010006",
+            "display": "No mouth problem"
+          }
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ]
+          }
+        }
+      ],
+      "linkId": "oral-cavity-site",
+      "text": "Oral Cavity Site",
+      "required": true,
+      "readOnly": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "16811007",
+            "display": "Buccal mucosa"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "18444004",
+            "display": "Mucosa of upper lip"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "46353006",
+            "display": "Mucosa of lower lip"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "66938003",
+            "display": "Dorsum of Tongue"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "422005",
+            "display": "Ventral aspect of tongue"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "47975008",
+            "display": "Base of tongue"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "36360002",
+            "display": "Floor of mouth"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "72914001",
+            "display": "Palate"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "85816001",
+            "display": "Retromolar trigone"
+          }
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ]
+          }
+        }
+      ],
+      "linkId": "recommendation",
+      "text": "Recommendation",
+      "required": true,
+      "readOnly": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "https://terminology.midas.iisc.ac.in/remote-screening-recommendation",
+            "code": "urgent-refer-to-hospital",
+            "display": "Urgent Referral to Hospital"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "https://terminology.midas.iisc.ac.in/remote-screening-recommendation",
+            "code": "additional-investigation-needed",
+            "display": "Refer to Hospital for additional investigation"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "https://terminology.midas.iisc.ac.in/remote-screening-recommendation",
+            "code": "retake-image",
+            "display": "Retake Photo"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "https://terminology.midas.iisc.ac.in/remote-screening-recommendation",
+            "code": "quit-habit",
+            "display": "Advise to quit habit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "linkId": "note",
+      "text": "Notes",
+      "required": false
+    }
+  ]
+}

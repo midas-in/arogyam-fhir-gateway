@@ -31,4 +31,4 @@ define "Available Reader Reference": if "Available Reader" is not null
              }
     else null
 
-define "Image Labelling Questionnaire": Reference { reference : string {value: 'Questionnaire/345'}}
+define "Image Labelling Questionnaire": Reference { reference : string {value: 'Questionnaire/OralCancerImageLabel'}}

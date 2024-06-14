@@ -36,7 +36,7 @@ define "Available Specialist Reference": if "Available Specialist" is not null
              }
     else null
 
-define "Patient Screenging Questionnaire": Reference { reference : string {value: 'Questionnaire/123'}}
+define "Patient Screenging Questionnaire": Reference { reference : string {value: 'Questionnaire/OralCancerScreenPatient'}}
 
 
 // Senior Specialist
