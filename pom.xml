@@ -11,9 +11,9 @@
 
     <groupId>in.ac.iisc.midas.fhir</groupId>
     <artifactId>gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>fhir-gateway</name>
     <description>fhir-gateway</description>
+    <packaging>war</packaging>
     <properties>
         <java.version>17</java.version>
         <hapi-fhir.version>7.2.0</hapi-fhir.version>
@@ -192,6 +192,7 @@
     </dependencies>
 
     <build>
+        <finalName>ROOT</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
