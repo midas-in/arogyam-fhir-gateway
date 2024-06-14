@@ -25,4 +25,4 @@ WORKDIR /app
 COPY --chown=nonroot:nonroot --from=build-distroless /app /app
 COPY --chown=nonroot:nonroot --from=build-fhir-gateway /tmp/fhir-gateway/opentelemetry-javaagent.jar /app
 
-ENTRYPOINT ["java", "--class-path", "/app/main.war", "-Dloader.path=main.war!/WEB-INF/classes/,main.war!/WEB-INF/,/app/extra-classes", "org.springframework.boot.loader.PropertiesLauncher"]
+ENTRYPOINT ["java", "--class-path", "/app/main.war", "-Dloader.path=main.war!/WEB-INF/classes/,main.war!/WEB-INF/,/app/extra-classes", "org.springframework.boot.loader.launch.PropertiesLauncher"]
