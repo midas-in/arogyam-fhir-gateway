@@ -321,6 +321,8 @@ group TransformObservationMedia(source item: BackboneElement,  source patient: P
     item -> media.id = uuid() "rule_set_media_id";
     item -> media.status = 'preparation' "rule_set_media_status";
     item -> media.type = cc('http://terminology.hl7.org/CodeSystem/media-type','image', 'Image') "rule_set_media_type";
+    item -> media.bodySite = cc('http://www.snomed.org','113277000', 'Oral mucous membrane structure') "rule_set_media_body_site";
+    item -> media.view = cc('http://nema.org/dicom/dicm','XC', 'External-camera Photography') "rule_set_media_view";
 
     item.answer first as answer then {
         answer.value as attachment -> media.content = attachment then {
