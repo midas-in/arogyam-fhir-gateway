@@ -1,7 +1,7 @@
 {
   "resourceType": "Questionnaire",
   "id": "OralCancerImageLabel",
-  "url": "https://midas.iisc.ac.in/Questionnaire/OralCancerLabelImage",
+  "url": "https://midas.iisc.ac.in/fhir/Questionnaire/OralCancerLabelImage",
   "title": "Label Oral Cavity Image",
   "name": "Label Oral Cavity Image",
   "subjectType": "Media",

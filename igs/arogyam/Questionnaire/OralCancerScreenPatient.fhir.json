@@ -4,7 +4,7 @@
   "name": "Screen Oral Cancer Patient",
   "status": "active",
   "id": "OralCancerScreenPatient",
-  "url": "https://midas.iisc.ac.in/Questionnaire/OralCancerScreenPatient",
+  "url": "https://midas.iisc.ac.in/fhir/Questionnaire/OralCancerScreenPatient",
   "subjectType": "Media",
   "item": [
     {

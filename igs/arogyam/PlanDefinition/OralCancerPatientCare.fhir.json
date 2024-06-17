@@ -1,7 +1,7 @@
 {
   "resourceType": "PlanDefinition",
   "id": "OralCancerPatientCare",
-  "url": "https://midas.iisc.ac.in/PlanDefinition/OralCancerPatientCare",
+  "url": "https://midas.iisc.ac.in/fhir/PlanDefinition/OralCancerPatientCare",
   "version": "1",
   "name": "Oral Cancer Patient Care",
   "title": "Oral Cancer Patient Care",
@@ -10,13 +10,13 @@
   "contained": [
     {
       "resourceType": "ActivityDefinition",
-      "url": "https://midas.iisc.ac.in/ActivityDefinition/oral-cancer-screen-patient",
+      "url": "https://midas.iisc.ac.in/fhir/ActivityDefinition/oral-cancer-screen-patient",
       "id": "oral-cancer-screen-patient",
       "title": "Screen patient for oral cancer",
       "status": "active",
       "description": "Task ordering specialist to screen the registered patient for oral cancer",
       "kind": "Task",
-      "library": ["https://midas.iisc.ac.in/Library/OralCancerScreenPatient"],
+      "library": ["https://midas.iisc.ac.in/fhir/Library/OralCancerScreenPatient"],
       "dynamicValue": [
         {
           "path": "owner",
@@ -33,7 +33,7 @@
           }
         }
       ],
-      "transform": "https://midas.iisc.ac.in/StructureMap/OralCancerScreeningTask"
+      "transform": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningTask"
     }
   ],
   "action": [

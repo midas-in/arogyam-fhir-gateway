@@ -4,12 +4,9 @@ using FHIR version '3.0.0'
 
 include FHIRHelpers version '3.0.0'
 
-codesystem "UserType": 'https://terminology.midas.iisc.ac.in/CodeSystem/user-type'
-code "OralCancerSpecialist": '1304124007' from "UserType" display 'Oral Cancer Specialist'
-code "OralCancerSeniorSpecialist": '1304124007' from "UserType" display 'Oral Cancer Senior Specialist'
-
-valueset "TaskCode": 'http://hl7.org/fhir/ValueSet/task-code'
-code
+codesystem "RoleType": 'https://midas.iisc.ac.in/fhir/CodeSystem/practitioner-role-type'
+code "OralCancerSpecialist": 'specialist' from "RoleType" display 'Oral Cancer Specialist'
+code "OralCancerSeniorSpecialist": 'senior-specialist' from "RoleType" display 'Oral Cancer Senior Specialist'
 
 
 // Specialist

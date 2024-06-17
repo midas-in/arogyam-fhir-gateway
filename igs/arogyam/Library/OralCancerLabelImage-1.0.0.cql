@@ -4,8 +4,8 @@ using FHIR version '3.0.0'
 
 include FHIRHelpers version '3.0.0'
 
-codesystem "SNOMED-CT": 'http://snomed.info/sct'
-code "OralCancerReader": '1304124007' from "SNOMED-CT" display 'Oral Cancer Reader'
+codesystem "RoleType": 'https://midas.iisc.ac.in/fhir/CodeSystem/practitioner-role-type'
+code "OralCancerReader": 'reader' from "RoleType" display 'Reader'
 
 // Reader
 define "All Active Reader" : [Practitioner] P

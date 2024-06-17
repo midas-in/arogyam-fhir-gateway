@@ -1,7 +1,7 @@
 {
     "resourceType": "CodeSystem",
     "id": "practitioner-role-type",
-    "url": "https://midas.iisc.ac.in/fhir/practitioner-role-type",
+    "url": "https://midas.iisc.ac.in/fhir/CodeSystem/practitioner-role-type",
     "version": "1.0.0",
     "name": "PractitionerRoleType",
     "title": "Practitioner Role Type",

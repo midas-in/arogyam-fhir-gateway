@@ -1,4 +1,4 @@
-map "https://midas.iisc.ac.in/StructureMap/OralCancerLabelImageTask" = 'OralCancerLabelImageTask'
+map "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageTask" = 'OralCancerLabelImageTask'
 
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" as target
 uses "http://hl7.org/fhir/StructureDefinition/Task" as source

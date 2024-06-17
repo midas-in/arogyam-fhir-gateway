@@ -1,7 +1,7 @@
 {
     "resourceType": "PlanDefinition",
     "id": "OralCancerLabelImage",
-    "url": "https://midas.iisc.ac.in/PlanDefinition/OralCancerLabelImage",
+    "url": "https://midas.iisc.ac.in/fhir/PlanDefinition/OralCancerLabelImage",
     "version": "1",
     "name": "Oral Cancer Image Label",
     "title": "Oral Cancer Image Label",
@@ -10,14 +10,14 @@
     "contained": [
       {
         "resourceType": "ActivityDefinition",
-        "url": "https://midas.iisc.ac.in/ActivityDefinition/oral-cancer-label-image",
+        "url": "https://midas.iisc.ac.in/fhir/ActivityDefinition/oral-cancer-label-image",
         "id": "oral-cancer-label-image",
         "title": "Label Image",
         "status": "active",
         "description": "Task ordering reader to label the image",
         "kind": "Task",
         "library": [
-          "https://midas.iisc.ac.in/Library/OralCancerLabelImage"
+          "https://midas.iisc.ac.in/fhir/Library/OralCancerLabelImage"
         ],
         "dynamicValue": [
           {
@@ -35,7 +35,7 @@
             }
           }
         ],
-        "transform": "https://midas.iisc.ac.in/StructureMap/OralCancerLabelImageTask"
+        "transform": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageTask"
       }
     ],
     "action": [
