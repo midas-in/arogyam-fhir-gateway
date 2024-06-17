@@ -5,6 +5,7 @@ import in.ac.iisc.midas.fhir.gateway.modules.gateway.common.target.ITargetProvid
 import in.ac.iisc.midas.fhir.gateway.project.arogyam.opensrp.SyncStrategySearchNarrowingInterceptor;
 import org.hl7.fhir.r4.context.IWorkerContext;
 import org.hl7.fhir.r4.context.SimpleWorkerContext;
+import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.utils.StructureMapUtilities;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ public class ArogyamConfig {
     @Bean
     IWorkerContext workerContext() throws IOException {
         var worker = SimpleWorkerContext.fromNothing();
+        worker.setExpansionProfile(new Parameters());
         return worker;
     }
 
