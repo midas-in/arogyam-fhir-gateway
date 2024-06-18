@@ -16,7 +16,7 @@
       "status": "active",
       "description": "Task ordering specialist to screen the registered patient for oral cancer",
       "kind": "Task",
-      "library": ["https://midas.iisc.ac.in/fhir/Library/OralCancerScreenPatient"],
+      "library": ["https://midas.iisc.ac.in/fhir/Library/OralCancerScreenPatient|1.0.0"],
       "dynamicValue": [
         {
           "path": "owner",

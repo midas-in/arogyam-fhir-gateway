@@ -17,7 +17,7 @@
         "description": "Task ordering reader to label the image",
         "kind": "Task",
         "library": [
-          "https://midas.iisc.ac.in/fhir/Library/OralCancerLabelImage"
+          "https://midas.iisc.ac.in/fhir/Library/OralCancerLabelImage|1.0.0"
         ],
         "dynamicValue": [
           {

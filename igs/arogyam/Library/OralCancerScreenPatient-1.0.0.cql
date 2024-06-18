@@ -25,7 +25,13 @@ define "All Active Specialist with Task Count": "All Active Specialist" P
 
 define "Available Specialist": First("All Active Specialist with Task Count").practitioner
 
-define "Available Specialist Reference": { Reference { reference: string { value: 'Practitioner/sp1' } } }
+define "Available Specialist Reference": if "Available Specialist" is not null
+    then Reference {
+                 reference : string {
+                     value: ReplaceMatches('Practitioner/'+ "Available Specialist".id,'#','')
+                 }
+             }
+    else null
 
 define "Patient Screening Questionnaire": Reference { reference : string {value: 'Questionnaire/OralCancerScreenPatient'}}
 
