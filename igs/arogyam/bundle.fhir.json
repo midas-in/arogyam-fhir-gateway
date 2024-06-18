@@ -301,1024 +301,713 @@
       "resource": {
         "resourceType": "Questionnaire",
         "id": "OralCancerPatientRegistration",
-        "extension": [
-          {
-            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
-            "valueCanonical": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerPatientRegistration"
-          },
-          {
-            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-entryMode",
-            "valueString": "prior-edit"
-          },
-          {
-            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-constraint",
-            "extension": [
-              {
-                "url": "key",
-                "valueId": "contraint-1"
-              },
-              {
-                "url": "requirements",
-                "valueString": "At least Date of Birth or Age needs to be answered"
-              },
-              {
-                "url": "severity",
-                "valueCode": "error"
-              },
-              {
-                "url": "expression",
-                "valueString": "%resource.repeat(item).where(linkId='basic-info-group').item.where(linkId='patient-age-by-years' or linkId='patient-age-by-dob').answer.value.count()=1"
-              },
-              {
-                "url": "human",
-                "valueString": "You should answer date of birth or age only"
-              }
-            ]
-          }
-        ],
+        "extension": [ {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
+          "valueCanonical": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerPatientRegistration"
+        }, {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-entryMode",
+          "valueString": "prior-edit"
+        }, {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-constraint",
+          "extension": [ {
+            "url": "key",
+            "valueId": "contraint-1"
+          }, {
+            "url": "requirements",
+            "valueString": "At least Date of Birth or Age needs to be answered"
+          }, {
+            "url": "severity",
+            "valueCode": "error"
+          }, {
+            "url": "expression",
+            "valueString": "%resource.repeat(item).where(linkId='basic-info-group').item.where(linkId='patient-age-by-years' or linkId='patient-age-by-dob').answer.value.count()=1"
+          }, {
+            "url": "human",
+            "valueString": "You should answer date of birth or age only"
+          } ]
+        } ],
         "name": "Patient registration for Oral Cancer screening",
         "title": "Patient Registration",
         "status": "active",
-        "subjectType": ["Patient", "Observation"],
+        "subjectType": [ "Patient", "Observation" ],
         "publisher": "Farmaan",
         "purpose": "Patient registration for Oral Cancer screening",
-        "item": [
-          {
-            "extension": [
-              {
+        "item": [ {
+          "extension": [ {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+            "valueCodeableConcept": {
+              "coding": [ {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "page",
+                "display": "Page"
+              } ],
+              "text": "Basic Info"
+            }
+          } ],
+          "linkId": "basic-info-group",
+          "text": "Basic Info",
+          "type": "group",
+          "item": [ {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/regex",
+              "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’* ]*$"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+              "valueString": "First name should only contain letters"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter first name"
+            } ],
+            "linkId": "patient-name-given",
+            "text": "First Name",
+            "type": "string",
+            "required": true,
+            "maxLength": 64
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/regex",
+              "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’* ]*$"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+              "valueString": "Last name should only contain letters"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter last name"
+            } ],
+            "linkId": "patient-name-family",
+            "text": "Last Name",
+            "type": "string",
+            "required": true,
+            "maxLength": 64
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/regex",
+              "valueString": "^[A-Za-z0-9]{14}$"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+              "valueString": "Invalid ABHA ID"
+            } ],
+            "linkId": "patient-identifier-abha",
+            "text": "ABHA ID(Optional)",
+            "type": "string",
+            "required": false
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [ {
+                  "system": "http://hl7.org/fhir/questionnaire-item-control",
+                  "code": "radio-button",
+                  "display": "Radio Button"
+                } ]
+              }
+            } ],
+            "linkId": "patient-age",
+            "text": "Age",
+            "type": "choice",
+            "required": true,
+            "answerOption": [ {
+              "valueCoding": {
+                "code": "dob",
+                "display": "By Date of Birth"
+              },
+              "initialSelected": true
+            }, {
+              "valueCoding": {
+                "code": "years",
+                "display": "By Years"
+              }
+            } ]
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/entryFormat",
+              "valueString": "dd/MM/yyyy"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+              "_valueDate": {
+                "extension": [ {
+                  "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
+                  "valueExpression": {
+                    "language": "text/fhirpath",
+                    "expression": "today() - 30 years"
+                  }
+                } ]
+              }
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+              "valueString": "Please enter valid age(Must be 30y or above)"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter date of birth"
+            } ],
+            "linkId": "patient-age-by-dob",
+            "text": "By Date of Birth",
+            "type": "date",
+            "enableWhen": [ {
+              "question": "patient-age",
+              "operator": "=",
+              "answerCoding": {
+                "code": "dob",
+                "display": "By Date of Birth"
+              }
+            } ],
+            "required": false
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+              "valueInteger": 30
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+              "valueInteger": 150
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+              "valueString": "Please enter valid age(Must be 30y or above)"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter age"
+            } ],
+            "linkId": "patient-age-by-years",
+            "text": "By Years",
+            "type": "integer",
+            "enableWhen": [ {
+              "question": "patient-age",
+              "operator": "=",
+              "answerCoding": {
+                "code": "years",
+                "display": "By Years"
+              }
+            } ]
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode": "horizontal"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [ {
+                  "system": "http://hl7.org/fhir/questionnaire-item-control",
+                  "code": "radio-button",
+                  "display": "Radio Button"
+                } ]
+              }
+            }, {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-preferredTerminologyServer",
+              "valueUrl": "http://hl7.org/fhir/ValueSet/administrative-gender"
+            } ],
+            "linkId": "patient-gender",
+            "text": "Gender",
+            "type": "choice",
+            "answerOption": [ {
+              "valueCoding": {
+                "system": "http://hl7.org/fhir/administrative-gender",
+                "code": "male",
+                "display": "Male"
+              }
+            }, {
+              "valueCoding": {
+                "system": "http://hl7.org/fhir/administrative-gender",
+                "code": "female",
+                "display": "Female"
+              }
+            }, {
+              "valueCoding": {
+                "system": "http://hl7.org/fhir/administrative-gender",
+                "code": "unknown",
+                "display": "Unknown"
+              }
+            }, {
+              "valueCoding": {
+                "system": "http://hl7.org/fhir/administrative-gender",
+                "code": "other",
+                "display": "Other"
+              }
+            } ]
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/regex",
+              "valueString": "^[6-9]\\d{9}$"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+              "valueString": "Please enter a valid mobile number."
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter  primary mobile number"
+            } ],
+            "linkId": "patient-contact-primary",
+            "text": "Primary Contact Number",
+            "type": "string",
+            "required": true
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/regex",
+              "valueString": "^[6-9]\\d{9}$"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+              "valueString": "Please enter a valid mobile number."
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter  primary mobile number"
+            } ],
+            "linkId": "patient-contact-secondary",
+            "text": "Secondary Contact Number",
+            "type": "string",
+            "required": false
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter House Number & Village"
+            } ],
+            "linkId": "patient-address-village",
+            "text": "House Number & Village",
+            "type": "string",
+            "required": false,
+            "maxLength": 128
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+              "valueInteger": 110000
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+              "valueInteger": 999999
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+              "valueString": "Please enter a valid pincode"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter  pincode"
+            } ],
+            "linkId": "patient-address-pincode",
+            "text": "Pincode",
+            "type": "integer",
+            "required": false
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/regex",
+              "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’*0-9 ]*$"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter district"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+              "valueString": "Please enter a valid district"
+            } ],
+            "linkId": "patient-address-district",
+            "text": "District",
+            "type": "string",
+            "required": true
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/regex",
+              "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’*0-9 ]*$"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter state"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+              "valueString": "Please enter a valid state"
+            } ],
+            "linkId": "patient-address-state",
+            "text": "State",
+            "type": "string",
+            "required": true
+          } ]
+        }, {
+          "extension": [ {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+            "valueCodeableConcept": {
+              "coding": [ {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "page",
+                "display": "Page"
+              } ],
+              "text": "Habit History"
+            }
+          } ],
+          "linkId": "habit-history-group",
+          "text": "Habit History",
+          "type": "group",
+          "item": [ {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode": "horizontal"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [ {
+                  "system": "http://hl7.org/fhir/questionnaire-item-control",
+                  "code": "chip",
+                  "display": "Chip Group"
+                } ]
+              }
+            } ],
+            "linkId": "patient-habit-cigarette",
+            "text": "Cigarette/Bidi",
+            "type": "choice",
+            "required": true,
+            "answerOption": [ {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "current",
+                "display": "Current"
+              }
+            }, {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "past",
+                "display": "Past"
+              }
+            }, {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "never",
+                "display": "Never"
+              }
+            } ]
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode": "horizontal"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [ {
+                  "system": "http://hl7.org/fhir/questionnaire-item-control",
+                  "code": "chip",
+                  "display": "Chip Group"
+                } ]
+              }
+            } ],
+            "linkId": "patient-habit-tobacco",
+            "text": "Smokeless Tobacco",
+            "type": "choice",
+            "required": true,
+            "answerOption": [ {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "current",
+                "display": "Current"
+              }
+            }, {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "past",
+                "display": "Past"
+              }
+            }, {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "never",
+                "display": "Never"
+              }
+            } ]
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode": "horizontal"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [ {
+                  "system": "http://hl7.org/fhir/questionnaire-item-control",
+                  "code": "chip",
+                  "display": "Chip Group"
+                } ]
+              }
+            } ],
+            "linkId": "patient-habit-areca",
+            "text": "Areca Nut",
+            "type": "choice",
+            "required": true,
+            "answerOption": [ {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "current",
+                "display": "Current"
+              }
+            }, {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "past",
+                "display": "Past"
+              }
+            }, {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "never",
+                "display": "Never"
+              }
+            } ]
+          }, {
+            "extension": [ {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode": "horizontal"
+            }, {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [ {
+                  "system": "http://hl7.org/fhir/questionnaire-item-control",
+                  "code": "chip",
+                  "display": "Chip Group"
+                } ]
+              }
+            } ],
+            "linkId": "patient-habit-alcohol",
+            "text": "Alcohol",
+            "type": "choice",
+            "required": true,
+            "answerOption": [ {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "current",
+                "display": "Current"
+              }
+            }, {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "past",
+                "display": "Past"
+              }
+            }, {
+              "valueCoding": {
+                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                "code": "never",
+                "display": "Never"
+              }
+            } ]
+          } ]
+        }, {
+          "extension": [ {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+            "valueCodeableConcept": {
+              "coding": [ {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "page",
+                "display": "Page"
+              } ],
+              "text": "Screening"
+            }
+          } ],
+          "linkId": "screening-group",
+          "text": "Screening",
+          "type": "group",
+          "item": [ {
+            "linkId": "patient-screening-question-group",
+            "text": "Current Condition",
+            "type": "group",
+            "item": [ {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                "valueCode": "horizontal"
+              }, {
                 "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
                 "valueCodeableConcept": {
-                  "coding": [
-                    {
-                      "system": "http://hl7.org/fhir/questionnaire-item-control",
-                      "code": "page",
-                      "display": "Page"
-                    }
-                  ],
-                  "text": "Basic Info"
+                  "coding": [ {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "chip",
+                    "display": "Chip Group"
+                  } ]
                 }
-              }
-            ],
-            "linkId": "basic-info-group",
-            "text": "Basic Info",
-            "type": "group",
-            "item": [
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
-                    "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’* ]*$"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-                    "valueString": "First name should only contain letters"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter first name"
-                  }
-                ],
-                "linkId": "patient-name-given",
-                "text": "First Name",
-                "type": "string",
-                "required": true,
-                "maxLength": 64
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
-                    "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’* ]*$"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-                    "valueString": "Last name should only contain letters"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter last name"
-                  }
-                ],
-                "linkId": "patient-name-family",
-                "text": "Last Name",
-                "type": "string",
-                "required": true,
-                "maxLength": 64
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
-                    "valueString": "^[A-Za-z0-9]{14}$"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-                    "valueString": "Invalid ABHA ID"
-                  }
-                ],
-                "linkId": "patient-identifier-abha",
-                "text": "ABHA ID(Optional)",
-                "type": "string",
-                "required": false
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                    "valueCodeableConcept": {
-                      "coding": [
-                        {
-                          "system": "http://hl7.org/fhir/questionnaire-item-control",
-                          "code": "radio-button",
-                          "display": "Radio Button"
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "linkId": "patient-age",
-                "text": "Age",
-                "type": "choice",
-                "required": true,
-                "answerOption": [
-                  {
-                    "valueCoding": {
-                      "code": "dob",
-                      "display": "By Date of Birth"
-                    },
-                    "initialSelected": true
-                  },
-                  {
-                    "valueCoding": {
-                      "code": "years",
-                      "display": "By Years"
-                    }
-                  }
-                ]
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/entryFormat",
-                    "valueString": "dd/MM/yyyy"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-                    "_valueDate": {
-                      "extension": [
-                        {
-                          "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
-                          "valueExpression": {
-                            "language": "text/fhirpath",
-                            "expression": "today() - 30 years"
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-                    "valueString": "Please enter valid age(Must be 30y or above)"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter date of birth"
-                  }
-                ],
-                "linkId": "patient-age-by-dob",
-                "text": "By Date of Birth",
-                "type": "date",
-                "enableWhen": [
-                  {
-                    "question": "patient-age",
-                    "operator": "=",
-                    "answerCoding": {
-                      "code": "dob",
-                      "display": "By Date of Birth"
-                    }
-                  }
-                ],
-                "required": false
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/minValue",
-                    "valueInteger": 30
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-                    "valueInteger": 150
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-                    "valueString": "Please enter valid age(Must be 30y or above)"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter age"
-                  }
-                ],
-                "linkId": "patient-age-by-years",
-                "text": "By Years",
-                "type": "integer",
-                "enableWhen": [
-                  {
-                    "question": "patient-age",
-                    "operator": "=",
-                    "answerCoding": {
-                      "code": "years",
-                      "display": "By Years"
-                    }
-                  }
-                ]
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                    "valueCode": "horizontal"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                    "valueCodeableConcept": {
-                      "coding": [
-                        {
-                          "system": "http://hl7.org/fhir/questionnaire-item-control",
-                          "code": "radio-button",
-                          "display": "Radio Button"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-preferredTerminologyServer",
-                    "valueUrl": "http://hl7.org/fhir/ValueSet/administrative-gender"
-                  }
-                ],
-                "linkId": "patient-gender",
-                "text": "Gender",
-                "type": "choice",
-                "answerOption": [
-                  {
-                    "valueCoding": {
-                      "system": "http://hl7.org/fhir/administrative-gender",
-                      "code": "male",
-                      "display": "Male"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "http://hl7.org/fhir/administrative-gender",
-                      "code": "female",
-                      "display": "Female"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "http://hl7.org/fhir/administrative-gender",
-                      "code": "unknown",
-                      "display": "Unknown"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "http://hl7.org/fhir/administrative-gender",
-                      "code": "other",
-                      "display": "Other"
-                    }
-                  }
-                ]
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
-                    "valueString": "^[6-9]\\d{9}$"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-                    "valueString": "Please enter a valid mobile number."
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter  primary mobile number"
-                  }
-                ],
-                "linkId": "patient-contact-primary",
-                "text": "Primary Contact Number",
-                "type": "string",
-                "required": true
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
-                    "valueString": "^[6-9]\\d{9}$"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-                    "valueString": "Please enter a valid mobile number."
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter  primary mobile number"
-                  }
-                ],
-                "linkId": "patient-contact-secondary",
-                "text": "Secondary Contact Number",
-                "type": "string",
-                "required": false
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter H.No and Street"
-                  }
-                ],
-                "linkId": "patient-address-house",
-                "text": "House Number",
-                "type": "string",
-                "required": true,
-                "maxLength": 128
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter village"
-                  }
-                ],
-                "linkId": "patient-address-village",
-                "text": "Village",
-                "type": "string",
-                "required": true,
-                "maxLength": 100
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/minValue",
-                    "valueInteger": 110000
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-                    "valueInteger": 999999
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-                    "valueString": "Please enter a valid pincode"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter  pincode"
-                  }
-                ],
-                "linkId": "patient-address-pincode",
-                "text": "Pincode",
-                "type": "integer",
-                "required": true
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
-                    "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’*0-9 ]*$"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter district"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-                    "valueString": "Please enter a valid district"
-                  }
-                ],
-                "linkId": "patient-address-district",
-                "text": "District",
-                "type": "string",
-                "required": true
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
-                    "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’*0-9 ]*$"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter state"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-                    "valueString": "Please enter a valid state"
-                  }
-                ],
-                "linkId": "patient-address-state",
-                "text": "State",
-                "type": "string",
-                "required": true
-              }
-            ]
-          },
-          {
-            "extension": [
-              {
+              } ],
+              "linkId": "patient-screening-mouth-open",
+              "text": "Open Mouth",
+              "type": "choice",
+              "required": true,
+              "answerOption": [ {
+                "valueCoding": {
+                  "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
+                  "code": "yes",
+                  "display": "Yes"
+                }
+              }, {
+                "valueCoding": {
+                  "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
+                  "code": "no",
+                  "display": "No"
+                }
+              } ]
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                "valueCode": "horizontal"
+              }, {
                 "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
                 "valueCodeableConcept": {
-                  "coding": [
-                    {
-                      "system": "http://hl7.org/fhir/questionnaire-item-control",
-                      "code": "page",
-                      "display": "Page"
-                    }
-                  ],
-                  "text": "Habit History"
+                  "coding": [ {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "chip",
+                    "display": "Chip Group"
+                  } ]
                 }
-              }
-            ],
-            "linkId": "habit-history-group",
-            "text": "Habit History",
-            "type": "group",
-            "item": [
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                    "valueCode": "horizontal"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                    "valueCodeableConcept": {
-                      "coding": [
-                        {
-                          "system": "http://hl7.org/fhir/questionnaire-item-control",
-                          "code": "chip",
-                          "display": "Chip Group"
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "linkId": "patient-habit-cigarette",
-                "text": "Cigarette/Bidi",
-                "type": "choice",
-                "required": true,
-                "answerOption": [
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "current",
-                      "display": "Current"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "past",
-                      "display": "Past"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "never",
-                      "display": "Never"
-                    }
-                  }
-                ]
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                    "valueCode": "horizontal"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                    "valueCodeableConcept": {
-                      "coding": [
-                        {
-                          "system": "http://hl7.org/fhir/questionnaire-item-control",
-                          "code": "chip",
-                          "display": "Chip Group"
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "linkId": "patient-habit-tobacco",
-                "text": "Smokeless Tobacco",
-                "type": "choice",
-                "required": true,
-                "answerOption": [
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "current",
-                      "display": "Current"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "past",
-                      "display": "Past"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "never",
-                      "display": "Never"
-                    }
-                  }
-                ]
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                    "valueCode": "horizontal"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                    "valueCodeableConcept": {
-                      "coding": [
-                        {
-                          "system": "http://hl7.org/fhir/questionnaire-item-control",
-                          "code": "chip",
-                          "display": "Chip Group"
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "linkId": "patient-habit-areca",
-                "text": "Areca Nut",
-                "type": "choice",
-                "required": true,
-                "answerOption": [
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "current",
-                      "display": "Current"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "past",
-                      "display": "Past"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "never",
-                      "display": "Never"
-                    }
-                  }
-                ]
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                    "valueCode": "horizontal"
-                  },
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                    "valueCodeableConcept": {
-                      "coding": [
-                        {
-                          "system": "http://hl7.org/fhir/questionnaire-item-control",
-                          "code": "chip",
-                          "display": "Chip Group"
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "linkId": "patient-habit-alcohol",
-                "text": "Alcohol",
-                "type": "choice",
-                "required": true,
-                "answerOption": [
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "current",
-                      "display": "Current"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "past",
-                      "display": "Past"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "never",
-                      "display": "Never"
-                    }
-                  }
-                ]
-              },
-              {
-                "extension": [
-                  {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                    "valueCodeableConcept": {
-                      "coding": [
-                        {
-                          "system": "http://hl7.org/fhir/questionnaire-item-control",
-                          "code": "radio-button",
-                          "display": "Radio Button"
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "linkId": "patient-habit-alcohol-frequency",
-                "text": "How often do you drink Alcohol?",
-                "type": "choice",
-                "enableWhen": [
-                  {
-                    "question": "patient-habit-alcohol",
-                    "operator": "=",
-                    "answerCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                      "code": "current",
-                      "display": "Current"
-                    }
-                  }
-                ],
-                "answerOption": [
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f11c8dg",
-                      "code": "daily",
-                      "display": "Daily"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f11c8dg",
-                      "code": "5-6_times_per_week",
-                      "display": "5-6 times per week"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f11c8dg",
-                      "code": "3-4_times_per_week",
-                      "display": "3-4 times per week"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f11c8dg",
-                      "code": "1-2_times_per_week",
-                      "display": "1-2 times per week"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f11c8dg",
-                      "code": "1-2_times_per_month",
-                      "display": "1-2 times per month"
-                    }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f11c8dg",
-                      "code": "less_than_once_a_month",
-                      "display": "Less than once a month"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "extension": [
-              {
-                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                "valueCodeableConcept": {
-                  "coding": [
-                    {
-                      "system": "http://hl7.org/fhir/questionnaire-item-control",
-                      "code": "page",
-                      "display": "Page"
-                    }
-                  ],
-                  "text": "Screening"
+              } ],
+              "linkId": "patient-screening-lesion",
+              "text": "Lesion/Patch",
+              "type": "choice",
+              "required": true,
+              "answerOption": [ {
+                "valueCoding": {
+                  "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
+                  "code": "yes",
+                  "display": "Yes"
                 }
-              }
-            ],
-            "linkId": "screening-group",
-            "text": "Screening",
+              }, {
+                "valueCoding": {
+                  "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
+                  "code": "no",
+                  "display": "No"
+                }
+              } ]
+            } ]
+          }, {
+            "linkId": "patient-screening-image-group",
+            "text": "Image Screening",
             "type": "group",
-            "item": [
-              {
-                "linkId": "patient-screening-question-group",
-                "text": "Current Condition",
-                "type": "group",
-                "item": [
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                        "valueCode": "horizontal"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                        "valueCodeableConcept": {
-                          "coding": [
-                            {
-                              "system": "http://hl7.org/fhir/questionnaire-item-control",
-                              "code": "chip",
-                              "display": "Chip Group"
-                            }
-                          ]
-                        }
-                      }
-                    ],
-                    "linkId": "patient-screening-mouth-open",
-                    "text": "Open Mouth",
-                    "type": "choice",
-                    "required": true,
-                    "answerOption": [
-                      {
-                        "valueCoding": {
-                          "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
-                          "code": "yes",
-                          "display": "Yes"
-                        }
-                      },
-                      {
-                        "valueCoding": {
-                          "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
-                          "code": "no",
-                          "display": "No"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                        "valueCode": "horizontal"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                        "valueCodeableConcept": {
-                          "coding": [
-                            {
-                              "system": "http://hl7.org/fhir/questionnaire-item-control",
-                              "code": "chip",
-                              "display": "Chip Group"
-                            }
-                          ]
-                        }
-                      }
-                    ],
-                    "linkId": "patient-screening-lesion",
-                    "text": "Lesion/Patch",
-                    "type": "choice",
-                    "required": true,
-                    "answerOption": [
-                      {
-                        "valueCoding": {
-                          "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
-                          "code": "yes",
-                          "display": "Yes"
-                        }
-                      },
-                      {
-                        "valueCoding": {
-                          "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
-                          "code": "no",
-                          "display": "No"
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "linkId": "patient-screening-image-group",
-                "text": "Image Screening",
-                "type": "group",
-                "item": [
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-1",
-                    "text": "Image 1",
-                    "type": "attachment",
-                    "required": true
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-2",
-                    "text": "Image 2",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-3",
-                    "text": "Image 3",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-4",
-                    "text": "Image 4",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-5",
-                    "text": "Image 5",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-6",
-                    "text": "Image 6",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-7",
-                    "text": "Image 7",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-8",
-                    "text": "Image 8",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-9",
-                    "text": "Image 9",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-10",
-                    "text": "Image 10",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-11",
-                    "text": "Image 11",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-12",
-                    "text": "Image 12",
-                    "type": "attachment"
-                  },
-                  {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                        "valueCode": "image/*"
-                      },
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                        "valueDecimal": 20000000
-                      }
-                    ],
-                    "linkId": "patient-screening-image-13",
-                    "text": "Image 13",
-                    "type": "attachment"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+            "item": [ {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-1",
+              "text": "Image 1",
+              "type": "attachment",
+              "required": true
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-2",
+              "text": "Image 2",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-3",
+              "text": "Image 3",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-4",
+              "text": "Image 4",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-5",
+              "text": "Image 5",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-6",
+              "text": "Image 6",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-7",
+              "text": "Image 7",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-8",
+              "text": "Image 8",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-9",
+              "text": "Image 9",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-10",
+              "text": "Image 10",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-11",
+              "text": "Image 11",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-12",
+              "text": "Image 12",
+              "type": "attachment"
+            }, {
+              "extension": [ {
+                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                "valueCode": "image/*"
+              }, {
+                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                "valueDecimal": 20000000
+              } ],
+              "linkId": "patient-screening-image-13",
+              "text": "Image 13",
+              "type": "attachment"
+            } ]
+          } ]
+        } ]
       },
       "request": {
         "method": "PUT",
