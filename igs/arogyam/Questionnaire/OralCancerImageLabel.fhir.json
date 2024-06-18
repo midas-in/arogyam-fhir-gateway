@@ -92,6 +92,13 @@
           }
         }
       ]
+    },
+    {
+      "type": "string",
+      "linkId": "media-id",
+      "text": "Media Id",
+      "required": true,
+      "readOnly": false
     }
   ]
 }

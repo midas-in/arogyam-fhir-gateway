@@ -1,0 +1,230 @@
+{
+  "resourceType" : "StructureMap",
+  "id" : "OralCancerLabelImageResponse",
+  "text" : {
+    "status" : "additional",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse&quot; = 'OralCancerLabelImageResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerLabelImageResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry, bundleClinicalImpressionEntry.resource = create('ClinicalImpression') as impression then {\n        src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n            provisionDiagnosisItem.answer first as answer -&gt; impression.id = uuid(),\n                impression.encounter = evaluate(src,$this.encounter),\n                impression.status = 'completed',\n                impression.description = 'Clinical impression by Reade to label the images',\n                impression.subject = evaluate(src,$this.subject),\n                impression.date = evaluate(src, $this.authored),\n                impression.assessor = evaluate(src,$this.author),\n                impression.finding as finding,\n                finding.itemCodeableConcept = create('CodeableConcept') as cc,\n                cc.coding = evaluate(answer,$this.value)\n                then AddMedia(src, finding) &quot;rule_populate_impression&quot;;\n        } &quot;rule_prov&quot;;\n    } &quot;rule_bundle_entry_impression&quot;;\n}\n\ngroup AddMedia(source src: QuestionnaireResponse, target finding){\n    src.item as mediaItem where(linkId = 'media-id') then {\n        mediaItem.answer first as answer -&gt; finding.itemReference = create('Reference') as ref, ref.reference = evaluate(answer, 'Media/' + $this.value) &quot;rule_media_rt&quot;;\n    } &quot;rule_add_media&quot;;\n}\n</pre></div>"
+  },
+  "url" : "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse",
+  "name" : "OralCancerLabelImageResponse",
+  "structure" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/Bundle",
+    "mode" : "target"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse",
+    "mode" : "source"
+  }],
+  "group" : [{
+    "name" : "OralCancerLabelImageResponse",
+    "typeMode" : "none",
+    "input" : [{
+      "name" : "src",
+      "type" : "QuestionnaireResponse",
+      "mode" : "source"
+    },
+    {
+      "name" : "bundle",
+      "type" : "Bundle",
+      "mode" : "target"
+    }],
+    "rule" : [{
+      "name" : "rule_bundle_entry_impression",
+      "source" : [{
+        "context" : "src"
+      }],
+      "target" : [{
+        "context" : "bundle",
+        "contextType" : "variable",
+        "element" : "entry",
+        "variable" : "bundleClinicalImpressionEntry"
+      },
+      {
+        "context" : "bundleClinicalImpressionEntry",
+        "contextType" : "variable",
+        "element" : "resource",
+        "variable" : "impression",
+        "transform" : "create",
+        "parameter" : [{
+          "valueString" : "ClinicalImpression"
+        }]
+      }],
+      "rule" : [{
+        "name" : "rule_prov",
+        "source" : [{
+          "context" : "src",
+          "element" : "item",
+          "variable" : "provisionDiagnosisItem",
+          "condition" : "(linkId = 'provisional-diagnosis')"
+        }],
+        "rule" : [{
+          "name" : "rule_populate_impression",
+          "source" : [{
+            "context" : "provisionDiagnosisItem",
+            "element" : "answer",
+            "listMode" : "first",
+            "variable" : "answer"
+          }],
+          "target" : [{
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "id",
+            "transform" : "uuid"
+          },
+          {
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "encounter",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "src"
+            },
+            {
+              "valueString" : "$this.encounter"
+            }]
+          },
+          {
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "status",
+            "transform" : "copy",
+            "parameter" : [{
+              "valueString" : "completed"
+            }]
+          },
+          {
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "description",
+            "transform" : "copy",
+            "parameter" : [{
+              "valueString" : "Clinical impression by Reade to label the images"
+            }]
+          },
+          {
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "subject",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "src"
+            },
+            {
+              "valueString" : "$this.subject"
+            }]
+          },
+          {
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "date",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "src"
+            },
+            {
+              "valueString" : "$this.authored"
+            }]
+          },
+          {
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "assessor",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "src"
+            },
+            {
+              "valueString" : "$this.author"
+            }]
+          },
+          {
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "finding",
+            "variable" : "finding"
+          },
+          {
+            "context" : "finding",
+            "contextType" : "variable",
+            "element" : "itemCodeableConcept",
+            "variable" : "cc",
+            "transform" : "create",
+            "parameter" : [{
+              "valueString" : "CodeableConcept"
+            }]
+          },
+          {
+            "context" : "cc",
+            "contextType" : "variable",
+            "element" : "coding",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "answer"
+            },
+            {
+              "valueString" : "$this.value"
+            }]
+          }],
+          "dependent" : [{
+            "name" : "AddMedia",
+            "variable" : ["src",
+            "finding"]
+          }]
+        }]
+      }]
+    }]
+  },
+  {
+    "name" : "AddMedia",
+    "typeMode" : "none",
+    "input" : [{
+      "name" : "src",
+      "type" : "QuestionnaireResponse",
+      "mode" : "source"
+    },
+    {
+      "name" : "finding",
+      "mode" : "target"
+    }],
+    "rule" : [{
+      "name" : "rule_add_media",
+      "source" : [{
+        "context" : "src",
+        "element" : "item",
+        "variable" : "mediaItem",
+        "condition" : "(linkId = 'media-id')"
+      }],
+      "rule" : [{
+        "name" : "rule_media_rt",
+        "source" : [{
+          "context" : "mediaItem",
+          "element" : "answer",
+          "listMode" : "first",
+          "variable" : "answer"
+        }],
+        "target" : [{
+          "context" : "finding",
+          "contextType" : "variable",
+          "element" : "itemReference",
+          "variable" : "ref",
+          "transform" : "create",
+          "parameter" : [{
+            "valueString" : "Reference"
+          }]
+        },
+        {
+          "context" : "ref",
+          "contextType" : "variable",
+          "element" : "reference",
+          "transform" : "evaluate",
+          "parameter" : [{
+            "valueId" : "answer"
+          },
+          {
+            "valueString" : "'Media/' + $this.value"
+          }]
+        }]
+      }]
+    }]
+  }]
+}
