@@ -1,0 +1,39 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Subscription",
+        "id": "SubscriptionEncounterTriaged",
+        "status": "active",
+        "criteria": "Encounter?status=triaged",
+        "channel": {
+          "type": "rest-hook",
+          "endpoint": "<Base Path of Arogyam Gateway Server>/api/incoming-webhook/main/encounter-change/OralCancerPatientCare"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Subscription/SubscriptionEncounterTriaged"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Subscription",
+        "id": "SubscriptionOralCancerMedia",
+        "status": "active",
+        "criteria": "Media?status=preparation&site=http://www.snomed.org|113277000",
+        "channel": {
+          "type": "rest-hook",
+          "endpoint": "<Base Arogyam Gateway>/api/incoming-webhook/main/media-change/OralCancerLabelImage"
+        }
+      }
+      ,
+      "request": {
+        "method": "PUT",
+        "url": "Subscription/SubscriptionOralCancerMedia"
+      }
+    }
+  ]
+}

@@ -29,7 +29,7 @@
           "path": "focus",
           "expression": {
             "language": "text/cql-identifier",
-            "expression": "Patient Screenging Questionnaire"
+            "expression": "Patient Screening Questionnaire"
           }
         }
       ],

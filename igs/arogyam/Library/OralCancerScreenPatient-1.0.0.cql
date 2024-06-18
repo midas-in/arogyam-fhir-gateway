@@ -1,8 +1,8 @@
 library OralCancerScreenPatient version '1.0.0'
 
-using FHIR version '3.0.0'
+using FHIR version '4.0.1'
 
-include FHIRHelpers version '3.0.0'
+include FHIRHelpers version '4.0.1'
 
 codesystem "RoleType": 'https://midas.iisc.ac.in/fhir/CodeSystem/practitioner-role-type'
 code "OralCancerSpecialist": 'specialist' from "RoleType" display 'Oral Cancer Specialist'
@@ -25,15 +25,9 @@ define "All Active Specialist with Task Count": "All Active Specialist" P
 
 define "Available Specialist": First("All Active Specialist with Task Count").practitioner
 
-define "Available Specialist Reference": if "Available Specialist" is not null
-    then Reference {
-                 reference : string {
-                     value: ReplaceMatches('Practitioner/'+ "Available Specialist".id,'#','')
-                 }
-             }
-    else null
+define "Available Specialist Reference": { Reference { reference: string { value: 'Practitioner/sp1' } } }
 
-define "Patient Screenging Questionnaire": Reference { reference : string {value: 'Questionnaire/OralCancerScreenPatient'}}
+define "Patient Screening Questionnaire": Reference { reference : string {value: 'Questionnaire/OralCancerScreenPatient'}}
 
 
 // Senior Specialist

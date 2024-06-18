@@ -1,8 +1,8 @@
 library OralCancerLabelImage version '1.0.0'
 
-using FHIR version '3.0.0'
+using FHIR version '4.0.1'
 
-include FHIRHelpers version '3.0.0'
+include FHIRHelpers version '4.0.1'
 
 codesystem "RoleType": 'https://midas.iisc.ac.in/fhir/CodeSystem/practitioner-role-type'
 code "OralCancerReader": 'reader' from "RoleType" display 'Reader'
