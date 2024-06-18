@@ -10,7 +10,7 @@
         "criteria": "Encounter?status=triaged",
         "channel": {
           "type": "rest-hook",
-          "endpoint": "<Base Path of Arogyam Gateway Server>/api/incoming-webhook/main/encounter-change/OralCancerPatientCare"
+          "endpoint": "http://arogyam-fhir-gateway.staging-fhir.svc.cluster.local/api/incoming-webhook/main/encounter-change/OralCancerPatientCare"
         }
       },
       "request": {
@@ -26,7 +26,7 @@
         "criteria": "Media?status=preparation&site=http://www.snomed.org|113277000",
         "channel": {
           "type": "rest-hook",
-          "endpoint": "<Base Arogyam Gateway>/api/incoming-webhook/main/media-change/OralCancerLabelImage"
+          "endpoint": "http://arogyam-fhir-gateway.staging-fhir.svc.cluster.local/api/incoming-webhook/main/media-change/OralCancerLabelImage"
         }
       }
       ,
