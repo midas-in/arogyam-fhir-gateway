@@ -30,7 +30,7 @@ public class AuthenticationConfig {
 
     @Bean
     public JwtDecoder jwtDecoder(AuthenticationProperties properties) {
-        return JwtDecoders.fromIssuerLocation(properties.getKeycloak().userRealmUri());
+        return JwtDecoders.fromIssuerLocation(properties.getUserRealmUri());
     }
 
     @Bean

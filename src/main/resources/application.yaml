@@ -10,13 +10,7 @@ hapi:
           enabled: false
           proceed-to-authorization-on-failure: false
           proceed-to-authorization-on-no-auth: true
-          keycloak:
-            base-uri: http://localhost:8090
-            management-realm: master
-            client-id: admin-cli
-            username: admin
-            password: some-password
-            user-realm: arogyam
+          user-realm-uri: http://localhost:9000/auth/realm/arogyam
         authorization:
           enabled: false
           allow-anonymous-access: true
