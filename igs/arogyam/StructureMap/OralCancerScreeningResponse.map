@@ -1,0 +1,59 @@
+map "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse" = 'OralCancerScreeningResponse'
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" as target
+uses "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse" as source
+
+
+group OralCancerScreeningResponse(source src : QuestionnaireResponse, target bundle: Bundle) {
+    src -> bundle.entry as bundleClinicalImpressionEntry, bundleClinicalImpressionEntry.resource = create('ClinicalImpression') as impression then {
+        src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {
+            provisionDiagnosisItem.answer first as answer -> impression.id = uuid(),
+                impression.encounter = evaluate(src,$this.encounter),
+                impression.status = 'completed',
+                impression.description = 'Clinical impression by Specialist or Senior Specialist for a proabbale oral cancer patient',
+                impression.subject = evaluate(src,$this.subject),
+                impression.date = evaluate(src, $this.authored),
+                impression.assessor = evaluate(src,$this.author),
+                impression.finding as finding,
+                finding.itemCodeableConcept = create('CodeableConcept') as cc,
+                cc.coding = evaluate(answer,$this.value) "rule_populate_impression";
+
+            provisionDiagnosisItem.answer first as answer then {
+                // No there is a problem we will add a condition
+                answer.value where(code !='162010006') -> bundle.entry as conditionEntry, 
+                    conditionEntry.resource = create('Condition') as condition,
+                    condition.id = uuid(),
+                    condition.encounter = evaluate(src,$this.encounter),
+                    condition.subject = evaluate(src,$this.subject),
+                    condition.clinicalStatus = cc('http://terminology.hl7.org/CodeSystem/condition-clinical','active','Active'),
+                    condition.verificationStatus = cc('http://terminology.hl7.org/CodeSystem/condition-ver-status','confirmed','Confirmed'),
+                    condition.code as conditionCode,
+                    conditionCode.asserter = evaluate(src,$this.author),
+                    impression.problem = evaluate(condition,'Condition/' + $this.id) then {
+                        src.item as bodySiteItem where(linkId='oral-cavity-site') then {
+                            bodySiteItem.answer first as answer -> condition.bodySite = evaluate(answer,$this.value) "fdfd";
+                        } "rule_body_site";
+                    }  "rule_populate_condition";
+            } "rule_generate_condition";
+            
+            src.item as noteItem where(linkId = 'note') then {
+                noteItem.answer first as answer -> impression.summary = evaluate(answer,$this.value) "rule_populate_impression_note";
+            } "rule_impression_note";
+
+        } "rule_prov";
+    } "rule_bundle_entry_impression";
+
+    src.item as recommendationItem where(linkId = 'recommendation') then {
+        recommendationItem.answer as answer -> bundle.entry as taskEntry, taskEntry.resource = create('Task') as task,
+            task.id = uuid(),
+            task.encounter = evaluate(src,$this.encounter),
+            task.subject = evaluate(src,$this.subject),
+            task.status = 'received',
+            task.intent = 'order',
+            task.priority = 'routine',
+            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),
+            task.description = evaluate(answer, 'Follow up: ' + $this.value.display),
+            task.authoredOn = evaluate(src ,now()),
+            task.lastModified = evaluate(src ,now()) "rule_task_map";
+    } "rule_followup";
+}
