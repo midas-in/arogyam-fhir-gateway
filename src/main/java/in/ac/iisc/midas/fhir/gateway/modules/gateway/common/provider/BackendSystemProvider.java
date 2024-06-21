@@ -11,6 +11,7 @@ import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Measure;
+import org.hl7.fhir.r4.model.QuestionnaireResponse;
 
 @AllArgsConstructor
 public class BackendSystemProvider {
@@ -215,6 +216,22 @@ public class BackendSystemProvider {
      */
     @Operation(name = "$transform", global = true, manualRequest = true, idempotent = true)
     public IBaseResource transform(@IdParam IIdType theResourceId, RequestDetails theRequestDetails) {
+        return requestForwarder.tryParseResourceResponse(theRequestDetails);
+    }
+
+    /**
+     * $extract
+     */
+    @Operation(name = "$extract", global = true, manualRequest = true, idempotent = true, type = QuestionnaireResponse.class)
+    public IBaseResource $extract(RequestDetails theRequestDetails) {
+        return requestForwarder.tryParseResourceResponse(theRequestDetails);
+    }
+
+    /**
+     * $extract
+     */
+    @Operation(name = "$extract", global = true, manualRequest = true, idempotent = true, type = QuestionnaireResponse.class)
+    public IBaseResource extract(@IdParam IIdType theResourceId, RequestDetails theRequestDetails) {
         return requestForwarder.tryParseResourceResponse(theRequestDetails);
     }
 
