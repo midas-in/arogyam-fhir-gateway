@@ -6,6 +6,12 @@
   "id": "OralCancerScreenPatient",
   "url": "https://midas.iisc.ac.in/fhir/Questionnaire/OralCancerScreenPatient",
   "subjectType": "Media",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
+      "valueCanonical": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse"
+    }
+  ],
   "item": [
     {
       "type": "choice",

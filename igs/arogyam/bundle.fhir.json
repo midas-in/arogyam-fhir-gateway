@@ -203,6 +203,12 @@
         "name": "Label Oral Cavity Image",
         "subjectType": "Media",
         "status": "active",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
+            "valueCanonical": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse"
+          }
+        ],
         "item": [
           {
             "type": "choice",
@@ -308,713 +314,937 @@
       "resource": {
         "resourceType": "Questionnaire",
         "id": "OralCancerPatientRegistration",
-        "extension": [ {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
-          "valueCanonical": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerPatientRegistration"
-        }, {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-entryMode",
-          "valueString": "prior-edit"
-        }, {
-          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-constraint",
-          "extension": [ {
-            "url": "key",
-            "valueId": "contraint-1"
-          }, {
-            "url": "requirements",
-            "valueString": "At least Date of Birth or Age needs to be answered"
-          }, {
-            "url": "severity",
-            "valueCode": "error"
-          }, {
-            "url": "expression",
-            "valueString": "%resource.repeat(item).where(linkId='basic-info-group').item.where(linkId='patient-age-by-years' or linkId='patient-age-by-dob').answer.value.count()=1"
-          }, {
-            "url": "human",
-            "valueString": "You should answer date of birth or age only"
-          } ]
-        } ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
+            "valueCanonical": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerPatientRegistration"
+          },
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-entryMode",
+            "valueString": "prior-edit"
+          },
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-constraint",
+            "extension": [
+              {
+                "url": "key",
+                "valueId": "contraint-1"
+              },
+              {
+                "url": "requirements",
+                "valueString": "At least Date of Birth or Age needs to be answered"
+              },
+              {
+                "url": "severity",
+                "valueCode": "error"
+              },
+              {
+                "url": "expression",
+                "valueString": "%resource.repeat(item).where(linkId='basic-info-group').item.where(linkId='patient-age-by-years' or linkId='patient-age-by-dob').answer.value.count()=1"
+              },
+              {
+                "url": "human",
+                "valueString": "You should answer date of birth or age only"
+              }
+            ]
+          }
+        ],
         "name": "Patient registration for Oral Cancer screening",
         "title": "Patient Registration",
         "status": "active",
-        "subjectType": [ "Patient", "Observation" ],
+        "subjectType": ["Patient", "Observation"],
         "publisher": "Farmaan",
         "purpose": "Patient registration for Oral Cancer screening",
-        "item": [ {
-          "extension": [ {
-            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-            "valueCodeableConcept": {
-              "coding": [ {
-                "system": "http://hl7.org/fhir/questionnaire-item-control",
-                "code": "page",
-                "display": "Page"
-              } ],
-              "text": "Basic Info"
-            }
-          } ],
-          "linkId": "basic-info-group",
-          "text": "Basic Info",
-          "type": "group",
-          "item": [ {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/regex",
-              "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’* ]*$"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-              "valueString": "First name should only contain letters"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter first name"
-            } ],
-            "linkId": "patient-name-given",
-            "text": "First Name",
-            "type": "string",
-            "required": true,
-            "maxLength": 64
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/regex",
-              "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’* ]*$"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-              "valueString": "Last name should only contain letters"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter last name"
-            } ],
-            "linkId": "patient-name-family",
-            "text": "Last Name",
-            "type": "string",
-            "required": true,
-            "maxLength": 64
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/regex",
-              "valueString": "^[A-Za-z0-9]{14}$"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-              "valueString": "Invalid ABHA ID"
-            } ],
-            "linkId": "patient-identifier-abha",
-            "text": "ABHA ID(Optional)",
-            "type": "string",
-            "required": false
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [ {
-                  "system": "http://hl7.org/fhir/questionnaire-item-control",
-                  "code": "radio-button",
-                  "display": "Radio Button"
-                } ]
+        "item": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "system": "http://hl7.org/fhir/questionnaire-item-control",
+                      "code": "page",
+                      "display": "Page"
+                    }
+                  ],
+                  "text": "Basic Info"
+                }
               }
-            } ],
-            "linkId": "patient-age",
-            "text": "Age",
-            "type": "choice",
-            "required": true,
-            "answerOption": [ {
-              "valueCoding": {
-                "code": "dob",
-                "display": "By Date of Birth"
-              },
-              "initialSelected": true
-            }, {
-              "valueCoding": {
-                "code": "years",
-                "display": "By Years"
-              }
-            } ]
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/entryFormat",
-              "valueString": "dd/MM/yyyy"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-              "_valueDate": {
-                "extension": [ {
-                  "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
-                  "valueExpression": {
-                    "language": "text/fhirpath",
-                    "expression": "today() - 30 years"
+            ],
+            "linkId": "basic-info-group",
+            "text": "Basic Info",
+            "type": "group",
+            "item": [
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
+                    "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’* ]*$"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+                    "valueString": "First name should only contain letters"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+                    "valueString": "Please enter first name"
                   }
-                } ]
+                ],
+                "linkId": "patient-name-given",
+                "text": "First Name",
+                "type": "string",
+                "required": true,
+                "maxLength": 64
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
+                    "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’* ]*$"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+                    "valueString": "Last name should only contain letters"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+                    "valueString": "Please enter last name"
+                  }
+                ],
+                "linkId": "patient-name-family",
+                "text": "Last Name",
+                "type": "string",
+                "required": true,
+                "maxLength": 64
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
+                    "valueString": "^[A-Za-z0-9]{14}$"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+                    "valueString": "Invalid ABHA ID"
+                  }
+                ],
+                "linkId": "patient-identifier-abha",
+                "text": "ABHA ID(Optional)",
+                "type": "string",
+                "required": false
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://hl7.org/fhir/questionnaire-item-control",
+                          "code": "radio-button",
+                          "display": "Radio Button"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "linkId": "patient-age",
+                "text": "Age",
+                "type": "choice",
+                "required": true,
+                "answerOption": [
+                  {
+                    "valueCoding": {
+                      "code": "dob",
+                      "display": "By Date of Birth"
+                    },
+                    "initialSelected": true
+                  },
+                  {
+                    "valueCoding": {
+                      "code": "years",
+                      "display": "By Years"
+                    }
+                  }
+                ]
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/entryFormat",
+                    "valueString": "dd/MM/yyyy"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+                    "_valueDate": {
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
+                          "valueExpression": {
+                            "language": "text/fhirpath",
+                            "expression": "today() - 30 years"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+                    "valueString": "Please enter valid age(Must be 30y or above)"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+                    "valueString": "Please enter date of birth"
+                  }
+                ],
+                "linkId": "patient-age-by-dob",
+                "text": "By Date of Birth",
+                "type": "date",
+                "enableWhen": [
+                  {
+                    "question": "patient-age",
+                    "operator": "=",
+                    "answerCoding": {
+                      "code": "dob",
+                      "display": "By Date of Birth"
+                    }
+                  }
+                ],
+                "required": false
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+                    "valueInteger": 30
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+                    "valueInteger": 150
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+                    "valueString": "Please enter valid age(Must be 30y or above)"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+                    "valueString": "Please enter age"
+                  }
+                ],
+                "linkId": "patient-age-by-years",
+                "text": "By Years",
+                "type": "integer",
+                "enableWhen": [
+                  {
+                    "question": "patient-age",
+                    "operator": "=",
+                    "answerCoding": {
+                      "code": "years",
+                      "display": "By Years"
+                    }
+                  }
+                ]
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                    "valueCode": "horizontal"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://hl7.org/fhir/questionnaire-item-control",
+                          "code": "radio-button",
+                          "display": "Radio Button"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-preferredTerminologyServer",
+                    "valueUrl": "http://hl7.org/fhir/ValueSet/administrative-gender"
+                  }
+                ],
+                "linkId": "patient-gender",
+                "text": "Gender",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueCoding": {
+                      "system": "http://hl7.org/fhir/administrative-gender",
+                      "code": "male",
+                      "display": "Male"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "http://hl7.org/fhir/administrative-gender",
+                      "code": "female",
+                      "display": "Female"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "http://hl7.org/fhir/administrative-gender",
+                      "code": "unknown",
+                      "display": "Unknown"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "http://hl7.org/fhir/administrative-gender",
+                      "code": "other",
+                      "display": "Other"
+                    }
+                  }
+                ]
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
+                    "valueString": "^[6-9]\\d{9}$"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+                    "valueString": "Please enter a valid mobile number."
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+                    "valueString": "Please enter  primary mobile number"
+                  }
+                ],
+                "linkId": "patient-contact-primary",
+                "text": "Primary Contact Number",
+                "type": "string",
+                "required": true
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
+                    "valueString": "^[6-9]\\d{9}$"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+                    "valueString": "Please enter a valid mobile number."
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+                    "valueString": "Please enter  primary mobile number"
+                  }
+                ],
+                "linkId": "patient-contact-secondary",
+                "text": "Secondary Contact Number",
+                "type": "string",
+                "required": false
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+                    "valueString": "Please enter House Number & Village"
+                  }
+                ],
+                "linkId": "patient-address-village",
+                "text": "House Number & Village",
+                "type": "string",
+                "required": false,
+                "maxLength": 128
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+                    "valueInteger": 110000
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+                    "valueInteger": 999999
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+                    "valueString": "Please enter a valid pincode"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+                    "valueString": "Please enter  pincode"
+                  }
+                ],
+                "linkId": "patient-address-pincode",
+                "text": "Pincode",
+                "type": "integer",
+                "required": false
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
+                    "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’*0-9 ]*$"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+                    "valueString": "Please enter district"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+                    "valueString": "Please enter a valid district"
+                  }
+                ],
+                "linkId": "patient-address-district",
+                "text": "District",
+                "type": "string",
+                "required": true
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/regex",
+                    "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’*0-9 ]*$"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+                    "valueString": "Please enter state"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
+                    "valueString": "Please enter a valid state"
+                  }
+                ],
+                "linkId": "patient-address-state",
+                "text": "State",
+                "type": "string",
+                "required": true
               }
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-              "valueString": "Please enter valid age(Must be 30y or above)"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter date of birth"
-            } ],
-            "linkId": "patient-age-by-dob",
-            "text": "By Date of Birth",
-            "type": "date",
-            "enableWhen": [ {
-              "question": "patient-age",
-              "operator": "=",
-              "answerCoding": {
-                "code": "dob",
-                "display": "By Date of Birth"
-              }
-            } ],
-            "required": false
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/minValue",
-              "valueInteger": 30
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-              "valueInteger": 150
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-              "valueString": "Please enter valid age(Must be 30y or above)"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter age"
-            } ],
-            "linkId": "patient-age-by-years",
-            "text": "By Years",
-            "type": "integer",
-            "enableWhen": [ {
-              "question": "patient-age",
-              "operator": "=",
-              "answerCoding": {
-                "code": "years",
-                "display": "By Years"
-              }
-            } ]
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-              "valueCode": "horizontal"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [ {
-                  "system": "http://hl7.org/fhir/questionnaire-item-control",
-                  "code": "radio-button",
-                  "display": "Radio Button"
-                } ]
-              }
-            }, {
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-preferredTerminologyServer",
-              "valueUrl": "http://hl7.org/fhir/ValueSet/administrative-gender"
-            } ],
-            "linkId": "patient-gender",
-            "text": "Gender",
-            "type": "choice",
-            "answerOption": [ {
-              "valueCoding": {
-                "system": "http://hl7.org/fhir/administrative-gender",
-                "code": "male",
-                "display": "Male"
-              }
-            }, {
-              "valueCoding": {
-                "system": "http://hl7.org/fhir/administrative-gender",
-                "code": "female",
-                "display": "Female"
-              }
-            }, {
-              "valueCoding": {
-                "system": "http://hl7.org/fhir/administrative-gender",
-                "code": "unknown",
-                "display": "Unknown"
-              }
-            }, {
-              "valueCoding": {
-                "system": "http://hl7.org/fhir/administrative-gender",
-                "code": "other",
-                "display": "Other"
-              }
-            } ]
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/regex",
-              "valueString": "^[6-9]\\d{9}$"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-              "valueString": "Please enter a valid mobile number."
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter  primary mobile number"
-            } ],
-            "linkId": "patient-contact-primary",
-            "text": "Primary Contact Number",
-            "type": "string",
-            "required": true
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/regex",
-              "valueString": "^[6-9]\\d{9}$"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-              "valueString": "Please enter a valid mobile number."
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter  primary mobile number"
-            } ],
-            "linkId": "patient-contact-secondary",
-            "text": "Secondary Contact Number",
-            "type": "string",
-            "required": false
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter House Number & Village"
-            } ],
-            "linkId": "patient-address-village",
-            "text": "House Number & Village",
-            "type": "string",
-            "required": false,
-            "maxLength": 128
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/minValue",
-              "valueInteger": 110000
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-              "valueInteger": 999999
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-              "valueString": "Please enter a valid pincode"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter  pincode"
-            } ],
-            "linkId": "patient-address-pincode",
-            "text": "Pincode",
-            "type": "integer",
-            "required": false
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/regex",
-              "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’*0-9 ]*$"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter district"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-              "valueString": "Please enter a valid district"
-            } ],
-            "linkId": "patient-address-district",
-            "text": "District",
-            "type": "string",
-            "required": true
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/regex",
-              "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’*0-9 ]*$"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter state"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/validationtext",
-              "valueString": "Please enter a valid state"
-            } ],
-            "linkId": "patient-address-state",
-            "text": "State",
-            "type": "string",
-            "required": true
-          } ]
-        }, {
-          "extension": [ {
-            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-            "valueCodeableConcept": {
-              "coding": [ {
-                "system": "http://hl7.org/fhir/questionnaire-item-control",
-                "code": "page",
-                "display": "Page"
-              } ],
-              "text": "Habit History"
-            }
-          } ],
-          "linkId": "habit-history-group",
-          "text": "Habit History",
-          "type": "group",
-          "item": [ {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-              "valueCode": "horizontal"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [ {
-                  "system": "http://hl7.org/fhir/questionnaire-item-control",
-                  "code": "chip",
-                  "display": "Chip Group"
-                } ]
-              }
-            } ],
-            "linkId": "patient-habit-cigarette",
-            "text": "Cigarette/Bidi",
-            "type": "choice",
-            "required": true,
-            "answerOption": [ {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "current",
-                "display": "Current"
-              }
-            }, {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "past",
-                "display": "Past"
-              }
-            }, {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "never",
-                "display": "Never"
-              }
-            } ]
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-              "valueCode": "horizontal"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [ {
-                  "system": "http://hl7.org/fhir/questionnaire-item-control",
-                  "code": "chip",
-                  "display": "Chip Group"
-                } ]
-              }
-            } ],
-            "linkId": "patient-habit-tobacco",
-            "text": "Smokeless Tobacco",
-            "type": "choice",
-            "required": true,
-            "answerOption": [ {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "current",
-                "display": "Current"
-              }
-            }, {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "past",
-                "display": "Past"
-              }
-            }, {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "never",
-                "display": "Never"
-              }
-            } ]
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-              "valueCode": "horizontal"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [ {
-                  "system": "http://hl7.org/fhir/questionnaire-item-control",
-                  "code": "chip",
-                  "display": "Chip Group"
-                } ]
-              }
-            } ],
-            "linkId": "patient-habit-areca",
-            "text": "Areca Nut",
-            "type": "choice",
-            "required": true,
-            "answerOption": [ {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "current",
-                "display": "Current"
-              }
-            }, {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "past",
-                "display": "Past"
-              }
-            }, {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "never",
-                "display": "Never"
-              }
-            } ]
-          }, {
-            "extension": [ {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-              "valueCode": "horizontal"
-            }, {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [ {
-                  "system": "http://hl7.org/fhir/questionnaire-item-control",
-                  "code": "chip",
-                  "display": "Chip Group"
-                } ]
-              }
-            } ],
-            "linkId": "patient-habit-alcohol",
-            "text": "Alcohol",
-            "type": "choice",
-            "required": true,
-            "answerOption": [ {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "current",
-                "display": "Current"
-              }
-            }, {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "past",
-                "display": "Past"
-              }
-            }, {
-              "valueCoding": {
-                "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
-                "code": "never",
-                "display": "Never"
-              }
-            } ]
-          } ]
-        }, {
-          "extension": [ {
-            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-            "valueCodeableConcept": {
-              "coding": [ {
-                "system": "http://hl7.org/fhir/questionnaire-item-control",
-                "code": "page",
-                "display": "Page"
-              } ],
-              "text": "Screening"
-            }
-          } ],
-          "linkId": "screening-group",
-          "text": "Screening",
-          "type": "group",
-          "item": [ {
-            "linkId": "patient-screening-question-group",
-            "text": "Current Condition",
-            "type": "group",
-            "item": [ {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                "valueCode": "horizontal"
-              }, {
+            ]
+          },
+          {
+            "extension": [
+              {
                 "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
                 "valueCodeableConcept": {
-                  "coding": [ {
-                    "system": "http://hl7.org/fhir/questionnaire-item-control",
-                    "code": "chip",
-                    "display": "Chip Group"
-                  } ]
+                  "coding": [
+                    {
+                      "system": "http://hl7.org/fhir/questionnaire-item-control",
+                      "code": "page",
+                      "display": "Page"
+                    }
+                  ],
+                  "text": "Habit History"
                 }
-              } ],
-              "linkId": "patient-screening-mouth-open",
-              "text": "Open Mouth",
-              "type": "choice",
-              "required": true,
-              "answerOption": [ {
-                "valueCoding": {
-                  "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
-                  "code": "yes",
-                  "display": "Yes"
-                }
-              }, {
-                "valueCoding": {
-                  "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
-                  "code": "no",
-                  "display": "No"
-                }
-              } ]
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                "valueCode": "horizontal"
-              }, {
+              }
+            ],
+            "linkId": "habit-history-group",
+            "text": "Habit History",
+            "type": "group",
+            "item": [
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                    "valueCode": "horizontal"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://hl7.org/fhir/questionnaire-item-control",
+                          "code": "chip",
+                          "display": "Chip Group"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "linkId": "patient-habit-cigarette",
+                "text": "Cigarette/Bidi",
+                "type": "choice",
+                "required": true,
+                "answerOption": [
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "current",
+                      "display": "Current"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "past",
+                      "display": "Past"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "never",
+                      "display": "Never"
+                    }
+                  }
+                ]
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                    "valueCode": "horizontal"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://hl7.org/fhir/questionnaire-item-control",
+                          "code": "chip",
+                          "display": "Chip Group"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "linkId": "patient-habit-tobacco",
+                "text": "Smokeless Tobacco",
+                "type": "choice",
+                "required": true,
+                "answerOption": [
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "current",
+                      "display": "Current"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "past",
+                      "display": "Past"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "never",
+                      "display": "Never"
+                    }
+                  }
+                ]
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                    "valueCode": "horizontal"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://hl7.org/fhir/questionnaire-item-control",
+                          "code": "chip",
+                          "display": "Chip Group"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "linkId": "patient-habit-areca",
+                "text": "Areca Nut",
+                "type": "choice",
+                "required": true,
+                "answerOption": [
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "current",
+                      "display": "Current"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "past",
+                      "display": "Past"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "never",
+                      "display": "Never"
+                    }
+                  }
+                ]
+              },
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                    "valueCode": "horizontal"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://hl7.org/fhir/questionnaire-item-control",
+                          "code": "chip",
+                          "display": "Chip Group"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "linkId": "patient-habit-alcohol",
+                "text": "Alcohol",
+                "type": "choice",
+                "required": true,
+                "answerOption": [
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "current",
+                      "display": "Current"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "past",
+                      "display": "Past"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dg",
+                      "code": "never",
+                      "display": "Never"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
                 "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
                 "valueCodeableConcept": {
-                  "coding": [ {
-                    "system": "http://hl7.org/fhir/questionnaire-item-control",
-                    "code": "chip",
-                    "display": "Chip Group"
-                  } ]
+                  "coding": [
+                    {
+                      "system": "http://hl7.org/fhir/questionnaire-item-control",
+                      "code": "page",
+                      "display": "Page"
+                    }
+                  ],
+                  "text": "Screening"
                 }
-              } ],
-              "linkId": "patient-screening-lesion",
-              "text": "Lesion/Patch",
-              "type": "choice",
-              "required": true,
-              "answerOption": [ {
-                "valueCoding": {
-                  "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
-                  "code": "yes",
-                  "display": "Yes"
-                }
-              }, {
-                "valueCoding": {
-                  "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
-                  "code": "no",
-                  "display": "No"
-                }
-              } ]
-            } ]
-          }, {
-            "linkId": "patient-screening-image-group",
-            "text": "Image Screening",
+              }
+            ],
+            "linkId": "screening-group",
+            "text": "Screening",
             "type": "group",
-            "item": [ {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-1",
-              "text": "Image 1",
-              "type": "attachment",
-              "required": true
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-2",
-              "text": "Image 2",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-3",
-              "text": "Image 3",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-4",
-              "text": "Image 4",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-5",
-              "text": "Image 5",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-6",
-              "text": "Image 6",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-7",
-              "text": "Image 7",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-8",
-              "text": "Image 8",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-9",
-              "text": "Image 9",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-10",
-              "text": "Image 10",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-11",
-              "text": "Image 11",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-12",
-              "text": "Image 12",
-              "type": "attachment"
-            }, {
-              "extension": [ {
-                "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
-                "valueCode": "image/*"
-              }, {
-                "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
-                "valueDecimal": 20000000
-              } ],
-              "linkId": "patient-screening-image-13",
-              "text": "Image 13",
-              "type": "attachment"
-            } ]
-          } ]
-        } ]
+            "item": [
+              {
+                "linkId": "patient-screening-question-group",
+                "text": "Current Condition",
+                "type": "group",
+                "item": [
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                        "valueCode": "horizontal"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                        "valueCodeableConcept": {
+                          "coding": [
+                            {
+                              "system": "http://hl7.org/fhir/questionnaire-item-control",
+                              "code": "chip",
+                              "display": "Chip Group"
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "linkId": "patient-screening-mouth-open",
+                    "text": "Open Mouth",
+                    "type": "choice",
+                    "required": true,
+                    "answerOption": [
+                      {
+                        "valueCoding": {
+                          "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
+                          "code": "yes",
+                          "display": "Yes"
+                        }
+                      },
+                      {
+                        "valueCoding": {
+                          "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
+                          "code": "no",
+                          "display": "No"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                        "valueCode": "horizontal"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                        "valueCodeableConcept": {
+                          "coding": [
+                            {
+                              "system": "http://hl7.org/fhir/questionnaire-item-control",
+                              "code": "chip",
+                              "display": "Chip Group"
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "linkId": "patient-screening-lesion",
+                    "text": "Lesion/Patch",
+                    "type": "choice",
+                    "required": true,
+                    "answerOption": [
+                      {
+                        "valueCoding": {
+                          "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
+                          "code": "yes",
+                          "display": "Yes"
+                        }
+                      },
+                      {
+                        "valueCoding": {
+                          "system": "urn:uuid:0d87c467-5274-4fec-8b6e-665b8f10c8dd",
+                          "code": "no",
+                          "display": "No"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "linkId": "patient-screening-image-group",
+                "text": "Image Screening",
+                "type": "group",
+                "item": [
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-1",
+                    "text": "Image 1",
+                    "type": "attachment",
+                    "required": true
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-2",
+                    "text": "Image 2",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-3",
+                    "text": "Image 3",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-4",
+                    "text": "Image 4",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-5",
+                    "text": "Image 5",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-6",
+                    "text": "Image 6",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-7",
+                    "text": "Image 7",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-8",
+                    "text": "Image 8",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-9",
+                    "text": "Image 9",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-10",
+                    "text": "Image 10",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-11",
+                    "text": "Image 11",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-12",
+                    "text": "Image 12",
+                    "type": "attachment"
+                  },
+                  {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/mimeType",
+                        "valueCode": "image/*"
+                      },
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/maxSize",
+                        "valueDecimal": 20000000
+                      }
+                    ],
+                    "linkId": "patient-screening-image-13",
+                    "text": "Image 13",
+                    "type": "attachment"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "request": {
         "method": "PUT",
@@ -1024,14 +1254,21 @@
     {
       "resource": {
         "resourceType": "Questionnaire",
+        "title": "Screen Oral Cancer Patient",
+        "name": "Screen Oral Cancer Patient",
+        "status": "active",
         "id": "OralCancerScreenPatient",
         "url": "https://midas.iisc.ac.in/fhir/Questionnaire/OralCancerScreenPatient",
-        "name": "Screen Oral Cancer Patient",
-        "title": "Screen Oral Cancer Patient",
-        "status": "active",
-        "subjectType": ["Media"],
+        "subjectType": "Media",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
+            "valueCanonical": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse"
+          }
+        ],
         "item": [
           {
+            "type": "choice",
             "extension": [
               {
                 "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -1048,7 +1285,6 @@
             ],
             "linkId": "provisional-diagnosis",
             "text": "Provisional Diagnosis",
-            "type": "choice",
             "required": true,
             "repeats": false,
             "answerOption": [
@@ -1118,6 +1354,7 @@
             ]
           },
           {
+            "type": "choice",
             "extension": [
               {
                 "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -1134,7 +1371,6 @@
             ],
             "linkId": "oral-cavity-site",
             "text": "Oral Cavity Site",
-            "type": "choice",
             "required": true,
             "readOnly": false,
             "answerOption": [
@@ -1204,6 +1440,7 @@
             ]
           },
           {
+            "type": "choice",
             "extension": [
               {
                 "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -1220,7 +1457,6 @@
             ],
             "linkId": "recommendation",
             "text": "Recommendation",
-            "type": "choice",
             "required": true,
             "readOnly": false,
             "answerOption": [
@@ -1255,9 +1491,9 @@
             ]
           },
           {
+            "type": "text",
             "linkId": "note",
             "text": "Notes",
-            "type": "text",
             "required": false
           }
         ]
@@ -6306,7 +6542,7 @@
         "id" : "OralCancerLabelImageResponse",
         "text" : {
           "status" : "additional",
-          "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse&quot; = 'OralCancerLabelImageResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerLabelImageResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry, bundleClinicalImpressionEntry.resource = create('ClinicalImpression') as impression then {\n        src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n            provisionDiagnosisItem.answer first as answer -&gt; impression.id = uuid(),\n                impression.encounter = evaluate(src,$this.encounter),\n                impression.status = 'completed',\n                impression.description = 'Clinical impression by Reade to label the images',\n                impression.subject = evaluate(src,$this.subject),\n                impression.date = evaluate(src, $this.authored),\n                impression.assessor = evaluate(src,$this.author),\n                impression.finding as finding,\n                finding.itemCodeableConcept = create('CodeableConcept') as cc,\n                cc.coding = evaluate(answer,$this.value)\n                then AddMedia(src, finding) &quot;rule_populate_impression&quot;;\n        } &quot;rule_prov&quot;;\n    } &quot;rule_bundle_entry_impression&quot;;\n}\n\ngroup AddMedia(source src: QuestionnaireResponse, target finding){\n    src.item as mediaItem where(linkId = 'media-id') then {\n        mediaItem.answer first as answer -&gt; finding.itemReference = create('Reference') as ref, ref.reference = evaluate(answer, 'Media/' + $this.value) &quot;rule_media_rt&quot;;\n    } &quot;rule_add_media&quot;;\n}\n</pre></div>"
+          "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse&quot; = 'OralCancerLabelImageResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerLabelImageResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry,\n         bundleClinicalImpressionEntry.resource = create('DiagnosticReport') as dr then {\n            src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n                provisionDiagnosisItem.answer first as answer -&gt; \n                    dr.id = uuid(),\n                    dr.encounter = evaluate(src,$this.encounter),\n                    dr.status = 'final',\n                    dr.subject = evaluate(src,$this.subject),\n                    dr.effective = evaluate(src, $this.authored),\n                    dr.performer = evaluate(src,$this.author),\n                    dr.conclusionCode as conclusionCode,\n                    conclusionCode.coding = evaluate(answer,$this.value)\n                    then AddMedia(src, dr) &quot;rule_populate_impression&quot;;\n            } &quot;rule_prov&quot;;\n    } &quot;rule_bundle_entry_impression&quot;;\n}\n\ngroup AddMedia(source src: QuestionnaireResponse, target dr: DiagnosticReport){\n    src.item as mediaItem where(linkId = 'media-id') then {\n        mediaItem.answer first as answer -&gt; dr.media as media, media.link = create('Reference') as ref, ref.reference = evaluate(answer, $this.value) &quot;rule_media_rt&quot;;\n    } &quot;rule_add_media&quot;;\n}\n</pre></div>"
         },
         "url" : "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse",
         "name" : "OralCancerLabelImageResponse",
@@ -6346,10 +6582,10 @@
                 "context" : "bundleClinicalImpressionEntry",
                 "contextType" : "variable",
                 "element" : "resource",
-                "variable" : "impression",
+                "variable" : "dr",
                 "transform" : "create",
                 "parameter" : [{
-                  "valueString" : "ClinicalImpression"
+                  "valueString" : "DiagnosticReport"
                 }]
               }],
             "rule" : [{
@@ -6369,13 +6605,13 @@
                   "variable" : "answer"
                 }],
                 "target" : [{
-                  "context" : "impression",
+                  "context" : "dr",
                   "contextType" : "variable",
                   "element" : "id",
                   "transform" : "uuid"
                 },
                   {
-                    "context" : "impression",
+                    "context" : "dr",
                     "contextType" : "variable",
                     "element" : "encounter",
                     "transform" : "evaluate",
@@ -6387,25 +6623,16 @@
                       }]
                   },
                   {
-                    "context" : "impression",
+                    "context" : "dr",
                     "contextType" : "variable",
                     "element" : "status",
                     "transform" : "copy",
                     "parameter" : [{
-                      "valueString" : "completed"
+                      "valueString" : "final"
                     }]
                   },
                   {
-                    "context" : "impression",
-                    "contextType" : "variable",
-                    "element" : "description",
-                    "transform" : "copy",
-                    "parameter" : [{
-                      "valueString" : "Clinical impression by Reade to label the images"
-                    }]
-                  },
-                  {
-                    "context" : "impression",
+                    "context" : "dr",
                     "contextType" : "variable",
                     "element" : "subject",
                     "transform" : "evaluate",
@@ -6417,9 +6644,9 @@
                       }]
                   },
                   {
-                    "context" : "impression",
+                    "context" : "dr",
                     "contextType" : "variable",
-                    "element" : "date",
+                    "element" : "effective",
                     "transform" : "evaluate",
                     "parameter" : [{
                       "valueId" : "src"
@@ -6429,9 +6656,9 @@
                       }]
                   },
                   {
-                    "context" : "impression",
+                    "context" : "dr",
                     "contextType" : "variable",
-                    "element" : "assessor",
+                    "element" : "performer",
                     "transform" : "evaluate",
                     "parameter" : [{
                       "valueId" : "src"
@@ -6441,23 +6668,13 @@
                       }]
                   },
                   {
-                    "context" : "impression",
+                    "context" : "dr",
                     "contextType" : "variable",
-                    "element" : "finding",
-                    "variable" : "finding"
+                    "element" : "conclusionCode",
+                    "variable" : "conclusionCode"
                   },
                   {
-                    "context" : "finding",
-                    "contextType" : "variable",
-                    "element" : "itemCodeableConcept",
-                    "variable" : "cc",
-                    "transform" : "create",
-                    "parameter" : [{
-                      "valueString" : "CodeableConcept"
-                    }]
-                  },
-                  {
-                    "context" : "cc",
+                    "context" : "conclusionCode",
                     "contextType" : "variable",
                     "element" : "coding",
                     "transform" : "evaluate",
@@ -6471,7 +6688,7 @@
                 "dependent" : [{
                   "name" : "AddMedia",
                   "variable" : ["src",
-                    "finding"]
+                    "dr"]
                 }]
               }]
             }]
@@ -6486,7 +6703,8 @@
               "mode" : "source"
             },
               {
-                "name" : "finding",
+                "name" : "dr",
+                "type" : "DiagnosticReport",
                 "mode" : "target"
               }],
             "rule" : [{
@@ -6506,15 +6724,21 @@
                   "variable" : "answer"
                 }],
                 "target" : [{
-                  "context" : "finding",
+                  "context" : "dr",
                   "contextType" : "variable",
-                  "element" : "itemReference",
-                  "variable" : "ref",
-                  "transform" : "create",
-                  "parameter" : [{
-                    "valueString" : "Reference"
-                  }]
+                  "element" : "media",
+                  "variable" : "media"
                 },
+                  {
+                    "context" : "media",
+                    "contextType" : "variable",
+                    "element" : "link",
+                    "variable" : "ref",
+                    "transform" : "create",
+                    "parameter" : [{
+                      "valueString" : "Reference"
+                    }]
+                  },
                   {
                     "context" : "ref",
                     "contextType" : "variable",
@@ -6524,7 +6748,7 @@
                       "valueId" : "answer"
                     },
                       {
-                        "valueString" : "'Media/' + $this.value"
+                        "valueString" : "$this.value"
                       }]
                   }]
               }]
@@ -6541,7 +6765,7 @@
         "id" : "OralCancerScreeningResponse",
         "text" : {
           "status" : "additional",
-          "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse&quot; = 'OralCancerScreeningResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerScreeningResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry, bundleClinicalImpressionEntry.resource = create('ClinicalImpression') as impression then {\n        src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n            provisionDiagnosisItem.answer first as answer -&gt; impression.id = uuid(),\n                impression.encounter = evaluate(src,$this.encounter),\n                impression.status = 'completed',\n                impression.description = 'Clinical impression by Specialist or Senior Specialist for a proabbale oral cancer patient',\n                impression.subject = evaluate(src,$this.subject),\n                impression.date = evaluate(src, $this.authored),\n                impression.assessor = evaluate(src,$this.author),\n                impression.finding as finding,\n                finding.itemCodeableConcept = create('CodeableConcept') as cc,\n                cc.coding = evaluate(answer,$this.value) &quot;rule_populate_impression&quot;;\n\n            provisionDiagnosisItem.answer first as answer then {\n                // No there is a problem we will add a condition\n                answer.value where(code !='162010006') -&gt; bundle.entry as conditionEntry, \n                    conditionEntry.resource = create('Condition') as condition,\n                    condition.id = uuid(),\n                    condition.encounter = evaluate(src,$this.encounter),\n                    condition.subject = evaluate(src,$this.subject),\n                    condition.clinicalStatus = cc('http://terminology.hl7.org/CodeSystem/condition-clinical','active','Active'),\n                    condition.verificationStatus = cc('http://terminology.hl7.org/CodeSystem/condition-ver-status','confirmed','Confirmed'),\n                    condition.code as conditionCode,\n                    conditionCode.asserter = evaluate(src,$this.author),\n                    impression.problem = evaluate(condition,'Condition/' + $this.id) then {\n                        src.item as bodySiteItem where(linkId='oral-cavity-site') then {\n                            bodySiteItem.answer first as answer -&gt; condition.bodySite = evaluate(answer,$this.value) &quot;fdfd&quot;;\n                        } &quot;rule_body_site&quot;;\n                    }  &quot;rule_populate_condition&quot;;\n            } &quot;rule_generate_condition&quot;;\n            \n            src.item as noteItem where(linkId = 'note') then {\n                noteItem.answer first as answer -&gt; impression.summary = evaluate(answer,$this.value) &quot;rule_populate_impression_note&quot;;\n            } &quot;rule_impression_note&quot;;\n\n        } &quot;rule_prov&quot;;\n    } &quot;rule_bundle_entry_impression&quot;;\n\n    src.item as recommendationItem where(linkId = 'recommendation') then {\n        recommendationItem.answer as answer -&gt; bundle.entry as taskEntry, taskEntry.resource = create('Task') as task,\n            task.id = uuid(),\n            task.encounter = evaluate(src,$this.encounter),\n            task.subject = evaluate(src,$this.subject),\n            task.status = 'received',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = evaluate(answer, 'Follow up: ' + $this.value.display),\n            task.authoredOn = evaluate(src ,now()),\n            task.lastModified = evaluate(src ,now()) &quot;rule_task_map&quot;;\n    } &quot;rule_followup&quot;;\n}\n</pre></div>"
+          "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse&quot; = 'OralCancerScreeningResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerScreeningResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry,\n        bundle.entry as conditionEntry,\n        bundle.entry as raEntry,\n        bundleClinicalImpressionEntry.resource = create('ClinicalImpression') as impression,\n        create('Condition') as condition,\n        create('RiskAssessment') as ra then {\n\n        src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n            provisionDiagnosisItem.answer first as answer -&gt; \n                impression.id = uuid(),\n                condition.id = uuid(),\n                impression.encounter = evaluate(src,$this.encounter),\n                impression.status = 'completed',\n                impression.description = 'Clinical impression by Specialist or Senior Specialist for a proabbale oral cancer patient',\n                impression.subject = evaluate(src,$this.subject),\n                impression.date = evaluate(src, $this.authored),\n                impression.assessor = evaluate(src,$this.author),\n                impression.finding as finding,\n                finding.itemCodeableConcept = create('CodeableConcept') as findingCC,\n                findingCC.coding = evaluate(answer,$this.value),\n                condition.encounter = evaluate(src,$this.encounter),\n                condition.subject = evaluate(src,$this.subject),\n                condition.clinicalStatus = cc('http://terminology.hl7.org/CodeSystem/condition-clinical','active','Active'),\n                condition.verificationStatus = cc('http://terminology.hl7.org/CodeSystem/condition-ver-status','confirmed','Confirmed'),\n                condition.code as conditionCode,\n                conditionCode.coding = evaluate(answer,$this.value),\n                condition.asserter = evaluate(src,$this.author),\n                impression.problem = create('Reference') as impressionProblemRef, \n                impressionProblemRef.reference = evaluate(condition,'Condition/' + $this.id),\n                conditionEntry.resource = condition &quot;rule_populate_impression&quot;;\n        } &quot;rule_prov&quot;;\n\n        src.item as recommendationItem where(linkId = 'recommendation') then {\n            recommendationItem.answer first as answer -&gt; \n                ra.id = uuid(),\n                ra.status = 'final',\n                ra.subject = evaluate(src, $this.subject),\n                ra.encounter = evaluate(src, $this.encounter),\n                ra.performer = evaluate(src, $this.author),\n                ra.prediction as prediction,\n                ra.condition = create('Reference') as raConditionRef,\n                raConditionRef.reference = evaluate(condition,'Condition/' + $this.id),\n                prediction.outcome as predictionCC,\n                predictionCC.coding = evaluate(answer,$this.value),\n                impression.prognosisReference = create('Reference') as impressionPrognosisRef,\n                impressionPrognosisRef.reference = evaluate(ra,'RiskAssessment/' + $this.id),\n                raEntry.resource = ra &quot;rule_populate_ra&quot;;\n        } &quot;rule_rec_ra&quot;;\n\n        src.item as bodySiteItem where(linkId='oral-cavity-site') then {\n            bodySiteItem.answer first as answer -&gt; condition.bodySite = create('CodeableConcept') as bodyCC, bodyCC.coding = evaluate(answer,$this.value) &quot;rule_condition_body_site&quot;;\n        } &quot;rule_body_site&quot;;\n            \n        src.item as noteItem where(linkId = 'note') then {\n            noteItem.answer first as answer -&gt; \n                impression.summary = evaluate(answer,$this.value) &quot;rule_populate_impression_note&quot;;\n        } &quot;rule_impression_note&quot;;\n\n    } &quot;rule_bundle_entry_impression&quot;;\n\n    src.item as recommendationItem where(linkId = 'recommendation') then {\n        recommendationItem.answer as answer -&gt; bundle.entry as taskEntry, taskEntry.resource = create('Task') as task,\n            task.id = uuid(),\n            task.encounter = evaluate(src,$this.encounter),\n            task.subject = evaluate(src,$this.subject),\n            task.status = 'received',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = evaluate(answer, 'Follow up: ' + $this.value.display),\n            task.authoredOn = evaluate(src ,now()),\n            task.lastModified = evaluate(src ,now()) &quot;rule_task_map&quot;;\n    } &quot;rule_followup&quot;;\n}\n</pre></div>"
         },
         "url" : "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse",
         "name" : "OralCancerScreeningResponse",
@@ -6578,6 +6802,18 @@
               "variable" : "bundleClinicalImpressionEntry"
             },
               {
+                "context" : "bundle",
+                "contextType" : "variable",
+                "element" : "entry",
+                "variable" : "conditionEntry"
+              },
+              {
+                "context" : "bundle",
+                "contextType" : "variable",
+                "element" : "entry",
+                "variable" : "raEntry"
+              },
+              {
                 "context" : "bundleClinicalImpressionEntry",
                 "contextType" : "variable",
                 "element" : "resource",
@@ -6585,6 +6821,22 @@
                 "transform" : "create",
                 "parameter" : [{
                   "valueString" : "ClinicalImpression"
+                }]
+              },
+              {
+                "contextType" : "variable",
+                "variable" : "condition",
+                "transform" : "create",
+                "parameter" : [{
+                  "valueString" : "Condition"
+                }]
+              },
+              {
+                "contextType" : "variable",
+                "variable" : "ra",
+                "transform" : "create",
+                "parameter" : [{
+                  "valueString" : "RiskAssessment"
                 }]
               }],
             "rule" : [{
@@ -6609,6 +6861,12 @@
                   "element" : "id",
                   "transform" : "uuid"
                 },
+                  {
+                    "context" : "condition",
+                    "contextType" : "variable",
+                    "element" : "id",
+                    "transform" : "uuid"
+                  },
                   {
                     "context" : "impression",
                     "contextType" : "variable",
@@ -6685,14 +6943,14 @@
                     "context" : "finding",
                     "contextType" : "variable",
                     "element" : "itemCodeableConcept",
-                    "variable" : "cc",
+                    "variable" : "findingCC",
                     "transform" : "create",
                     "parameter" : [{
                       "valueString" : "CodeableConcept"
                     }]
                   },
                   {
-                    "context" : "cc",
+                    "context" : "findingCC",
                     "contextType" : "variable",
                     "element" : "coding",
                     "transform" : "evaluate",
@@ -6702,181 +6960,300 @@
                       {
                         "valueString" : "$this.value"
                       }]
+                  },
+                  {
+                    "context" : "condition",
+                    "contextType" : "variable",
+                    "element" : "encounter",
+                    "transform" : "evaluate",
+                    "parameter" : [{
+                      "valueId" : "src"
+                    },
+                      {
+                        "valueString" : "$this.encounter"
+                      }]
+                  },
+                  {
+                    "context" : "condition",
+                    "contextType" : "variable",
+                    "element" : "subject",
+                    "transform" : "evaluate",
+                    "parameter" : [{
+                      "valueId" : "src"
+                    },
+                      {
+                        "valueString" : "$this.subject"
+                      }]
+                  },
+                  {
+                    "context" : "condition",
+                    "contextType" : "variable",
+                    "element" : "clinicalStatus",
+                    "transform" : "cc",
+                    "parameter" : [{
+                      "valueString" : "http://terminology.hl7.org/CodeSystem/condition-clinical"
+                    },
+                      {
+                        "valueString" : "active"
+                      },
+                      {
+                        "valueString" : "Active"
+                      }]
+                  },
+                  {
+                    "context" : "condition",
+                    "contextType" : "variable",
+                    "element" : "verificationStatus",
+                    "transform" : "cc",
+                    "parameter" : [{
+                      "valueString" : "http://terminology.hl7.org/CodeSystem/condition-ver-status"
+                    },
+                      {
+                        "valueString" : "confirmed"
+                      },
+                      {
+                        "valueString" : "Confirmed"
+                      }]
+                  },
+                  {
+                    "context" : "condition",
+                    "contextType" : "variable",
+                    "element" : "code",
+                    "variable" : "conditionCode"
+                  },
+                  {
+                    "context" : "conditionCode",
+                    "contextType" : "variable",
+                    "element" : "coding",
+                    "transform" : "evaluate",
+                    "parameter" : [{
+                      "valueId" : "answer"
+                    },
+                      {
+                        "valueString" : "$this.value"
+                      }]
+                  },
+                  {
+                    "context" : "condition",
+                    "contextType" : "variable",
+                    "element" : "asserter",
+                    "transform" : "evaluate",
+                    "parameter" : [{
+                      "valueId" : "src"
+                    },
+                      {
+                        "valueString" : "$this.author"
+                      }]
+                  },
+                  {
+                    "context" : "impression",
+                    "contextType" : "variable",
+                    "element" : "problem",
+                    "variable" : "impressionProblemRef",
+                    "transform" : "create",
+                    "parameter" : [{
+                      "valueString" : "Reference"
+                    }]
+                  },
+                  {
+                    "context" : "impressionProblemRef",
+                    "contextType" : "variable",
+                    "element" : "reference",
+                    "transform" : "evaluate",
+                    "parameter" : [{
+                      "valueId" : "condition"
+                    },
+                      {
+                        "valueString" : "'Condition/' + $this.id"
+                      }]
+                  },
+                  {
+                    "context" : "conditionEntry",
+                    "contextType" : "variable",
+                    "element" : "resource",
+                    "transform" : "copy",
+                    "parameter" : [{
+                      "valueId" : "condition"
+                    }]
                   }]
-              },
-                {
-                  "name" : "rule_generate_condition",
+              }]
+            },
+              {
+                "name" : "rule_rec_ra",
+                "source" : [{
+                  "context" : "src",
+                  "element" : "item",
+                  "variable" : "recommendationItem",
+                  "condition" : "(linkId = 'recommendation')"
+                }],
+                "rule" : [{
+                  "name" : "rule_populate_ra",
                   "source" : [{
-                    "context" : "provisionDiagnosisItem",
+                    "context" : "recommendationItem",
                     "element" : "answer",
                     "listMode" : "first",
                     "variable" : "answer"
                   }],
-                  "rule" : [{
-                    "name" : "rule_populate_condition",
-                    "source" : [{
-                      "context" : "answer",
-                      "element" : "value",
-                      "condition" : "(code != '162010006')"
-                    }],
-                    "target" : [{
-                      "context" : "bundle",
+                  "target" : [{
+                    "context" : "ra",
+                    "contextType" : "variable",
+                    "element" : "id",
+                    "transform" : "uuid"
+                  },
+                    {
+                      "context" : "ra",
                       "contextType" : "variable",
-                      "element" : "entry",
-                      "variable" : "conditionEntry"
-                    },
-                      {
-                        "context" : "conditionEntry",
-                        "contextType" : "variable",
-                        "element" : "resource",
-                        "variable" : "condition",
-                        "transform" : "create",
-                        "parameter" : [{
-                          "valueString" : "Condition"
-                        }]
-                      },
-                      {
-                        "context" : "condition",
-                        "contextType" : "variable",
-                        "element" : "id",
-                        "transform" : "uuid"
-                      },
-                      {
-                        "context" : "condition",
-                        "contextType" : "variable",
-                        "element" : "encounter",
-                        "transform" : "evaluate",
-                        "parameter" : [{
-                          "valueId" : "src"
-                        },
-                          {
-                            "valueString" : "$this.encounter"
-                          }]
-                      },
-                      {
-                        "context" : "condition",
-                        "contextType" : "variable",
-                        "element" : "subject",
-                        "transform" : "evaluate",
-                        "parameter" : [{
-                          "valueId" : "src"
-                        },
-                          {
-                            "valueString" : "$this.subject"
-                          }]
-                      },
-                      {
-                        "context" : "condition",
-                        "contextType" : "variable",
-                        "element" : "clinicalStatus",
-                        "transform" : "cc",
-                        "parameter" : [{
-                          "valueString" : "http://terminology.hl7.org/CodeSystem/condition-clinical"
-                        },
-                          {
-                            "valueString" : "active"
-                          },
-                          {
-                            "valueString" : "Active"
-                          }]
-                      },
-                      {
-                        "context" : "condition",
-                        "contextType" : "variable",
-                        "element" : "verificationStatus",
-                        "transform" : "cc",
-                        "parameter" : [{
-                          "valueString" : "http://terminology.hl7.org/CodeSystem/condition-ver-status"
-                        },
-                          {
-                            "valueString" : "confirmed"
-                          },
-                          {
-                            "valueString" : "Confirmed"
-                          }]
-                      },
-                      {
-                        "context" : "condition",
-                        "contextType" : "variable",
-                        "element" : "code",
-                        "variable" : "conditionCode"
-                      },
-                      {
-                        "context" : "conditionCode",
-                        "contextType" : "variable",
-                        "element" : "asserter",
-                        "transform" : "evaluate",
-                        "parameter" : [{
-                          "valueId" : "src"
-                        },
-                          {
-                            "valueString" : "$this.author"
-                          }]
-                      },
-                      {
-                        "context" : "impression",
-                        "contextType" : "variable",
-                        "element" : "problem",
-                        "transform" : "evaluate",
-                        "parameter" : [{
-                          "valueId" : "condition"
-                        },
-                          {
-                            "valueString" : "'Condition/' + $this.id"
-                          }]
-                      }],
-                    "rule" : [{
-                      "name" : "rule_body_site",
-                      "source" : [{
-                        "context" : "src",
-                        "element" : "item",
-                        "variable" : "bodySiteItem",
-                        "condition" : "(linkId = 'oral-cavity-site')"
-                      }],
-                      "rule" : [{
-                        "name" : "fdfd",
-                        "source" : [{
-                          "context" : "bodySiteItem",
-                          "element" : "answer",
-                          "listMode" : "first",
-                          "variable" : "answer"
-                        }],
-                        "target" : [{
-                          "context" : "condition",
-                          "contextType" : "variable",
-                          "element" : "bodySite",
-                          "transform" : "evaluate",
-                          "parameter" : [{
-                            "valueId" : "answer"
-                          },
-                            {
-                              "valueString" : "$this.value"
-                            }]
-                        }]
+                      "element" : "status",
+                      "transform" : "copy",
+                      "parameter" : [{
+                        "valueString" : "final"
                       }]
-                    }]
-                  }]
-                },
-                {
-                  "name" : "rule_impression_note",
-                  "source" : [{
-                    "context" : "src",
-                    "element" : "item",
-                    "variable" : "noteItem",
-                    "condition" : "(linkId = 'note')"
-                  }],
-                  "rule" : [{
-                    "name" : "rule_populate_impression_note",
-                    "source" : [{
-                      "context" : "noteItem",
-                      "element" : "answer",
-                      "listMode" : "first",
-                      "variable" : "answer"
-                    }],
-                    "target" : [{
+                    },
+                    {
+                      "context" : "ra",
+                      "contextType" : "variable",
+                      "element" : "subject",
+                      "transform" : "evaluate",
+                      "parameter" : [{
+                        "valueId" : "src"
+                      },
+                        {
+                          "valueString" : "$this.subject"
+                        }]
+                    },
+                    {
+                      "context" : "ra",
+                      "contextType" : "variable",
+                      "element" : "encounter",
+                      "transform" : "evaluate",
+                      "parameter" : [{
+                        "valueId" : "src"
+                      },
+                        {
+                          "valueString" : "$this.encounter"
+                        }]
+                    },
+                    {
+                      "context" : "ra",
+                      "contextType" : "variable",
+                      "element" : "performer",
+                      "transform" : "evaluate",
+                      "parameter" : [{
+                        "valueId" : "src"
+                      },
+                        {
+                          "valueString" : "$this.author"
+                        }]
+                    },
+                    {
+                      "context" : "ra",
+                      "contextType" : "variable",
+                      "element" : "prediction",
+                      "variable" : "prediction"
+                    },
+                    {
+                      "context" : "ra",
+                      "contextType" : "variable",
+                      "element" : "condition",
+                      "variable" : "raConditionRef",
+                      "transform" : "create",
+                      "parameter" : [{
+                        "valueString" : "Reference"
+                      }]
+                    },
+                    {
+                      "context" : "raConditionRef",
+                      "contextType" : "variable",
+                      "element" : "reference",
+                      "transform" : "evaluate",
+                      "parameter" : [{
+                        "valueId" : "condition"
+                      },
+                        {
+                          "valueString" : "'Condition/' + $this.id"
+                        }]
+                    },
+                    {
+                      "context" : "prediction",
+                      "contextType" : "variable",
+                      "element" : "outcome",
+                      "variable" : "predictionCC"
+                    },
+                    {
+                      "context" : "predictionCC",
+                      "contextType" : "variable",
+                      "element" : "coding",
+                      "transform" : "evaluate",
+                      "parameter" : [{
+                        "valueId" : "answer"
+                      },
+                        {
+                          "valueString" : "$this.value"
+                        }]
+                    },
+                    {
                       "context" : "impression",
                       "contextType" : "variable",
-                      "element" : "summary",
+                      "element" : "prognosisReference",
+                      "variable" : "impressionPrognosisRef",
+                      "transform" : "create",
+                      "parameter" : [{
+                        "valueString" : "Reference"
+                      }]
+                    },
+                    {
+                      "context" : "impressionPrognosisRef",
+                      "contextType" : "variable",
+                      "element" : "reference",
+                      "transform" : "evaluate",
+                      "parameter" : [{
+                        "valueId" : "ra"
+                      },
+                        {
+                          "valueString" : "'RiskAssessment/' + $this.id"
+                        }]
+                    },
+                    {
+                      "context" : "raEntry",
+                      "contextType" : "variable",
+                      "element" : "resource",
+                      "transform" : "copy",
+                      "parameter" : [{
+                        "valueId" : "ra"
+                      }]
+                    }]
+                }]
+              },
+              {
+                "name" : "rule_body_site",
+                "source" : [{
+                  "context" : "src",
+                  "element" : "item",
+                  "variable" : "bodySiteItem",
+                  "condition" : "(linkId = 'oral-cavity-site')"
+                }],
+                "rule" : [{
+                  "name" : "rule_condition_body_site",
+                  "source" : [{
+                    "context" : "bodySiteItem",
+                    "element" : "answer",
+                    "listMode" : "first",
+                    "variable" : "answer"
+                  }],
+                  "target" : [{
+                    "context" : "condition",
+                    "contextType" : "variable",
+                    "element" : "bodySite",
+                    "variable" : "bodyCC",
+                    "transform" : "create",
+                    "parameter" : [{
+                      "valueString" : "CodeableConcept"
+                    }]
+                  },
+                    {
+                      "context" : "bodyCC",
+                      "contextType" : "variable",
+                      "element" : "coding",
                       "transform" : "evaluate",
                       "parameter" : [{
                         "valueId" : "answer"
@@ -6885,9 +7262,38 @@
                           "valueString" : "$this.value"
                         }]
                     }]
+                }]
+              },
+              {
+                "name" : "rule_impression_note",
+                "source" : [{
+                  "context" : "src",
+                  "element" : "item",
+                  "variable" : "noteItem",
+                  "condition" : "(linkId = 'note')"
+                }],
+                "rule" : [{
+                  "name" : "rule_populate_impression_note",
+                  "source" : [{
+                    "context" : "noteItem",
+                    "element" : "answer",
+                    "listMode" : "first",
+                    "variable" : "answer"
+                  }],
+                  "target" : [{
+                    "context" : "impression",
+                    "contextType" : "variable",
+                    "element" : "summary",
+                    "transform" : "evaluate",
+                    "parameter" : [{
+                      "valueId" : "answer"
+                    },
+                      {
+                        "valueString" : "$this.value"
+                      }]
                   }]
                 }]
-            }]
+              }]
           },
             {
               "name" : "rule_followup",

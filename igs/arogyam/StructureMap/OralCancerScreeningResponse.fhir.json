@@ -3,7 +3,7 @@
   "id" : "OralCancerScreeningResponse",
   "text" : {
     "status" : "additional",
-    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse&quot; = 'OralCancerScreeningResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerScreeningResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry, bundleClinicalImpressionEntry.resource = create('ClinicalImpression') as impression then {\n        src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n            provisionDiagnosisItem.answer first as answer -&gt; impression.id = uuid(),\n                impression.encounter = evaluate(src,$this.encounter),\n                impression.status = 'completed',\n                impression.description = 'Clinical impression by Specialist or Senior Specialist for a proabbale oral cancer patient',\n                impression.subject = evaluate(src,$this.subject),\n                impression.date = evaluate(src, $this.authored),\n                impression.assessor = evaluate(src,$this.author),\n                impression.finding as finding,\n                finding.itemCodeableConcept = create('CodeableConcept') as cc,\n                cc.coding = evaluate(answer,$this.value) &quot;rule_populate_impression&quot;;\n\n            provisionDiagnosisItem.answer first as answer then {\n                // No there is a problem we will add a condition\n                answer.value where(code !='162010006') -&gt; bundle.entry as conditionEntry, \n                    conditionEntry.resource = create('Condition') as condition,\n                    condition.id = uuid(),\n                    condition.encounter = evaluate(src,$this.encounter),\n                    condition.subject = evaluate(src,$this.subject),\n                    condition.clinicalStatus = cc('http://terminology.hl7.org/CodeSystem/condition-clinical','active','Active'),\n                    condition.verificationStatus = cc('http://terminology.hl7.org/CodeSystem/condition-ver-status','confirmed','Confirmed'),\n                    condition.code as conditionCode,\n                    conditionCode.asserter = evaluate(src,$this.author),\n                    impression.problem = evaluate(condition,'Condition/' + $this.id) then {\n                        src.item as bodySiteItem where(linkId='oral-cavity-site') then {\n                            bodySiteItem.answer first as answer -&gt; condition.bodySite = evaluate(answer,$this.value) &quot;fdfd&quot;;\n                        } &quot;rule_body_site&quot;;\n                    }  &quot;rule_populate_condition&quot;;\n            } &quot;rule_generate_condition&quot;;\n            \n            src.item as noteItem where(linkId = 'note') then {\n                noteItem.answer first as answer -&gt; impression.summary = evaluate(answer,$this.value) &quot;rule_populate_impression_note&quot;;\n            } &quot;rule_impression_note&quot;;\n\n        } &quot;rule_prov&quot;;\n    } &quot;rule_bundle_entry_impression&quot;;\n\n    src.item as recommendationItem where(linkId = 'recommendation') then {\n        recommendationItem.answer as answer -&gt; bundle.entry as taskEntry, taskEntry.resource = create('Task') as task,\n            task.id = uuid(),\n            task.encounter = evaluate(src,$this.encounter),\n            task.subject = evaluate(src,$this.subject),\n            task.status = 'received',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = evaluate(answer, 'Follow up: ' + $this.value.display),\n            task.authoredOn = evaluate(src ,now()),\n            task.lastModified = evaluate(src ,now()) &quot;rule_task_map&quot;;\n    } &quot;rule_followup&quot;;\n}\n</pre></div>"
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse&quot; = 'OralCancerScreeningResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerScreeningResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry,\n        bundle.entry as conditionEntry,\n        bundle.entry as raEntry,\n        bundleClinicalImpressionEntry.resource = create('ClinicalImpression') as impression,\n        create('Condition') as condition,\n        create('RiskAssessment') as ra then {\n\n        src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n            provisionDiagnosisItem.answer first as answer -&gt; \n                impression.id = uuid(),\n                condition.id = uuid(),\n                impression.encounter = evaluate(src,$this.encounter),\n                impression.status = 'completed',\n                impression.description = 'Clinical impression by Specialist or Senior Specialist for a proabbale oral cancer patient',\n                impression.subject = evaluate(src,$this.subject),\n                impression.date = evaluate(src, $this.authored),\n                impression.assessor = evaluate(src,$this.author),\n                impression.finding as finding,\n                finding.itemCodeableConcept = create('CodeableConcept') as findingCC,\n                findingCC.coding = evaluate(answer,$this.value),\n                condition.encounter = evaluate(src,$this.encounter),\n                condition.subject = evaluate(src,$this.subject),\n                condition.clinicalStatus = cc('http://terminology.hl7.org/CodeSystem/condition-clinical','active','Active'),\n                condition.verificationStatus = cc('http://terminology.hl7.org/CodeSystem/condition-ver-status','confirmed','Confirmed'),\n                condition.code as conditionCode,\n                conditionCode.coding = evaluate(answer,$this.value),\n                condition.asserter = evaluate(src,$this.author),\n                impression.problem = create('Reference') as impressionProblemRef, \n                impressionProblemRef.reference = evaluate(condition,'Condition/' + $this.id),\n                conditionEntry.resource = condition &quot;rule_populate_impression&quot;;\n        } &quot;rule_prov&quot;;\n\n        src.item as recommendationItem where(linkId = 'recommendation') then {\n            recommendationItem.answer first as answer -&gt; \n                ra.id = uuid(),\n                ra.status = 'final',\n                ra.subject = evaluate(src, $this.subject),\n                ra.encounter = evaluate(src, $this.encounter),\n                ra.performer = evaluate(src, $this.author),\n                ra.prediction as prediction,\n                ra.condition = create('Reference') as raConditionRef,\n                raConditionRef.reference = evaluate(condition,'Condition/' + $this.id),\n                prediction.outcome as predictionCC,\n                predictionCC.coding = evaluate(answer,$this.value),\n                impression.prognosisReference = create('Reference') as impressionPrognosisRef,\n                impressionPrognosisRef.reference = evaluate(ra,'RiskAssessment/' + $this.id),\n                raEntry.resource = ra &quot;rule_populate_ra&quot;;\n        } &quot;rule_rec_ra&quot;;\n\n        src.item as bodySiteItem where(linkId='oral-cavity-site') then {\n            bodySiteItem.answer first as answer -&gt; condition.bodySite = create('CodeableConcept') as bodyCC, bodyCC.coding = evaluate(answer,$this.value) &quot;rule_condition_body_site&quot;;\n        } &quot;rule_body_site&quot;;\n            \n        src.item as noteItem where(linkId = 'note') then {\n            noteItem.answer first as answer -&gt; \n                impression.summary = evaluate(answer,$this.value) &quot;rule_populate_impression_note&quot;;\n        } &quot;rule_impression_note&quot;;\n\n    } &quot;rule_bundle_entry_impression&quot;;\n\n    src.item as recommendationItem where(linkId = 'recommendation') then {\n        recommendationItem.answer as answer -&gt; bundle.entry as taskEntry, taskEntry.resource = create('Task') as task,\n            task.id = uuid(),\n            task.encounter = evaluate(src,$this.encounter),\n            task.subject = evaluate(src,$this.subject),\n            task.status = 'received',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = evaluate(answer, 'Follow up: ' + $this.value.display),\n            task.authoredOn = evaluate(src ,now()),\n            task.lastModified = evaluate(src ,now()) &quot;rule_task_map&quot;;\n    } &quot;rule_followup&quot;;\n}\n</pre></div>"
   },
   "url" : "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse",
   "name" : "OralCancerScreeningResponse",
@@ -40,6 +40,18 @@
         "variable" : "bundleClinicalImpressionEntry"
       },
       {
+        "context" : "bundle",
+        "contextType" : "variable",
+        "element" : "entry",
+        "variable" : "conditionEntry"
+      },
+      {
+        "context" : "bundle",
+        "contextType" : "variable",
+        "element" : "entry",
+        "variable" : "raEntry"
+      },
+      {
         "context" : "bundleClinicalImpressionEntry",
         "contextType" : "variable",
         "element" : "resource",
@@ -47,6 +59,22 @@
         "transform" : "create",
         "parameter" : [{
           "valueString" : "ClinicalImpression"
+        }]
+      },
+      {
+        "contextType" : "variable",
+        "variable" : "condition",
+        "transform" : "create",
+        "parameter" : [{
+          "valueString" : "Condition"
+        }]
+      },
+      {
+        "contextType" : "variable",
+        "variable" : "ra",
+        "transform" : "create",
+        "parameter" : [{
+          "valueString" : "RiskAssessment"
         }]
       }],
       "rule" : [{
@@ -67,6 +95,12 @@
           }],
           "target" : [{
             "context" : "impression",
+            "contextType" : "variable",
+            "element" : "id",
+            "transform" : "uuid"
+          },
+          {
+            "context" : "condition",
             "contextType" : "variable",
             "element" : "id",
             "transform" : "uuid"
@@ -147,14 +181,315 @@
             "context" : "finding",
             "contextType" : "variable",
             "element" : "itemCodeableConcept",
-            "variable" : "cc",
+            "variable" : "findingCC",
             "transform" : "create",
             "parameter" : [{
               "valueString" : "CodeableConcept"
             }]
           },
           {
-            "context" : "cc",
+            "context" : "findingCC",
+            "contextType" : "variable",
+            "element" : "coding",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "answer"
+            },
+            {
+              "valueString" : "$this.value"
+            }]
+          },
+          {
+            "context" : "condition",
+            "contextType" : "variable",
+            "element" : "encounter",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "src"
+            },
+            {
+              "valueString" : "$this.encounter"
+            }]
+          },
+          {
+            "context" : "condition",
+            "contextType" : "variable",
+            "element" : "subject",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "src"
+            },
+            {
+              "valueString" : "$this.subject"
+            }]
+          },
+          {
+            "context" : "condition",
+            "contextType" : "variable",
+            "element" : "clinicalStatus",
+            "transform" : "cc",
+            "parameter" : [{
+              "valueString" : "http://terminology.hl7.org/CodeSystem/condition-clinical"
+            },
+            {
+              "valueString" : "active"
+            },
+            {
+              "valueString" : "Active"
+            }]
+          },
+          {
+            "context" : "condition",
+            "contextType" : "variable",
+            "element" : "verificationStatus",
+            "transform" : "cc",
+            "parameter" : [{
+              "valueString" : "http://terminology.hl7.org/CodeSystem/condition-ver-status"
+            },
+            {
+              "valueString" : "confirmed"
+            },
+            {
+              "valueString" : "Confirmed"
+            }]
+          },
+          {
+            "context" : "condition",
+            "contextType" : "variable",
+            "element" : "code",
+            "variable" : "conditionCode"
+          },
+          {
+            "context" : "conditionCode",
+            "contextType" : "variable",
+            "element" : "coding",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "answer"
+            },
+            {
+              "valueString" : "$this.value"
+            }]
+          },
+          {
+            "context" : "condition",
+            "contextType" : "variable",
+            "element" : "asserter",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "src"
+            },
+            {
+              "valueString" : "$this.author"
+            }]
+          },
+          {
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "problem",
+            "variable" : "impressionProblemRef",
+            "transform" : "create",
+            "parameter" : [{
+              "valueString" : "Reference"
+            }]
+          },
+          {
+            "context" : "impressionProblemRef",
+            "contextType" : "variable",
+            "element" : "reference",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "condition"
+            },
+            {
+              "valueString" : "'Condition/' + $this.id"
+            }]
+          },
+          {
+            "context" : "conditionEntry",
+            "contextType" : "variable",
+            "element" : "resource",
+            "transform" : "copy",
+            "parameter" : [{
+              "valueId" : "condition"
+            }]
+          }]
+        }]
+      },
+      {
+        "name" : "rule_rec_ra",
+        "source" : [{
+          "context" : "src",
+          "element" : "item",
+          "variable" : "recommendationItem",
+          "condition" : "(linkId = 'recommendation')"
+        }],
+        "rule" : [{
+          "name" : "rule_populate_ra",
+          "source" : [{
+            "context" : "recommendationItem",
+            "element" : "answer",
+            "listMode" : "first",
+            "variable" : "answer"
+          }],
+          "target" : [{
+            "context" : "ra",
+            "contextType" : "variable",
+            "element" : "id",
+            "transform" : "uuid"
+          },
+          {
+            "context" : "ra",
+            "contextType" : "variable",
+            "element" : "status",
+            "transform" : "copy",
+            "parameter" : [{
+              "valueString" : "final"
+            }]
+          },
+          {
+            "context" : "ra",
+            "contextType" : "variable",
+            "element" : "subject",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "src"
+            },
+            {
+              "valueString" : "$this.subject"
+            }]
+          },
+          {
+            "context" : "ra",
+            "contextType" : "variable",
+            "element" : "encounter",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "src"
+            },
+            {
+              "valueString" : "$this.encounter"
+            }]
+          },
+          {
+            "context" : "ra",
+            "contextType" : "variable",
+            "element" : "performer",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "src"
+            },
+            {
+              "valueString" : "$this.author"
+            }]
+          },
+          {
+            "context" : "ra",
+            "contextType" : "variable",
+            "element" : "prediction",
+            "variable" : "prediction"
+          },
+          {
+            "context" : "ra",
+            "contextType" : "variable",
+            "element" : "condition",
+            "variable" : "raConditionRef",
+            "transform" : "create",
+            "parameter" : [{
+              "valueString" : "Reference"
+            }]
+          },
+          {
+            "context" : "raConditionRef",
+            "contextType" : "variable",
+            "element" : "reference",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "condition"
+            },
+            {
+              "valueString" : "'Condition/' + $this.id"
+            }]
+          },
+          {
+            "context" : "prediction",
+            "contextType" : "variable",
+            "element" : "outcome",
+            "variable" : "predictionCC"
+          },
+          {
+            "context" : "predictionCC",
+            "contextType" : "variable",
+            "element" : "coding",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "answer"
+            },
+            {
+              "valueString" : "$this.value"
+            }]
+          },
+          {
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "prognosisReference",
+            "variable" : "impressionPrognosisRef",
+            "transform" : "create",
+            "parameter" : [{
+              "valueString" : "Reference"
+            }]
+          },
+          {
+            "context" : "impressionPrognosisRef",
+            "contextType" : "variable",
+            "element" : "reference",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "ra"
+            },
+            {
+              "valueString" : "'RiskAssessment/' + $this.id"
+            }]
+          },
+          {
+            "context" : "raEntry",
+            "contextType" : "variable",
+            "element" : "resource",
+            "transform" : "copy",
+            "parameter" : [{
+              "valueId" : "ra"
+            }]
+          }]
+        }]
+      },
+      {
+        "name" : "rule_body_site",
+        "source" : [{
+          "context" : "src",
+          "element" : "item",
+          "variable" : "bodySiteItem",
+          "condition" : "(linkId = 'oral-cavity-site')"
+        }],
+        "rule" : [{
+          "name" : "rule_condition_body_site",
+          "source" : [{
+            "context" : "bodySiteItem",
+            "element" : "answer",
+            "listMode" : "first",
+            "variable" : "answer"
+          }],
+          "target" : [{
+            "context" : "condition",
+            "contextType" : "variable",
+            "element" : "bodySite",
+            "variable" : "bodyCC",
+            "transform" : "create",
+            "parameter" : [{
+              "valueString" : "CodeableConcept"
+            }]
+          },
+          {
+            "context" : "bodyCC",
             "contextType" : "variable",
             "element" : "coding",
             "transform" : "evaluate",
@@ -165,187 +500,34 @@
               "valueString" : "$this.value"
             }]
           }]
-        },
-        {
-          "name" : "rule_generate_condition",
+        }]
+      },
+      {
+        "name" : "rule_impression_note",
+        "source" : [{
+          "context" : "src",
+          "element" : "item",
+          "variable" : "noteItem",
+          "condition" : "(linkId = 'note')"
+        }],
+        "rule" : [{
+          "name" : "rule_populate_impression_note",
           "source" : [{
-            "context" : "provisionDiagnosisItem",
+            "context" : "noteItem",
             "element" : "answer",
             "listMode" : "first",
             "variable" : "answer"
           }],
-          "rule" : [{
-            "name" : "rule_populate_condition",
-            "source" : [{
-              "context" : "answer",
-              "element" : "value",
-              "condition" : "(code != '162010006')"
-            }],
-            "target" : [{
-              "context" : "bundle",
-              "contextType" : "variable",
-              "element" : "entry",
-              "variable" : "conditionEntry"
+          "target" : [{
+            "context" : "impression",
+            "contextType" : "variable",
+            "element" : "summary",
+            "transform" : "evaluate",
+            "parameter" : [{
+              "valueId" : "answer"
             },
             {
-              "context" : "conditionEntry",
-              "contextType" : "variable",
-              "element" : "resource",
-              "variable" : "condition",
-              "transform" : "create",
-              "parameter" : [{
-                "valueString" : "Condition"
-              }]
-            },
-            {
-              "context" : "condition",
-              "contextType" : "variable",
-              "element" : "id",
-              "transform" : "uuid"
-            },
-            {
-              "context" : "condition",
-              "contextType" : "variable",
-              "element" : "encounter",
-              "transform" : "evaluate",
-              "parameter" : [{
-                "valueId" : "src"
-              },
-              {
-                "valueString" : "$this.encounter"
-              }]
-            },
-            {
-              "context" : "condition",
-              "contextType" : "variable",
-              "element" : "subject",
-              "transform" : "evaluate",
-              "parameter" : [{
-                "valueId" : "src"
-              },
-              {
-                "valueString" : "$this.subject"
-              }]
-            },
-            {
-              "context" : "condition",
-              "contextType" : "variable",
-              "element" : "clinicalStatus",
-              "transform" : "cc",
-              "parameter" : [{
-                "valueString" : "http://terminology.hl7.org/CodeSystem/condition-clinical"
-              },
-              {
-                "valueString" : "active"
-              },
-              {
-                "valueString" : "Active"
-              }]
-            },
-            {
-              "context" : "condition",
-              "contextType" : "variable",
-              "element" : "verificationStatus",
-              "transform" : "cc",
-              "parameter" : [{
-                "valueString" : "http://terminology.hl7.org/CodeSystem/condition-ver-status"
-              },
-              {
-                "valueString" : "confirmed"
-              },
-              {
-                "valueString" : "Confirmed"
-              }]
-            },
-            {
-              "context" : "condition",
-              "contextType" : "variable",
-              "element" : "code",
-              "variable" : "conditionCode"
-            },
-            {
-              "context" : "conditionCode",
-              "contextType" : "variable",
-              "element" : "asserter",
-              "transform" : "evaluate",
-              "parameter" : [{
-                "valueId" : "src"
-              },
-              {
-                "valueString" : "$this.author"
-              }]
-            },
-            {
-              "context" : "impression",
-              "contextType" : "variable",
-              "element" : "problem",
-              "transform" : "evaluate",
-              "parameter" : [{
-                "valueId" : "condition"
-              },
-              {
-                "valueString" : "'Condition/' + $this.id"
-              }]
-            }],
-            "rule" : [{
-              "name" : "rule_body_site",
-              "source" : [{
-                "context" : "src",
-                "element" : "item",
-                "variable" : "bodySiteItem",
-                "condition" : "(linkId = 'oral-cavity-site')"
-              }],
-              "rule" : [{
-                "name" : "fdfd",
-                "source" : [{
-                  "context" : "bodySiteItem",
-                  "element" : "answer",
-                  "listMode" : "first",
-                  "variable" : "answer"
-                }],
-                "target" : [{
-                  "context" : "condition",
-                  "contextType" : "variable",
-                  "element" : "bodySite",
-                  "transform" : "evaluate",
-                  "parameter" : [{
-                    "valueId" : "answer"
-                  },
-                  {
-                    "valueString" : "$this.value"
-                  }]
-                }]
-              }]
-            }]
-          }]
-        },
-        {
-          "name" : "rule_impression_note",
-          "source" : [{
-            "context" : "src",
-            "element" : "item",
-            "variable" : "noteItem",
-            "condition" : "(linkId = 'note')"
-          }],
-          "rule" : [{
-            "name" : "rule_populate_impression_note",
-            "source" : [{
-              "context" : "noteItem",
-              "element" : "answer",
-              "listMode" : "first",
-              "variable" : "answer"
-            }],
-            "target" : [{
-              "context" : "impression",
-              "contextType" : "variable",
-              "element" : "summary",
-              "transform" : "evaluate",
-              "parameter" : [{
-                "valueId" : "answer"
-              },
-              {
-                "valueString" : "$this.value"
-              }]
+              "valueString" : "$this.value"
             }]
           }]
         }]

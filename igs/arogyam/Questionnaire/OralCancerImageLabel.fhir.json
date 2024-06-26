@@ -6,6 +6,12 @@
   "name": "Label Oral Cavity Image",
   "subjectType": "Media",
   "status": "active",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
+      "valueCanonical": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse"
+    }
+  ],
   "item": [
     {
       "type": "choice",
