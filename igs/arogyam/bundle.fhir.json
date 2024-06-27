@@ -37,6 +37,16 @@
             "definition": "A practitioner with read-only access."
           },
           {
+            "code": "site-admin",
+            "display": "Site Admin",
+            "definition": "A site coordinator managing a site"
+          },
+          {
+            "code": "site-coordinator",
+            "display": "Site Coordinator",
+            "definition": "A site coordinator managing a site"
+          },
+          {
             "code": "flw",
             "display": "Front Line Worker",
             "definition": "A practitioner who is a front line worker."
