@@ -37,6 +37,13 @@
         {
           "valueCoding": {
             "system": "http://snomed.info/sct",
+            "code": "162010006",
+            "display": "Oral cavity normal"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
             "code": "30807003",
             "display": "Benign"
           }
@@ -45,7 +52,7 @@
           "valueCoding": {
             "system": "http://snomed.info/sct",
             "code": "95269005",
-            "display": "Tobacco Pouch Keratosis"
+            "display": "Smokeless tobacco keratosis"
           }
         },
         {
@@ -72,29 +79,43 @@
         {
           "valueCoding": {
             "system": "http://snomed.info/sct",
-            "code": "235032001",
-            "display": "Syphilitic oral leukoplakia"
+            "code": "235029004",
+            "display": "Speckled oral leukoplakia"
           }
         },
         {
           "valueCoding": {
             "system": "http://snomed.info/sct",
-            "code": "1240414004",
-            "display": "Malignant neoplasm"
+            "code": "71379006",
+            "display": "Erythroplakia"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "235031008",
+            "display": "Verrucous oral leukoplakia"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "698010001",
+            "display": "Proliferative verrucous oral leukoplakia"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "419842002",
+            "display": "Squamous cell carcinoma of oral mucous membrane"
           }
         },
         {
           "valueCoding": {
             "system": "http://snomed.info/sct",
             "code": "103694001",
-            "display": " Finding related to non-diagnostic procedure"
-          }
-        },
-        {
-          "valueCoding": {
-            "system": "http://snomed.info/sct",
-            "code": "162010006",
-            "display": "No mouth problem"
+            "display": " Non-diagnostic procedure finding"
           }
         }
       ]
