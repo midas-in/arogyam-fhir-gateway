@@ -383,7 +383,10 @@
         "name": "Patient registration for Oral Cancer screening",
         "title": "Patient Registration",
         "status": "active",
-        "subjectType": ["Patient", "Observation"],
+        "subjectType": [
+          "Patient",
+          "Observation"
+        ],
         "publisher": "Farmaan",
         "purpose": "Patient registration for Oral Cancer screening",
         "item": [
@@ -399,12 +402,12 @@
                       "display": "Page"
                     }
                   ],
-                  "text": "Basic Info"
+                  "text": "Basic Information"
                 }
               }
             ],
             "linkId": "basic-info-group",
-            "text": "Basic Info",
+            "text": "Basic Information",
             "type": "group",
             "item": [
               {
@@ -423,7 +426,7 @@
                   }
                 ],
                 "linkId": "patient-name-given",
-                "text": "First Name",
+                "text": "First name",
                 "type": "string",
                 "required": true,
                 "maxLength": 64
@@ -444,7 +447,7 @@
                   }
                 ],
                 "linkId": "patient-name-family",
-                "text": "Last Name",
+                "text": "Last name",
                 "type": "string",
                 "required": true,
                 "maxLength": 64
@@ -487,15 +490,15 @@
                 "answerOption": [
                   {
                     "valueCoding": {
-                      "code": "dob",
-                      "display": "By Date of Birth"
+                      "code": "years",
+                      "display": "By years"
                     },
                     "initialSelected": true
                   },
                   {
                     "valueCoding": {
-                      "code": "years",
-                      "display": "By Years"
+                      "code": "dob",
+                      "display": "By date of birth"
                     }
                   }
                 ]
@@ -530,7 +533,7 @@
                   }
                 ],
                 "linkId": "patient-age-by-dob",
-                "text": "By Date of Birth",
+                "text": "By date of birth",
                 "type": "date",
                 "enableWhen": [
                   {
@@ -538,7 +541,7 @@
                     "operator": "=",
                     "answerCoding": {
                       "code": "dob",
-                      "display": "By Date of Birth"
+                      "display": "By date of birth"
                     }
                   }
                 ],
@@ -564,7 +567,7 @@
                   }
                 ],
                 "linkId": "patient-age-by-years",
-                "text": "By Years",
+                "text": "By years",
                 "type": "integer",
                 "enableWhen": [
                   {
@@ -572,7 +575,7 @@
                     "operator": "=",
                     "answerCoding": {
                       "code": "years",
-                      "display": "By Years"
+                      "display": "By years"
                     }
                   }
                 ]
@@ -624,13 +627,6 @@
                       "code": "unknown",
                       "display": "Unknown"
                     }
-                  },
-                  {
-                    "valueCoding": {
-                      "system": "http://hl7.org/fhir/administrative-gender",
-                      "code": "other",
-                      "display": "Other"
-                    }
                   }
                 ]
               },
@@ -650,7 +646,7 @@
                   }
                 ],
                 "linkId": "patient-contact-primary",
-                "text": "Primary Contact Number",
+                "text": "Primary contact number",
                 "type": "string",
                 "required": true
               },
@@ -666,11 +662,11 @@
                   },
                   {
                     "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter  primary mobile number"
+                    "valueString": "Please enter secondary mobile number"
                   }
                 ],
                 "linkId": "patient-contact-secondary",
-                "text": "Secondary Contact Number",
+                "text": "Secondary contact number",
                 "type": "string",
                 "required": false
               },
@@ -678,11 +674,11 @@
                 "extension": [
                   {
                     "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-                    "valueString": "Please enter House Number & Village"
+                    "valueString": "Please enter house number & Street"
                   }
                 ],
                 "linkId": "patient-address-village",
-                "text": "House Number & Village",
+                "text": "House number & street",
                 "type": "string",
                 "required": false,
                 "maxLength": 128
@@ -729,7 +725,12 @@
                 "linkId": "patient-address-district",
                 "text": "District",
                 "type": "string",
-                "required": true
+                "required": true,
+                "initial": [
+                  {
+                    "valueString": "Krishnagiri"
+                  }
+                ]
               },
               {
                 "extension": [
@@ -749,7 +750,12 @@
                 "linkId": "patient-address-state",
                 "text": "State",
                 "type": "string",
-                "required": true
+                "required": true,
+                "initial": [
+                  {
+                    "valueString": "Tamil Nadu"
+                  }
+                ]
               }
             ]
           },
@@ -1008,7 +1014,7 @@
                       }
                     ],
                     "linkId": "patient-screening-mouth-open",
-                    "text": "Open Mouth",
+                    "text": "Able to open mouth?",
                     "type": "choice",
                     "required": true,
                     "answerOption": [
