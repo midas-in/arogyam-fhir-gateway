@@ -262,6 +262,7 @@
           "linkId": "patient-gender",
           "text": "Gender",
           "type": "choice",
+          "required": true,
           "answerOption": [
             {
               "valueCoding": {
@@ -280,8 +281,8 @@
             {
               "valueCoding": {
                 "system": "http://hl7.org/fhir/administrative-gender",
-                "code": "unknown",
-                "display": "Unknown"
+                "code": "other",
+                "display": "Other"
               }
             }
           ]
@@ -330,13 +331,26 @@
           "extension": [
             {
               "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
-              "valueString": "Please enter house number & Street"
+              "valueString": "Please enter house number & street"
             }
           ],
-          "linkId": "patient-address-village",
+          "linkId": "patient-address-house",
           "text": "House number & street",
           "type": "string",
           "required": false,
+          "maxLength": 128
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/requiredtext",
+              "valueString": "Please enter village/town/area"
+            }
+          ],
+          "linkId": "patient-address-village",
+          "text": "Village/Town/Area",
+          "type": "string",
+          "required": true,
           "maxLength": 128
         },
         {
