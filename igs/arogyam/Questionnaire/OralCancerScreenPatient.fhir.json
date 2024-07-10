@@ -144,64 +144,57 @@
         {
           "valueCoding": {
             "system": "http://snomed.info/sct",
-            "code": "16811007",
-            "display": "Buccal mucosa"
+            "code": "1260444007",
+            "display": "Left buccal mucosa"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "1260443001",
+            "display": "Right buccal mucosa"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "110570003",
+            "display": "Left maxillary vestibule"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "110570003",
+            "display": "Right maxillary vestibule"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "110571004",
+            "display": "Left mandibular vestibule"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "110571004",
+            "display": "Right mandibular vestibule"
           }
         },
         {
           "valueCoding": {
             "system": "http://snomed.info/sct",
             "code": "18444004",
-            "display": "Mucosa of upper lip"
+            "display": "Labial mucosa of upper lip"
           }
         },
         {
           "valueCoding": {
             "system": "http://snomed.info/sct",
             "code": "46353006",
-            "display": "Mucosa of lower lip"
-          }
-        },
-        {
-          "valueCoding": {
-            "system": "http://snomed.info/sct",
-            "code": "66938003",
-            "display": "Dorsum of Tongue"
-          }
-        },
-        {
-          "valueCoding": {
-            "system": "http://snomed.info/sct",
-            "code": "422005",
-            "display": "Ventral aspect of tongue"
-          }
-        },
-        {
-          "valueCoding": {
-            "system": "http://snomed.info/sct",
-            "code": "47975008",
-            "display": "Base of tongue"
-          }
-        },
-        {
-          "valueCoding": {
-            "system": "http://snomed.info/sct",
-            "code": "36360002",
-            "display": "Floor of mouth"
-          }
-        },
-        {
-          "valueCoding": {
-            "system": "http://snomed.info/sct",
-            "code": "72914001",
-            "display": "Palate"
-          }
-        },
-        {
-          "valueCoding": {
-            "system": "http://snomed.info/sct",
-            "code": "85816001",
-            "display": "Retromolar trigone"
+            "display": "Labial mucosa of lower lip"
           }
         }
       ]
@@ -231,28 +224,28 @@
           "valueCoding": {
             "system": "https://terminology.midas.iisc.ac.in/remote-screening-recommendation",
             "code": "urgent-refer-to-hospital",
-            "display": "Urgent Referral to Hospital"
+            "display": "Urgent referral to the hospital"
           }
         },
         {
           "valueCoding": {
             "system": "https://terminology.midas.iisc.ac.in/remote-screening-recommendation",
             "code": "additional-investigation-needed",
-            "display": "Refer to Hospital for additional investigation"
+            "display": "Refer to hospital for additional investigation"
           }
         },
         {
           "valueCoding": {
             "system": "https://terminology.midas.iisc.ac.in/remote-screening-recommendation",
             "code": "retake-image",
-            "display": "Retake Photo"
+            "display": "Retake photo"
           }
         },
         {
           "valueCoding": {
             "system": "https://terminology.midas.iisc.ac.in/remote-screening-recommendation",
             "code": "quit-habit",
-            "display": "Advise to quit habit"
+            "display": "Advice to quit the habit"
           }
         }
       ]
