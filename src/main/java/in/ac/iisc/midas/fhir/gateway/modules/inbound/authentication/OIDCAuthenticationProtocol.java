@@ -34,7 +34,7 @@ public class OIDCAuthenticationProtocol implements AuthenticationProtocol {
 
         // Get the token from the query parameter
         var authHeaderTokens = requestDetails.getParameters().get("authToken");
-        if (authHeaderTokens==null || authHeaderTokens.length == 0 || isBlank(authHeaderTokens[0])) return null;
+        if (authHeaderTokens == null || authHeaderTokens.length == 0 || isBlank(authHeaderTokens[0])) return null;
         return authHeaderTokens[0];
     }
 
