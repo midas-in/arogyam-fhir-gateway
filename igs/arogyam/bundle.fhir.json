@@ -60,6 +60,77 @@
     },
     {
       "resource": {
+        "resourceType": "CodeSystem",
+        "id": "location-physical-type",
+        "url": "https://midas.iisc.ac.in/fhir/CodeSystem/location-physical-type",
+        "version": "1.0.0",
+        "name": "Location Physical Type",
+        "title": "Location Physical Type",
+        "status": "active",
+        "date": "2024-06-17T00:00:00Z",
+        "description": "A CodeSystem defining various location",
+        "caseSensitive": true,
+        "content": "complete",
+        "concept": [
+          {
+            "code": "field",
+            "display": "Field/primary care",
+            "definition": "Field or Primary Care"
+          },
+          {
+            "code": "hospital",
+            "display": "Hospital",
+            "definition": "Hospital"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "CodeSystem/location-physical-type"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Location",
+        "id": "physical-location-field",
+        "name": "Field/primary care",
+        "physicalType": {
+          "coding": [
+            {
+              "code": "field",
+              "system": "https://midas.iisc.ac.in/fhir/CodeSystem/location-physical-type",
+              "display": "Field/primary care"
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Location/physical-location-field"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Location",
+        "id": "physical-location-hospital",
+        "name": "Hospital",
+        "physicalType": {
+          "coding": [
+            {
+              "code": "hospital",
+              "system": "https://midas.iisc.ac.in/fhir/CodeSystem/location-physical-type",
+              "display": "Hospital"
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Location/physical-location-hospital"
+      }
+    },
+    {
+      "resource": {
         "resourceType": "Library",
         "url": "https://midas.iisc.ac.in/fhir/Library/OralCancerLabelImage",
         "id": "OralCancerLabelImage",
@@ -171,7 +242,9 @@
             "status": "active",
             "description": "Task ordering specialist to screen the registered patient for oral cancer",
             "kind": "Task",
-            "library": ["https://midas.iisc.ac.in/fhir/Library/OralCancerScreenPatient|1.0.0"],
+            "library": [
+              "https://midas.iisc.ac.in/fhir/Library/OralCancerScreenPatient|1.0.0"
+            ],
             "dynamicValue": [
               {
                 "path": "owner",
@@ -410,6 +483,42 @@
             "text": "Basic Information",
             "type": "group",
             "item": [
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "system": "http://hl7.org/fhir/questionnaire-item-control",
+                          "code": "radio-button",
+                          "display": "Radio Button"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "linkId": "location-physical-type",
+                "text": "Study setting",
+                "type": "choice",
+                "required": true,
+                "answerOption": [
+                  {
+                    "valueCoding": {
+                      "system": "https://terminology.midas.iisc.ac.in/CodeSystem/location-physical-type",
+                      "code": "field",
+                      "display": "Field/primary care"
+                    }
+                  },
+                  {
+                    "valueCoding": {
+                      "system": "https://terminology.midas.iisc.ac.in/CodeSystem/location-physical-type",
+                      "code": "hospital",
+                      "display": "Hospital"
+                    }
+                  }
+                ]
+              },
               {
                 "extension": [
                   {
@@ -1570,317 +1679,397 @@
     },
     {
       "resource": {
-        "resourceType" : "StructureMap",
-        "id" : "OralCancerLabelImageTask",
-        "text" : {
-          "status" : "additional",
-          "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageTask&quot; = 'OralCancerLabelImageTask'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/Parameters&quot; as source\n\n\ngroup OralCancerLabelImageTask(source src : Parameters, target bundle: Bundle) {\n    src -&gt;  evaluate(src, $this.parameter.where(name='context').resource) as media,\n            evaluate(src, $this.parameter.where(name='resource').resource) as task,\n            bundle.entry as bundleTaskEntry, bundleTaskEntry.resource = task,\n            bundle.entry as bundleMediaEntry, bundleMediaEntry.resource = media\n            then UpdateMediaStatus(bundleMediaEntry,media), TransformTask(bundleTaskEntry, media, task) &quot;rule_transform&quot; ;\n}\n\ngroup TransformTask(source input, source media: Media, target task: Task) {\n    input -&gt; task.id = uuid(),\n            task.status = 'requested',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = 'Task for reader to label image',\n            task.authoredOn = evaluate(input ,now()),\n            task.lastModified = evaluate(input ,now()) &quot;rule_task_map&quot;;\n\n    input -&gt; task.input as taskInput then AddTaskInput(task, media, taskInput) &quot;map_task_input&quot;;\n}\n\ngroup AddTaskInput(source task: Task, source media: Media, target input){\n    task -&gt; input.type = cc('http://hl7.org/fhir/resource-types','Media','Media'),\n            input.value = create('Reference') as ref, ref.reference = evaluate(media, 'Media/'+$this.id) &quot;rule_task_input_map&quot;;\n}\n\ngroup UpdateMediaStatus(source input, target media: Media ){\n    input -&gt; media.status = 'in-progress' 'update_media_status';\n}</pre></div>"
+        "resourceType": "StructureMap",
+        "id": "OralCancerLabelImageTask",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageTask&quot; = 'OralCancerLabelImageTask'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/Parameters&quot; as source\n\n\ngroup OralCancerLabelImageTask(source src : Parameters, target bundle: Bundle) {\n    src -&gt;  evaluate(src, $this.parameter.where(name='context').resource) as media,\n            evaluate(src, $this.parameter.where(name='resource').resource) as task,\n            bundle.entry as bundleTaskEntry, bundleTaskEntry.resource = task,\n            bundle.entry as bundleMediaEntry, bundleMediaEntry.resource = media\n            then UpdateMediaStatus(bundleMediaEntry,media), TransformTask(bundleTaskEntry, media, task) &quot;rule_transform&quot; ;\n}\n\ngroup TransformTask(source input, source media: Media, target task: Task) {\n    input -&gt; task.id = uuid(),\n            task.status = 'requested',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = 'Task for reader to label image',\n            task.authoredOn = evaluate(input ,now()),\n            task.lastModified = evaluate(input ,now()) &quot;rule_task_map&quot;;\n\n    input -&gt; task.input as taskInput then AddTaskInput(task, media, taskInput) &quot;map_task_input&quot;;\n}\n\ngroup AddTaskInput(source task: Task, source media: Media, target input){\n    task -&gt; input.type = cc('http://hl7.org/fhir/resource-types','Media','Media'),\n            input.value = create('Reference') as ref, ref.reference = evaluate(media, 'Media/'+$this.id) &quot;rule_task_input_map&quot;;\n}\n\ngroup UpdateMediaStatus(source input, target media: Media ){\n    input -&gt; media.status = 'in-progress' 'update_media_status';\n}</pre></div>"
         },
-        "url" : "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageTask",
-        "name" : "OralCancerLabelImageTask",
-        "structure" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/Bundle",
-          "mode" : "target"
-        },
+        "url": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageTask",
+        "name": "OralCancerLabelImageTask",
+        "structure": [
           {
-            "url" : "http://hl7.org/fhir/StructureDefinition/Parameters",
-            "mode" : "source"
-          }],
-        "group" : [{
-          "name" : "OralCancerLabelImageTask",
-          "typeMode" : "none",
-          "input" : [{
-            "name" : "src",
-            "type" : "Parameters",
-            "mode" : "source"
-          },
-            {
-              "name" : "bundle",
-              "type" : "Bundle",
-              "mode" : "target"
-            }],
-          "rule" : [{
-            "name" : "rule_transform",
-            "source" : [{
-              "context" : "src"
-            }],
-            "target" : [{
-              "contextType" : "variable",
-              "variable" : "media",
-              "transform" : "evaluate",
-              "parameter" : [{
-                "valueId" : "src"
-              },
-                {
-                  "valueString" : "$this.parameter.where(name = 'context').resource"
-                }]
-            },
-              {
-                "contextType" : "variable",
-                "variable" : "task",
-                "transform" : "evaluate",
-                "parameter" : [{
-                  "valueId" : "src"
-                },
-                  {
-                    "valueString" : "$this.parameter.where(name = 'resource').resource"
-                  }]
-              },
-              {
-                "context" : "bundle",
-                "contextType" : "variable",
-                "element" : "entry",
-                "variable" : "bundleTaskEntry"
-              },
-              {
-                "context" : "bundleTaskEntry",
-                "contextType" : "variable",
-                "element" : "resource",
-                "transform" : "copy",
-                "parameter" : [{
-                  "valueId" : "task"
-                }]
-              },
-              {
-                "context" : "bundle",
-                "contextType" : "variable",
-                "element" : "entry",
-                "variable" : "bundleMediaEntry"
-              },
-              {
-                "context" : "bundleMediaEntry",
-                "contextType" : "variable",
-                "element" : "resource",
-                "transform" : "copy",
-                "parameter" : [{
-                  "valueId" : "media"
-                }]
-              }],
-            "dependent" : [{
-              "name" : "UpdateMediaStatus",
-              "variable" : ["bundleMediaEntry",
-                "media"]
-            },
-              {
-                "name" : "TransformTask",
-                "variable" : ["bundleTaskEntry",
-                  "media",
-                  "task"]
-              }]
-          }]
-        },
-          {
-            "name" : "TransformTask",
-            "typeMode" : "none",
-            "input" : [{
-              "name" : "input",
-              "mode" : "source"
-            },
-              {
-                "name" : "media",
-                "type" : "Media",
-                "mode" : "source"
-              },
-              {
-                "name" : "task",
-                "type" : "Task",
-                "mode" : "target"
-              }],
-            "rule" : [{
-              "name" : "rule_task_map",
-              "source" : [{
-                "context" : "input"
-              }],
-              "target" : [{
-                "context" : "task",
-                "contextType" : "variable",
-                "element" : "id",
-                "transform" : "uuid"
-              },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "status",
-                  "transform" : "copy",
-                  "parameter" : [{
-                    "valueString" : "requested"
-                  }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "intent",
-                  "transform" : "copy",
-                  "parameter" : [{
-                    "valueString" : "order"
-                  }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "priority",
-                  "transform" : "copy",
-                  "parameter" : [{
-                    "valueString" : "routine"
-                  }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "code",
-                  "transform" : "cc",
-                  "parameter" : [{
-                    "valueString" : "http://hl7.org/fhir/CodeSystem/task-code"
-                  },
-                    {
-                      "valueString" : "fulfill"
-                    },
-                    {
-                      "valueString" : "Fulfill the focal request"
-                    }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "description",
-                  "transform" : "copy",
-                  "parameter" : [{
-                    "valueString" : "Task for reader to label image"
-                  }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "authoredOn",
-                  "transform" : "evaluate",
-                  "parameter" : [{
-                    "valueId" : "input"
-                  },
-                    {
-                      "valueString" : "now()"
-                    }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "lastModified",
-                  "transform" : "evaluate",
-                  "parameter" : [{
-                    "valueId" : "input"
-                  },
-                    {
-                      "valueString" : "now()"
-                    }]
-                }]
-            },
-              {
-                "name" : "map_task_input",
-                "source" : [{
-                  "context" : "input"
-                }],
-                "target" : [{
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "input",
-                  "variable" : "taskInput"
-                }],
-                "dependent" : [{
-                  "name" : "AddTaskInput",
-                  "variable" : ["task",
-                    "media",
-                    "taskInput"]
-                }]
-              }]
+            "url": "http://hl7.org/fhir/StructureDefinition/Bundle",
+            "mode": "target"
           },
           {
-            "name" : "AddTaskInput",
-            "typeMode" : "none",
-            "input" : [{
-              "name" : "task",
-              "type" : "Task",
-              "mode" : "source"
-            },
+            "url": "http://hl7.org/fhir/StructureDefinition/Parameters",
+            "mode": "source"
+          }
+        ],
+        "group": [
+          {
+            "name": "OralCancerLabelImageTask",
+            "typeMode": "none",
+            "input": [
               {
-                "name" : "media",
-                "type" : "Media",
-                "mode" : "source"
+                "name": "src",
+                "type": "Parameters",
+                "mode": "source"
               },
               {
-                "name" : "input",
-                "mode" : "target"
-              }],
-            "rule" : [{
-              "name" : "rule_task_input_map",
-              "source" : [{
-                "context" : "task"
-              }],
-              "target" : [{
-                "context" : "input",
-                "contextType" : "variable",
-                "element" : "type",
-                "transform" : "cc",
-                "parameter" : [{
-                  "valueString" : "http://hl7.org/fhir/resource-types"
-                },
+                "name": "bundle",
+                "type": "Bundle",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "rule_transform",
+                "source": [
                   {
-                    "valueString" : "Media"
+                    "context": "src"
+                  }
+                ],
+                "target": [
+                  {
+                    "contextType": "variable",
+                    "variable": "media",
+                    "transform": "evaluate",
+                    "parameter": [
+                      {
+                        "valueId": "src"
+                      },
+                      {
+                        "valueString": "$this.parameter.where(name = 'context').resource"
+                      }
+                    ]
                   },
                   {
-                    "valueString" : "Media"
-                  }]
-              },
-                {
-                  "context" : "input",
-                  "contextType" : "variable",
-                  "element" : "value",
-                  "variable" : "ref",
-                  "transform" : "create",
-                  "parameter" : [{
-                    "valueString" : "Reference"
-                  }]
-                },
-                {
-                  "context" : "ref",
-                  "contextType" : "variable",
-                  "element" : "reference",
-                  "transform" : "evaluate",
-                  "parameter" : [{
-                    "valueId" : "media"
+                    "contextType": "variable",
+                    "variable": "task",
+                    "transform": "evaluate",
+                    "parameter": [
+                      {
+                        "valueId": "src"
+                      },
+                      {
+                        "valueString": "$this.parameter.where(name = 'resource').resource"
+                      }
+                    ]
                   },
-                    {
-                      "valueString" : "'Media/' + $this.id"
-                    }]
-                }]
-            }]
+                  {
+                    "context": "bundle",
+                    "contextType": "variable",
+                    "element": "entry",
+                    "variable": "bundleTaskEntry"
+                  },
+                  {
+                    "context": "bundleTaskEntry",
+                    "contextType": "variable",
+                    "element": "resource",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueId": "task"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "bundle",
+                    "contextType": "variable",
+                    "element": "entry",
+                    "variable": "bundleMediaEntry"
+                  },
+                  {
+                    "context": "bundleMediaEntry",
+                    "contextType": "variable",
+                    "element": "resource",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueId": "media"
+                      }
+                    ]
+                  }
+                ],
+                "dependent": [
+                  {
+                    "name": "UpdateMediaStatus",
+                    "variable": [
+                      "bundleMediaEntry",
+                      "media"
+                    ]
+                  },
+                  {
+                    "name": "TransformTask",
+                    "variable": [
+                      "bundleTaskEntry",
+                      "media",
+                      "task"
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
-            "name" : "UpdateMediaStatus",
-            "typeMode" : "none",
-            "input" : [{
-              "name" : "input",
-              "mode" : "source"
-            },
+            "name": "TransformTask",
+            "typeMode": "none",
+            "input": [
               {
-                "name" : "media",
-                "type" : "Media",
-                "mode" : "target"
-              }],
-            "rule" : [{
-              "name" : "update_media_status",
-              "source" : [{
-                "context" : "input"
-              }],
-              "target" : [{
-                "context" : "media",
-                "contextType" : "variable",
-                "element" : "status",
-                "transform" : "copy",
-                "parameter" : [{
-                  "valueString" : "in-progress"
-                }]
-              }]
-            }]
-          }]
+                "name": "input",
+                "mode": "source"
+              },
+              {
+                "name": "media",
+                "type": "Media",
+                "mode": "source"
+              },
+              {
+                "name": "task",
+                "type": "Task",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "rule_task_map",
+                "source": [
+                  {
+                    "context": "input"
+                  }
+                ],
+                "target": [
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "id",
+                    "transform": "uuid"
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "status",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueString": "requested"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "intent",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueString": "order"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "priority",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueString": "routine"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "code",
+                    "transform": "cc",
+                    "parameter": [
+                      {
+                        "valueString": "http://hl7.org/fhir/CodeSystem/task-code"
+                      },
+                      {
+                        "valueString": "fulfill"
+                      },
+                      {
+                        "valueString": "Fulfill the focal request"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "description",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueString": "Task for reader to label image"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "authoredOn",
+                    "transform": "evaluate",
+                    "parameter": [
+                      {
+                        "valueId": "input"
+                      },
+                      {
+                        "valueString": "now()"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "lastModified",
+                    "transform": "evaluate",
+                    "parameter": [
+                      {
+                        "valueId": "input"
+                      },
+                      {
+                        "valueString": "now()"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "map_task_input",
+                "source": [
+                  {
+                    "context": "input"
+                  }
+                ],
+                "target": [
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "input",
+                    "variable": "taskInput"
+                  }
+                ],
+                "dependent": [
+                  {
+                    "name": "AddTaskInput",
+                    "variable": [
+                      "task",
+                      "media",
+                      "taskInput"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "AddTaskInput",
+            "typeMode": "none",
+            "input": [
+              {
+                "name": "task",
+                "type": "Task",
+                "mode": "source"
+              },
+              {
+                "name": "media",
+                "type": "Media",
+                "mode": "source"
+              },
+              {
+                "name": "input",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "rule_task_input_map",
+                "source": [
+                  {
+                    "context": "task"
+                  }
+                ],
+                "target": [
+                  {
+                    "context": "input",
+                    "contextType": "variable",
+                    "element": "type",
+                    "transform": "cc",
+                    "parameter": [
+                      {
+                        "valueString": "http://hl7.org/fhir/resource-types"
+                      },
+                      {
+                        "valueString": "Media"
+                      },
+                      {
+                        "valueString": "Media"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "input",
+                    "contextType": "variable",
+                    "element": "value",
+                    "variable": "ref",
+                    "transform": "create",
+                    "parameter": [
+                      {
+                        "valueString": "Reference"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "ref",
+                    "contextType": "variable",
+                    "element": "reference",
+                    "transform": "evaluate",
+                    "parameter": [
+                      {
+                        "valueId": "media"
+                      },
+                      {
+                        "valueString": "'Media/' + $this.id"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "UpdateMediaStatus",
+            "typeMode": "none",
+            "input": [
+              {
+                "name": "input",
+                "mode": "source"
+              },
+              {
+                "name": "media",
+                "type": "Media",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "update_media_status",
+                "source": [
+                  {
+                    "context": "input"
+                  }
+                ],
+                "target": [
+                  {
+                    "context": "media",
+                    "contextType": "variable",
+                    "element": "status",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueString": "in-progress"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "request": {
         "method": "PUT",
@@ -2025,15 +2214,26 @@
                 "dependent": [
                   {
                     "name": "TransformPatient",
-                    "variable": ["src", "patient"]
+                    "variable": [
+                      "src",
+                      "patient"
+                    ]
                   },
                   {
                     "name": "TransformPatientEncounter",
-                    "variable": ["patient", "encounter"]
+                    "variable": [
+                      "patient",
+                      "encounter"
+                    ]
                   },
                   {
                     "name": "TransformPatientResource",
-                    "variable": ["src", "patient", "encounter", "bundle"]
+                    "variable": [
+                      "src",
+                      "patient",
+                      "encounter",
+                      "bundle"
+                    ]
                   }
                 ]
               }
@@ -6369,232 +6569,290 @@
     },
     {
       "resource": {
-        "resourceType" : "StructureMap",
-        "id" : "OralCancerScreeningTask",
-        "text" : {
-          "status" : "additional",
-          "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningTask&quot; = 'OralCancerScreeningTask'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/Parameters&quot; as source\n\n\ngroup OralCancerScreeningTask(source src : Parameters, target bundle: Bundle) {\n    src -&gt;  evaluate(src, $this.parameter.where(name='context').resource) as encounter,\n            evaluate(src, $this.parameter.where(name='resource').resource) as task,\n            bundle.entry as bundleTaskEntry, bundleTaskEntry.resource = task,\n            bundle.entry as bundleEncounterEntry, bundleEncounterEntry.resource = encounter\n            then TransformEncounter(bundleEncounterEntry,encounter), TransformTask(bundleTaskEntry, task) &quot;rule_transform&quot; ;\n}\n\ngroup TransformTask(source input, target task: Task) {\n    input -&gt; task.id = uuid(),\n            task.status = 'requested',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = 'Task for specialist to screen patient',\n            task.authoredOn = evaluate(input ,now()),\n            task.lastModified = evaluate(input ,now()) &quot;rule_task_map&quot;;\n}\n\ngroup TransformEncounter(source input , target encounter: Encounter) {\n    input -&gt; encounter.status = 'in-progress' &quot;rule_encounter_map&quot;;\n}</pre></div>"
+        "resourceType": "StructureMap",
+        "id": "OralCancerScreeningTask",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningTask&quot; = 'OralCancerScreeningTask'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/Parameters&quot; as source\n\n\ngroup OralCancerScreeningTask(source src : Parameters, target bundle: Bundle) {\n    src -&gt;  evaluate(src, $this.parameter.where(name='context').resource) as encounter,\n            evaluate(src, $this.parameter.where(name='resource').resource) as task,\n            bundle.entry as bundleTaskEntry, bundleTaskEntry.resource = task,\n            bundle.entry as bundleEncounterEntry, bundleEncounterEntry.resource = encounter\n            then TransformEncounter(bundleEncounterEntry,encounter), TransformTask(bundleTaskEntry, task) &quot;rule_transform&quot; ;\n}\n\ngroup TransformTask(source input, target task: Task) {\n    input -&gt; task.id = uuid(),\n            task.status = 'requested',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = 'Task for specialist to screen patient',\n            task.authoredOn = evaluate(input ,now()),\n            task.lastModified = evaluate(input ,now()) &quot;rule_task_map&quot;;\n}\n\ngroup TransformEncounter(source input , target encounter: Encounter) {\n    input -&gt; encounter.status = 'in-progress' &quot;rule_encounter_map&quot;;\n}</pre></div>"
         },
-        "url" : "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningTask",
-        "name" : "OralCancerScreeningTask",
-        "structure" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/Bundle",
-          "mode" : "target"
-        },
+        "url": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningTask",
+        "name": "OralCancerScreeningTask",
+        "structure": [
           {
-            "url" : "http://hl7.org/fhir/StructureDefinition/Parameters",
-            "mode" : "source"
-          }],
-        "group" : [{
-          "name" : "OralCancerScreeningTask",
-          "typeMode" : "none",
-          "input" : [{
-            "name" : "src",
-            "type" : "Parameters",
-            "mode" : "source"
+            "url": "http://hl7.org/fhir/StructureDefinition/Bundle",
+            "mode": "target"
           },
-            {
-              "name" : "bundle",
-              "type" : "Bundle",
-              "mode" : "target"
-            }],
-          "rule" : [{
-            "name" : "rule_transform",
-            "source" : [{
-              "context" : "src"
-            }],
-            "target" : [{
-              "contextType" : "variable",
-              "variable" : "encounter",
-              "transform" : "evaluate",
-              "parameter" : [{
-                "valueId" : "src"
-              },
-                {
-                  "valueString" : "$this.parameter.where(name = 'context').resource"
-                }]
-            },
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/Parameters",
+            "mode": "source"
+          }
+        ],
+        "group": [
+          {
+            "name": "OralCancerScreeningTask",
+            "typeMode": "none",
+            "input": [
               {
-                "contextType" : "variable",
-                "variable" : "task",
-                "transform" : "evaluate",
-                "parameter" : [{
-                  "valueId" : "src"
-                },
+                "name": "src",
+                "type": "Parameters",
+                "mode": "source"
+              },
+              {
+                "name": "bundle",
+                "type": "Bundle",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "rule_transform",
+                "source": [
                   {
-                    "valueString" : "$this.parameter.where(name = 'resource').resource"
-                  }]
-              },
-              {
-                "context" : "bundle",
-                "contextType" : "variable",
-                "element" : "entry",
-                "variable" : "bundleTaskEntry"
-              },
-              {
-                "context" : "bundleTaskEntry",
-                "contextType" : "variable",
-                "element" : "resource",
-                "transform" : "copy",
-                "parameter" : [{
-                  "valueId" : "task"
-                }]
-              },
-              {
-                "context" : "bundle",
-                "contextType" : "variable",
-                "element" : "entry",
-                "variable" : "bundleEncounterEntry"
-              },
-              {
-                "context" : "bundleEncounterEntry",
-                "contextType" : "variable",
-                "element" : "resource",
-                "transform" : "copy",
-                "parameter" : [{
-                  "valueId" : "encounter"
-                }]
-              }],
-            "dependent" : [{
-              "name" : "TransformEncounter",
-              "variable" : ["bundleEncounterEntry",
-                "encounter"]
-            },
-              {
-                "name" : "TransformTask",
-                "variable" : ["bundleTaskEntry",
-                  "task"]
-              }]
-          }]
-        },
-          {
-            "name" : "TransformTask",
-            "typeMode" : "none",
-            "input" : [{
-              "name" : "input",
-              "mode" : "source"
-            },
-              {
-                "name" : "task",
-                "type" : "Task",
-                "mode" : "target"
-              }],
-            "rule" : [{
-              "name" : "rule_task_map",
-              "source" : [{
-                "context" : "input"
-              }],
-              "target" : [{
-                "context" : "task",
-                "contextType" : "variable",
-                "element" : "id",
-                "transform" : "uuid"
-              },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "status",
-                  "transform" : "copy",
-                  "parameter" : [{
-                    "valueString" : "requested"
-                  }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "intent",
-                  "transform" : "copy",
-                  "parameter" : [{
-                    "valueString" : "order"
-                  }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "priority",
-                  "transform" : "copy",
-                  "parameter" : [{
-                    "valueString" : "routine"
-                  }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "code",
-                  "transform" : "cc",
-                  "parameter" : [{
-                    "valueString" : "http://hl7.org/fhir/CodeSystem/task-code"
+                    "context": "src"
+                  }
+                ],
+                "target": [
+                  {
+                    "contextType": "variable",
+                    "variable": "encounter",
+                    "transform": "evaluate",
+                    "parameter": [
+                      {
+                        "valueId": "src"
+                      },
+                      {
+                        "valueString": "$this.parameter.where(name = 'context').resource"
+                      }
+                    ]
                   },
-                    {
-                      "valueString" : "fulfill"
-                    },
-                    {
-                      "valueString" : "Fulfill the focal request"
-                    }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "description",
-                  "transform" : "copy",
-                  "parameter" : [{
-                    "valueString" : "Task for specialist to screen patient"
-                  }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "authoredOn",
-                  "transform" : "evaluate",
-                  "parameter" : [{
-                    "valueId" : "input"
+                  {
+                    "contextType": "variable",
+                    "variable": "task",
+                    "transform": "evaluate",
+                    "parameter": [
+                      {
+                        "valueId": "src"
+                      },
+                      {
+                        "valueString": "$this.parameter.where(name = 'resource').resource"
+                      }
+                    ]
                   },
-                    {
-                      "valueString" : "now()"
-                    }]
-                },
-                {
-                  "context" : "task",
-                  "contextType" : "variable",
-                  "element" : "lastModified",
-                  "transform" : "evaluate",
-                  "parameter" : [{
-                    "valueId" : "input"
+                  {
+                    "context": "bundle",
+                    "contextType": "variable",
+                    "element": "entry",
+                    "variable": "bundleTaskEntry"
                   },
-                    {
-                      "valueString" : "now()"
-                    }]
-                }]
-            }]
+                  {
+                    "context": "bundleTaskEntry",
+                    "contextType": "variable",
+                    "element": "resource",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueId": "task"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "bundle",
+                    "contextType": "variable",
+                    "element": "entry",
+                    "variable": "bundleEncounterEntry"
+                  },
+                  {
+                    "context": "bundleEncounterEntry",
+                    "contextType": "variable",
+                    "element": "resource",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueId": "encounter"
+                      }
+                    ]
+                  }
+                ],
+                "dependent": [
+                  {
+                    "name": "TransformEncounter",
+                    "variable": [
+                      "bundleEncounterEntry",
+                      "encounter"
+                    ]
+                  },
+                  {
+                    "name": "TransformTask",
+                    "variable": [
+                      "bundleTaskEntry",
+                      "task"
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
-            "name" : "TransformEncounter",
-            "typeMode" : "none",
-            "input" : [{
-              "name" : "input",
-              "mode" : "source"
-            },
+            "name": "TransformTask",
+            "typeMode": "none",
+            "input": [
               {
-                "name" : "encounter",
-                "type" : "Encounter",
-                "mode" : "target"
-              }],
-            "rule" : [{
-              "name" : "rule_encounter_map",
-              "source" : [{
-                "context" : "input"
-              }],
-              "target" : [{
-                "context" : "encounter",
-                "contextType" : "variable",
-                "element" : "status",
-                "transform" : "copy",
-                "parameter" : [{
-                  "valueString" : "in-progress"
-                }]
-              }]
-            }]
-          }]
+                "name": "input",
+                "mode": "source"
+              },
+              {
+                "name": "task",
+                "type": "Task",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "rule_task_map",
+                "source": [
+                  {
+                    "context": "input"
+                  }
+                ],
+                "target": [
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "id",
+                    "transform": "uuid"
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "status",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueString": "requested"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "intent",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueString": "order"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "priority",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueString": "routine"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "code",
+                    "transform": "cc",
+                    "parameter": [
+                      {
+                        "valueString": "http://hl7.org/fhir/CodeSystem/task-code"
+                      },
+                      {
+                        "valueString": "fulfill"
+                      },
+                      {
+                        "valueString": "Fulfill the focal request"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "description",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueString": "Task for specialist to screen patient"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "authoredOn",
+                    "transform": "evaluate",
+                    "parameter": [
+                      {
+                        "valueId": "input"
+                      },
+                      {
+                        "valueString": "now()"
+                      }
+                    ]
+                  },
+                  {
+                    "context": "task",
+                    "contextType": "variable",
+                    "element": "lastModified",
+                    "transform": "evaluate",
+                    "parameter": [
+                      {
+                        "valueId": "input"
+                      },
+                      {
+                        "valueString": "now()"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "TransformEncounter",
+            "typeMode": "none",
+            "input": [
+              {
+                "name": "input",
+                "mode": "source"
+              },
+              {
+                "name": "encounter",
+                "type": "Encounter",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "rule_encounter_map",
+                "source": [
+                  {
+                    "context": "input"
+                  }
+                ],
+                "target": [
+                  {
+                    "context": "encounter",
+                    "contextType": "variable",
+                    "element": "status",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueString": "in-progress"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "request": {
         "method": "PUT",
@@ -6603,905 +6861,1102 @@
     },
     {
       "resource": {
-        "resourceType" : "StructureMap",
-        "id" : "OralCancerLabelImageResponse",
-        "text" : {
-          "status" : "additional",
-          "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse&quot; = 'OralCancerLabelImageResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerLabelImageResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry,\n         bundleClinicalImpressionEntry.resource = create('DiagnosticReport') as dr then {\n            src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n                provisionDiagnosisItem.answer first as answer -&gt; \n                    dr.id = uuid(),\n                    dr.encounter = evaluate(src,$this.encounter),\n                    dr.status = 'final',\n                    dr.subject = evaluate(src,$this.subject),\n                    dr.effective = evaluate(src, $this.authored),\n                    dr.performer = evaluate(src,$this.author),\n                    dr.conclusionCode as conclusionCode,\n                    conclusionCode.coding = evaluate(answer,$this.value)\n                    then AddMedia(src, dr) &quot;rule_populate_impression&quot;;\n            } &quot;rule_prov&quot;;\n    } &quot;rule_bundle_entry_impression&quot;;\n}\n\ngroup AddMedia(source src: QuestionnaireResponse, target dr: DiagnosticReport){\n    src.item as mediaItem where(linkId = 'media-id') then {\n        mediaItem.answer first as answer -&gt; dr.media as media, media.link = create('Reference') as ref, ref.reference = evaluate(answer, $this.value) &quot;rule_media_rt&quot;;\n    } &quot;rule_add_media&quot;;\n}\n</pre></div>"
+        "resourceType": "StructureMap",
+        "id": "OralCancerLabelImageResponse",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse&quot; = 'OralCancerLabelImageResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerLabelImageResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry,\n         bundleClinicalImpressionEntry.resource = create('DiagnosticReport') as dr then {\n            src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n                provisionDiagnosisItem.answer first as answer -&gt; \n                    dr.id = uuid(),\n                    dr.encounter = evaluate(src,$this.encounter),\n                    dr.status = 'final',\n                    dr.subject = evaluate(src,$this.subject),\n                    dr.effective = evaluate(src, $this.authored),\n                    dr.performer = evaluate(src,$this.author),\n                    dr.conclusionCode as conclusionCode,\n                    conclusionCode.coding = evaluate(answer,$this.value)\n                    then AddMedia(src, dr) &quot;rule_populate_impression&quot;;\n            } &quot;rule_prov&quot;;\n    } &quot;rule_bundle_entry_impression&quot;;\n}\n\ngroup AddMedia(source src: QuestionnaireResponse, target dr: DiagnosticReport){\n    src.item as mediaItem where(linkId = 'media-id') then {\n        mediaItem.answer first as answer -&gt; dr.media as media, media.link = create('Reference') as ref, ref.reference = evaluate(answer, $this.value) &quot;rule_media_rt&quot;;\n    } &quot;rule_add_media&quot;;\n}\n</pre></div>"
         },
-        "url" : "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse",
-        "name" : "OralCancerLabelImageResponse",
-        "structure" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/Bundle",
-          "mode" : "target"
-        },
+        "url": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageResponse",
+        "name": "OralCancerLabelImageResponse",
+        "structure": [
           {
-            "url" : "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse",
-            "mode" : "source"
-          }],
-        "group" : [{
-          "name" : "OralCancerLabelImageResponse",
-          "typeMode" : "none",
-          "input" : [{
-            "name" : "src",
-            "type" : "QuestionnaireResponse",
-            "mode" : "source"
+            "url": "http://hl7.org/fhir/StructureDefinition/Bundle",
+            "mode": "target"
           },
-            {
-              "name" : "bundle",
-              "type" : "Bundle",
-              "mode" : "target"
-            }],
-          "rule" : [{
-            "name" : "rule_bundle_entry_impression",
-            "source" : [{
-              "context" : "src"
-            }],
-            "target" : [{
-              "context" : "bundle",
-              "contextType" : "variable",
-              "element" : "entry",
-              "variable" : "bundleClinicalImpressionEntry"
-            },
-              {
-                "context" : "bundleClinicalImpressionEntry",
-                "contextType" : "variable",
-                "element" : "resource",
-                "variable" : "dr",
-                "transform" : "create",
-                "parameter" : [{
-                  "valueString" : "DiagnosticReport"
-                }]
-              }],
-            "rule" : [{
-              "name" : "rule_prov",
-              "source" : [{
-                "context" : "src",
-                "element" : "item",
-                "variable" : "provisionDiagnosisItem",
-                "condition" : "(linkId = 'provisional-diagnosis')"
-              }],
-              "rule" : [{
-                "name" : "rule_populate_impression",
-                "source" : [{
-                  "context" : "provisionDiagnosisItem",
-                  "element" : "answer",
-                  "listMode" : "first",
-                  "variable" : "answer"
-                }],
-                "target" : [{
-                  "context" : "dr",
-                  "contextType" : "variable",
-                  "element" : "id",
-                  "transform" : "uuid"
-                },
-                  {
-                    "context" : "dr",
-                    "contextType" : "variable",
-                    "element" : "encounter",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.encounter"
-                      }]
-                  },
-                  {
-                    "context" : "dr",
-                    "contextType" : "variable",
-                    "element" : "status",
-                    "transform" : "copy",
-                    "parameter" : [{
-                      "valueString" : "final"
-                    }]
-                  },
-                  {
-                    "context" : "dr",
-                    "contextType" : "variable",
-                    "element" : "subject",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.subject"
-                      }]
-                  },
-                  {
-                    "context" : "dr",
-                    "contextType" : "variable",
-                    "element" : "effective",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.authored"
-                      }]
-                  },
-                  {
-                    "context" : "dr",
-                    "contextType" : "variable",
-                    "element" : "performer",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.author"
-                      }]
-                  },
-                  {
-                    "context" : "dr",
-                    "contextType" : "variable",
-                    "element" : "conclusionCode",
-                    "variable" : "conclusionCode"
-                  },
-                  {
-                    "context" : "conclusionCode",
-                    "contextType" : "variable",
-                    "element" : "coding",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "answer"
-                    },
-                      {
-                        "valueString" : "$this.value"
-                      }]
-                  }],
-                "dependent" : [{
-                  "name" : "AddMedia",
-                  "variable" : ["src",
-                    "dr"]
-                }]
-              }]
-            }]
-          }]
-        },
           {
-            "name" : "AddMedia",
-            "typeMode" : "none",
-            "input" : [{
-              "name" : "src",
-              "type" : "QuestionnaireResponse",
-              "mode" : "source"
-            },
+            "url": "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse",
+            "mode": "source"
+          }
+        ],
+        "group": [
+          {
+            "name": "OralCancerLabelImageResponse",
+            "typeMode": "none",
+            "input": [
               {
-                "name" : "dr",
-                "type" : "DiagnosticReport",
-                "mode" : "target"
-              }],
-            "rule" : [{
-              "name" : "rule_add_media",
-              "source" : [{
-                "context" : "src",
-                "element" : "item",
-                "variable" : "mediaItem",
-                "condition" : "(linkId = 'media-id')"
-              }],
-              "rule" : [{
-                "name" : "rule_media_rt",
-                "source" : [{
-                  "context" : "mediaItem",
-                  "element" : "answer",
-                  "listMode" : "first",
-                  "variable" : "answer"
-                }],
-                "target" : [{
-                  "context" : "dr",
-                  "contextType" : "variable",
-                  "element" : "media",
-                  "variable" : "media"
-                },
+                "name": "src",
+                "type": "QuestionnaireResponse",
+                "mode": "source"
+              },
+              {
+                "name": "bundle",
+                "type": "Bundle",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "rule_bundle_entry_impression",
+                "source": [
                   {
-                    "context" : "media",
-                    "contextType" : "variable",
-                    "element" : "link",
-                    "variable" : "ref",
-                    "transform" : "create",
-                    "parameter" : [{
-                      "valueString" : "Reference"
-                    }]
+                    "context": "src"
+                  }
+                ],
+                "target": [
+                  {
+                    "context": "bundle",
+                    "contextType": "variable",
+                    "element": "entry",
+                    "variable": "bundleClinicalImpressionEntry"
                   },
                   {
-                    "context" : "ref",
-                    "contextType" : "variable",
-                    "element" : "reference",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "answer"
-                    },
+                    "context": "bundleClinicalImpressionEntry",
+                    "contextType": "variable",
+                    "element": "resource",
+                    "variable": "dr",
+                    "transform": "create",
+                    "parameter": [
                       {
-                        "valueString" : "$this.value"
-                      }]
-                  }]
-              }]
-            }]
-          }]
+                        "valueString": "DiagnosticReport"
+                      }
+                    ]
+                  }
+                ],
+                "rule": [
+                  {
+                    "name": "rule_prov",
+                    "source": [
+                      {
+                        "context": "src",
+                        "element": "item",
+                        "variable": "provisionDiagnosisItem",
+                        "condition": "(linkId = 'provisional-diagnosis')"
+                      }
+                    ],
+                    "rule": [
+                      {
+                        "name": "rule_populate_impression",
+                        "source": [
+                          {
+                            "context": "provisionDiagnosisItem",
+                            "element": "answer",
+                            "listMode": "first",
+                            "variable": "answer"
+                          }
+                        ],
+                        "target": [
+                          {
+                            "context": "dr",
+                            "contextType": "variable",
+                            "element": "id",
+                            "transform": "uuid"
+                          },
+                          {
+                            "context": "dr",
+                            "contextType": "variable",
+                            "element": "encounter",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.encounter"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "dr",
+                            "contextType": "variable",
+                            "element": "status",
+                            "transform": "copy",
+                            "parameter": [
+                              {
+                                "valueString": "final"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "dr",
+                            "contextType": "variable",
+                            "element": "subject",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.subject"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "dr",
+                            "contextType": "variable",
+                            "element": "effective",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.authored"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "dr",
+                            "contextType": "variable",
+                            "element": "performer",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.author"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "dr",
+                            "contextType": "variable",
+                            "element": "conclusionCode",
+                            "variable": "conclusionCode"
+                          },
+                          {
+                            "context": "conclusionCode",
+                            "contextType": "variable",
+                            "element": "coding",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "answer"
+                              },
+                              {
+                                "valueString": "$this.value"
+                              }
+                            ]
+                          }
+                        ],
+                        "dependent": [
+                          {
+                            "name": "AddMedia",
+                            "variable": [
+                              "src",
+                              "dr"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "AddMedia",
+            "typeMode": "none",
+            "input": [
+              {
+                "name": "src",
+                "type": "QuestionnaireResponse",
+                "mode": "source"
+              },
+              {
+                "name": "dr",
+                "type": "DiagnosticReport",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "rule_add_media",
+                "source": [
+                  {
+                    "context": "src",
+                    "element": "item",
+                    "variable": "mediaItem",
+                    "condition": "(linkId = 'media-id')"
+                  }
+                ],
+                "rule": [
+                  {
+                    "name": "rule_media_rt",
+                    "source": [
+                      {
+                        "context": "mediaItem",
+                        "element": "answer",
+                        "listMode": "first",
+                        "variable": "answer"
+                      }
+                    ],
+                    "target": [
+                      {
+                        "context": "dr",
+                        "contextType": "variable",
+                        "element": "media",
+                        "variable": "media"
+                      },
+                      {
+                        "context": "media",
+                        "contextType": "variable",
+                        "element": "link",
+                        "variable": "ref",
+                        "transform": "create",
+                        "parameter": [
+                          {
+                            "valueString": "Reference"
+                          }
+                        ]
+                      },
+                      {
+                        "context": "ref",
+                        "contextType": "variable",
+                        "element": "reference",
+                        "transform": "evaluate",
+                        "parameter": [
+                          {
+                            "valueId": "answer"
+                          },
+                          {
+                            "valueString": "$this.value"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "request": {
         "method": "PUT",
         "url": "StructureMap/OralCancerLabelImageResponse"
       }
-    },{
+    },
+    {
       "resource": {
-        "resourceType" : "StructureMap",
-        "id" : "OralCancerScreeningResponse",
-        "text" : {
-          "status" : "additional",
-          "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse&quot; = 'OralCancerScreeningResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerScreeningResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry,\n        bundle.entry as conditionEntry,\n        bundle.entry as raEntry,\n        bundleClinicalImpressionEntry.resource = create('ClinicalImpression') as impression,\n        create('Condition') as condition,\n        create('RiskAssessment') as ra then {\n\n        src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n            provisionDiagnosisItem.answer first as answer -&gt; \n                impression.id = uuid(),\n                condition.id = uuid(),\n                impression.encounter = evaluate(src,$this.encounter),\n                impression.status = 'completed',\n                impression.description = 'Clinical impression by Specialist or Senior Specialist for a proabbale oral cancer patient',\n                impression.subject = evaluate(src,$this.subject),\n                impression.date = evaluate(src, $this.authored),\n                impression.assessor = evaluate(src,$this.author),\n                impression.finding as finding,\n                finding.itemCodeableConcept = create('CodeableConcept') as findingCC,\n                findingCC.coding = evaluate(answer,$this.value),\n                condition.encounter = evaluate(src,$this.encounter),\n                condition.subject = evaluate(src,$this.subject),\n                condition.clinicalStatus = cc('http://terminology.hl7.org/CodeSystem/condition-clinical','active','Active'),\n                condition.verificationStatus = cc('http://terminology.hl7.org/CodeSystem/condition-ver-status','confirmed','Confirmed'),\n                condition.code as conditionCode,\n                conditionCode.coding = evaluate(answer,$this.value),\n                condition.asserter = evaluate(src,$this.author),\n                impression.problem = create('Reference') as impressionProblemRef, \n                impressionProblemRef.reference = evaluate(condition,'Condition/' + $this.id),\n                conditionEntry.resource = condition &quot;rule_populate_impression&quot;;\n        } &quot;rule_prov&quot;;\n\n        src.item as recommendationItem where(linkId = 'recommendation') then {\n            recommendationItem.answer first as answer -&gt; \n                ra.id = uuid(),\n                ra.status = 'final',\n                ra.subject = evaluate(src, $this.subject),\n                ra.encounter = evaluate(src, $this.encounter),\n                ra.performer = evaluate(src, $this.author),\n                ra.prediction as prediction,\n                ra.condition = create('Reference') as raConditionRef,\n                raConditionRef.reference = evaluate(condition,'Condition/' + $this.id),\n                prediction.outcome as predictionCC,\n                predictionCC.coding = evaluate(answer,$this.value),\n                impression.prognosisReference = create('Reference') as impressionPrognosisRef,\n                impressionPrognosisRef.reference = evaluate(ra,'RiskAssessment/' + $this.id),\n                raEntry.resource = ra &quot;rule_populate_ra&quot;;\n        } &quot;rule_rec_ra&quot;;\n\n        src.item as bodySiteItem where(linkId='oral-cavity-site') then {\n            bodySiteItem.answer first as answer -&gt; condition.bodySite = create('CodeableConcept') as bodyCC, bodyCC.coding = evaluate(answer,$this.value) &quot;rule_condition_body_site&quot;;\n        } &quot;rule_body_site&quot;;\n            \n        src.item as noteItem where(linkId = 'note') then {\n            noteItem.answer first as answer -&gt; \n                impression.summary = evaluate(answer,$this.value) &quot;rule_populate_impression_note&quot;;\n        } &quot;rule_impression_note&quot;;\n\n    } &quot;rule_bundle_entry_impression&quot;;\n\n    src.item as recommendationItem where(linkId = 'recommendation') then {\n        recommendationItem.answer as answer -&gt; bundle.entry as taskEntry, taskEntry.resource = create('Task') as task,\n            task.id = uuid(),\n            task.encounter = evaluate(src,$this.encounter),\n            task.for = evaluate(src,$this.subject),\n            task.status = 'received',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = evaluate(answer, 'Follow up: ' + $this.value.display),\n            task.authoredOn = evaluate(src ,now()),\n            task.lastModified = evaluate(src ,now()) &quot;rule_task_map&quot;;\n    } &quot;rule_followup&quot;;\n}\n</pre></div>"
+        "resourceType": "StructureMap",
+        "id": "OralCancerScreeningResponse",
+        "text": {
+          "status": "additional",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse&quot; = 'OralCancerScreeningResponse'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; as source\n\n\ngroup OralCancerScreeningResponse(source src : QuestionnaireResponse, target bundle: Bundle) {\n    src -&gt; bundle.entry as bundleClinicalImpressionEntry,\n        bundle.entry as conditionEntry,\n        bundle.entry as raEntry,\n        bundleClinicalImpressionEntry.resource = create('ClinicalImpression') as impression,\n        create('Condition') as condition,\n        create('RiskAssessment') as ra then {\n\n        src.item as provisionDiagnosisItem where(linkId = 'provisional-diagnosis') then {\n            provisionDiagnosisItem.answer first as answer -&gt; \n                impression.id = uuid(),\n                condition.id = uuid(),\n                impression.encounter = evaluate(src,$this.encounter),\n                impression.status = 'completed',\n                impression.description = 'Clinical impression by Specialist or Senior Specialist for a proabbale oral cancer patient',\n                impression.subject = evaluate(src,$this.subject),\n                impression.date = evaluate(src, $this.authored),\n                impression.assessor = evaluate(src,$this.author),\n                impression.finding as finding,\n                finding.itemCodeableConcept = create('CodeableConcept') as findingCC,\n                findingCC.coding = evaluate(answer,$this.value),\n                condition.encounter = evaluate(src,$this.encounter),\n                condition.subject = evaluate(src,$this.subject),\n                condition.clinicalStatus = cc('http://terminology.hl7.org/CodeSystem/condition-clinical','active','Active'),\n                condition.verificationStatus = cc('http://terminology.hl7.org/CodeSystem/condition-ver-status','confirmed','Confirmed'),\n                condition.code as conditionCode,\n                conditionCode.coding = evaluate(answer,$this.value),\n                condition.asserter = evaluate(src,$this.author),\n                impression.problem = create('Reference') as impressionProblemRef, \n                impressionProblemRef.reference = evaluate(condition,'Condition/' + $this.id),\n                conditionEntry.resource = condition &quot;rule_populate_impression&quot;;\n        } &quot;rule_prov&quot;;\n\n        src.item as recommendationItem where(linkId = 'recommendation') then {\n            recommendationItem.answer first as answer -&gt; \n                ra.id = uuid(),\n                ra.status = 'final',\n                ra.subject = evaluate(src, $this.subject),\n                ra.encounter = evaluate(src, $this.encounter),\n                ra.performer = evaluate(src, $this.author),\n                ra.prediction as prediction,\n                ra.condition = create('Reference') as raConditionRef,\n                raConditionRef.reference = evaluate(condition,'Condition/' + $this.id),\n                prediction.outcome as predictionCC,\n                predictionCC.coding = evaluate(answer,$this.value),\n                impression.prognosisReference = create('Reference') as impressionPrognosisRef,\n                impressionPrognosisRef.reference = evaluate(ra,'RiskAssessment/' + $this.id),\n                raEntry.resource = ra &quot;rule_populate_ra&quot;;\n        } &quot;rule_rec_ra&quot;;\n\n        src.item as bodySiteItem where(linkId='oral-cavity-site') then {\n            bodySiteItem.answer first as answer -&gt; condition.bodySite = create('CodeableConcept') as bodyCC, bodyCC.coding = evaluate(answer,$this.value) &quot;rule_condition_body_site&quot;;\n        } &quot;rule_body_site&quot;;\n            \n        src.item as noteItem where(linkId = 'note') then {\n            noteItem.answer first as answer -&gt; \n                impression.summary = evaluate(answer,$this.value) &quot;rule_populate_impression_note&quot;;\n        } &quot;rule_impression_note&quot;;\n\n    } &quot;rule_bundle_entry_impression&quot;;\n\n    src.item as recommendationItem where(linkId = 'recommendation') then {\n        recommendationItem.answer as answer -&gt; bundle.entry as taskEntry, taskEntry.resource = create('Task') as task,\n            task.id = uuid(),\n            task.encounter = evaluate(src,$this.encounter),\n            task.for = evaluate(src,$this.subject),\n            task.status = 'received',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = evaluate(answer, 'Follow up: ' + $this.value.display),\n            task.authoredOn = evaluate(src ,now()),\n            task.lastModified = evaluate(src ,now()) &quot;rule_task_map&quot;;\n    } &quot;rule_followup&quot;;\n}\n</pre></div>"
         },
-        "url" : "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse",
-        "name" : "OralCancerScreeningResponse",
-        "structure" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/Bundle",
-          "mode" : "target"
-        },
+        "url": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningResponse",
+        "name": "OralCancerScreeningResponse",
+        "structure": [
           {
-            "url" : "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse",
-            "mode" : "source"
-          }],
-        "group" : [{
-          "name" : "OralCancerScreeningResponse",
-          "typeMode" : "none",
-          "input" : [{
-            "name" : "src",
-            "type" : "QuestionnaireResponse",
-            "mode" : "source"
+            "url": "http://hl7.org/fhir/StructureDefinition/Bundle",
+            "mode": "target"
           },
-            {
-              "name" : "bundle",
-              "type" : "Bundle",
-              "mode" : "target"
-            }],
-          "rule" : [{
-            "name" : "rule_bundle_entry_impression",
-            "source" : [{
-              "context" : "src"
-            }],
-            "target" : [{
-              "context" : "bundle",
-              "contextType" : "variable",
-              "element" : "entry",
-              "variable" : "bundleClinicalImpressionEntry"
-            },
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse",
+            "mode": "source"
+          }
+        ],
+        "group": [
+          {
+            "name": "OralCancerScreeningResponse",
+            "typeMode": "none",
+            "input": [
               {
-                "context" : "bundle",
-                "contextType" : "variable",
-                "element" : "entry",
-                "variable" : "conditionEntry"
+                "name": "src",
+                "type": "QuestionnaireResponse",
+                "mode": "source"
               },
               {
-                "context" : "bundle",
-                "contextType" : "variable",
-                "element" : "entry",
-                "variable" : "raEntry"
+                "name": "bundle",
+                "type": "Bundle",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "rule_bundle_entry_impression",
+                "source": [
+                  {
+                    "context": "src"
+                  }
+                ],
+                "target": [
+                  {
+                    "context": "bundle",
+                    "contextType": "variable",
+                    "element": "entry",
+                    "variable": "bundleClinicalImpressionEntry"
+                  },
+                  {
+                    "context": "bundle",
+                    "contextType": "variable",
+                    "element": "entry",
+                    "variable": "conditionEntry"
+                  },
+                  {
+                    "context": "bundle",
+                    "contextType": "variable",
+                    "element": "entry",
+                    "variable": "raEntry"
+                  },
+                  {
+                    "context": "bundleClinicalImpressionEntry",
+                    "contextType": "variable",
+                    "element": "resource",
+                    "variable": "impression",
+                    "transform": "create",
+                    "parameter": [
+                      {
+                        "valueString": "ClinicalImpression"
+                      }
+                    ]
+                  },
+                  {
+                    "contextType": "variable",
+                    "variable": "condition",
+                    "transform": "create",
+                    "parameter": [
+                      {
+                        "valueString": "Condition"
+                      }
+                    ]
+                  },
+                  {
+                    "contextType": "variable",
+                    "variable": "ra",
+                    "transform": "create",
+                    "parameter": [
+                      {
+                        "valueString": "RiskAssessment"
+                      }
+                    ]
+                  }
+                ],
+                "rule": [
+                  {
+                    "name": "rule_prov",
+                    "source": [
+                      {
+                        "context": "src",
+                        "element": "item",
+                        "variable": "provisionDiagnosisItem",
+                        "condition": "(linkId = 'provisional-diagnosis')"
+                      }
+                    ],
+                    "rule": [
+                      {
+                        "name": "rule_populate_impression",
+                        "source": [
+                          {
+                            "context": "provisionDiagnosisItem",
+                            "element": "answer",
+                            "listMode": "first",
+                            "variable": "answer"
+                          }
+                        ],
+                        "target": [
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "id",
+                            "transform": "uuid"
+                          },
+                          {
+                            "context": "condition",
+                            "contextType": "variable",
+                            "element": "id",
+                            "transform": "uuid"
+                          },
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "encounter",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.encounter"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "status",
+                            "transform": "copy",
+                            "parameter": [
+                              {
+                                "valueString": "completed"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "description",
+                            "transform": "copy",
+                            "parameter": [
+                              {
+                                "valueString": "Clinical impression by Specialist or Senior Specialist for a proabbale oral cancer patient"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "subject",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.subject"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "date",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.authored"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "assessor",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.author"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "finding",
+                            "variable": "finding"
+                          },
+                          {
+                            "context": "finding",
+                            "contextType": "variable",
+                            "element": "itemCodeableConcept",
+                            "variable": "findingCC",
+                            "transform": "create",
+                            "parameter": [
+                              {
+                                "valueString": "CodeableConcept"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "findingCC",
+                            "contextType": "variable",
+                            "element": "coding",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "answer"
+                              },
+                              {
+                                "valueString": "$this.value"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "condition",
+                            "contextType": "variable",
+                            "element": "encounter",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.encounter"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "condition",
+                            "contextType": "variable",
+                            "element": "subject",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.subject"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "condition",
+                            "contextType": "variable",
+                            "element": "clinicalStatus",
+                            "transform": "cc",
+                            "parameter": [
+                              {
+                                "valueString": "http://terminology.hl7.org/CodeSystem/condition-clinical"
+                              },
+                              {
+                                "valueString": "active"
+                              },
+                              {
+                                "valueString": "Active"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "condition",
+                            "contextType": "variable",
+                            "element": "verificationStatus",
+                            "transform": "cc",
+                            "parameter": [
+                              {
+                                "valueString": "http://terminology.hl7.org/CodeSystem/condition-ver-status"
+                              },
+                              {
+                                "valueString": "confirmed"
+                              },
+                              {
+                                "valueString": "Confirmed"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "condition",
+                            "contextType": "variable",
+                            "element": "code",
+                            "variable": "conditionCode"
+                          },
+                          {
+                            "context": "conditionCode",
+                            "contextType": "variable",
+                            "element": "coding",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "answer"
+                              },
+                              {
+                                "valueString": "$this.value"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "condition",
+                            "contextType": "variable",
+                            "element": "asserter",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.author"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "problem",
+                            "variable": "impressionProblemRef",
+                            "transform": "create",
+                            "parameter": [
+                              {
+                                "valueString": "Reference"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "impressionProblemRef",
+                            "contextType": "variable",
+                            "element": "reference",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "condition"
+                              },
+                              {
+                                "valueString": "'Condition/' + $this.id"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "conditionEntry",
+                            "contextType": "variable",
+                            "element": "resource",
+                            "transform": "copy",
+                            "parameter": [
+                              {
+                                "valueId": "condition"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "rule_rec_ra",
+                    "source": [
+                      {
+                        "context": "src",
+                        "element": "item",
+                        "variable": "recommendationItem",
+                        "condition": "(linkId = 'recommendation')"
+                      }
+                    ],
+                    "rule": [
+                      {
+                        "name": "rule_populate_ra",
+                        "source": [
+                          {
+                            "context": "recommendationItem",
+                            "element": "answer",
+                            "listMode": "first",
+                            "variable": "answer"
+                          }
+                        ],
+                        "target": [
+                          {
+                            "context": "ra",
+                            "contextType": "variable",
+                            "element": "id",
+                            "transform": "uuid"
+                          },
+                          {
+                            "context": "ra",
+                            "contextType": "variable",
+                            "element": "status",
+                            "transform": "copy",
+                            "parameter": [
+                              {
+                                "valueString": "final"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "ra",
+                            "contextType": "variable",
+                            "element": "subject",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.subject"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "ra",
+                            "contextType": "variable",
+                            "element": "encounter",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.encounter"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "ra",
+                            "contextType": "variable",
+                            "element": "performer",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "src"
+                              },
+                              {
+                                "valueString": "$this.author"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "ra",
+                            "contextType": "variable",
+                            "element": "prediction",
+                            "variable": "prediction"
+                          },
+                          {
+                            "context": "ra",
+                            "contextType": "variable",
+                            "element": "condition",
+                            "variable": "raConditionRef",
+                            "transform": "create",
+                            "parameter": [
+                              {
+                                "valueString": "Reference"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "raConditionRef",
+                            "contextType": "variable",
+                            "element": "reference",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "condition"
+                              },
+                              {
+                                "valueString": "'Condition/' + $this.id"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "prediction",
+                            "contextType": "variable",
+                            "element": "outcome",
+                            "variable": "predictionCC"
+                          },
+                          {
+                            "context": "predictionCC",
+                            "contextType": "variable",
+                            "element": "coding",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "answer"
+                              },
+                              {
+                                "valueString": "$this.value"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "prognosisReference",
+                            "variable": "impressionPrognosisRef",
+                            "transform": "create",
+                            "parameter": [
+                              {
+                                "valueString": "Reference"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "impressionPrognosisRef",
+                            "contextType": "variable",
+                            "element": "reference",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "ra"
+                              },
+                              {
+                                "valueString": "'RiskAssessment/' + $this.id"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "raEntry",
+                            "contextType": "variable",
+                            "element": "resource",
+                            "transform": "copy",
+                            "parameter": [
+                              {
+                                "valueId": "ra"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "rule_body_site",
+                    "source": [
+                      {
+                        "context": "src",
+                        "element": "item",
+                        "variable": "bodySiteItem",
+                        "condition": "(linkId = 'oral-cavity-site')"
+                      }
+                    ],
+                    "rule": [
+                      {
+                        "name": "rule_condition_body_site",
+                        "source": [
+                          {
+                            "context": "bodySiteItem",
+                            "element": "answer",
+                            "listMode": "first",
+                            "variable": "answer"
+                          }
+                        ],
+                        "target": [
+                          {
+                            "context": "condition",
+                            "contextType": "variable",
+                            "element": "bodySite",
+                            "variable": "bodyCC",
+                            "transform": "create",
+                            "parameter": [
+                              {
+                                "valueString": "CodeableConcept"
+                              }
+                            ]
+                          },
+                          {
+                            "context": "bodyCC",
+                            "contextType": "variable",
+                            "element": "coding",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "answer"
+                              },
+                              {
+                                "valueString": "$this.value"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "rule_impression_note",
+                    "source": [
+                      {
+                        "context": "src",
+                        "element": "item",
+                        "variable": "noteItem",
+                        "condition": "(linkId = 'note')"
+                      }
+                    ],
+                    "rule": [
+                      {
+                        "name": "rule_populate_impression_note",
+                        "source": [
+                          {
+                            "context": "noteItem",
+                            "element": "answer",
+                            "listMode": "first",
+                            "variable": "answer"
+                          }
+                        ],
+                        "target": [
+                          {
+                            "context": "impression",
+                            "contextType": "variable",
+                            "element": "summary",
+                            "transform": "evaluate",
+                            "parameter": [
+                              {
+                                "valueId": "answer"
+                              },
+                              {
+                                "valueString": "$this.value"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               },
               {
-                "context" : "bundleClinicalImpressionEntry",
-                "contextType" : "variable",
-                "element" : "resource",
-                "variable" : "impression",
-                "transform" : "create",
-                "parameter" : [{
-                  "valueString" : "ClinicalImpression"
-                }]
-              },
-              {
-                "contextType" : "variable",
-                "variable" : "condition",
-                "transform" : "create",
-                "parameter" : [{
-                  "valueString" : "Condition"
-                }]
-              },
-              {
-                "contextType" : "variable",
-                "variable" : "ra",
-                "transform" : "create",
-                "parameter" : [{
-                  "valueString" : "RiskAssessment"
-                }]
-              }],
-            "rule" : [{
-              "name" : "rule_prov",
-              "source" : [{
-                "context" : "src",
-                "element" : "item",
-                "variable" : "provisionDiagnosisItem",
-                "condition" : "(linkId = 'provisional-diagnosis')"
-              }],
-              "rule" : [{
-                "name" : "rule_populate_impression",
-                "source" : [{
-                  "context" : "provisionDiagnosisItem",
-                  "element" : "answer",
-                  "listMode" : "first",
-                  "variable" : "answer"
-                }],
-                "target" : [{
-                  "context" : "impression",
-                  "contextType" : "variable",
-                  "element" : "id",
-                  "transform" : "uuid"
-                },
+                "name": "rule_followup",
+                "source": [
                   {
-                    "context" : "condition",
-                    "contextType" : "variable",
-                    "element" : "id",
-                    "transform" : "uuid"
-                  },
+                    "context": "src",
+                    "element": "item",
+                    "variable": "recommendationItem",
+                    "condition": "(linkId = 'recommendation')"
+                  }
+                ],
+                "rule": [
                   {
-                    "context" : "impression",
-                    "contextType" : "variable",
-                    "element" : "encounter",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
+                    "name": "rule_task_map",
+                    "source": [
                       {
-                        "valueString" : "$this.encounter"
-                      }]
-                  },
-                  {
-                    "context" : "impression",
-                    "contextType" : "variable",
-                    "element" : "status",
-                    "transform" : "copy",
-                    "parameter" : [{
-                      "valueString" : "completed"
-                    }]
-                  },
-                  {
-                    "context" : "impression",
-                    "contextType" : "variable",
-                    "element" : "description",
-                    "transform" : "copy",
-                    "parameter" : [{
-                      "valueString" : "Clinical impression by Specialist or Senior Specialist for a proabbale oral cancer patient"
-                    }]
-                  },
-                  {
-                    "context" : "impression",
-                    "contextType" : "variable",
-                    "element" : "subject",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
+                        "context": "recommendationItem",
+                        "element": "answer",
+                        "variable": "answer"
+                      }
+                    ],
+                    "target": [
                       {
-                        "valueString" : "$this.subject"
-                      }]
-                  },
-                  {
-                    "context" : "impression",
-                    "contextType" : "variable",
-                    "element" : "date",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.authored"
-                      }]
-                  },
-                  {
-                    "context" : "impression",
-                    "contextType" : "variable",
-                    "element" : "assessor",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.author"
-                      }]
-                  },
-                  {
-                    "context" : "impression",
-                    "contextType" : "variable",
-                    "element" : "finding",
-                    "variable" : "finding"
-                  },
-                  {
-                    "context" : "finding",
-                    "contextType" : "variable",
-                    "element" : "itemCodeableConcept",
-                    "variable" : "findingCC",
-                    "transform" : "create",
-                    "parameter" : [{
-                      "valueString" : "CodeableConcept"
-                    }]
-                  },
-                  {
-                    "context" : "findingCC",
-                    "contextType" : "variable",
-                    "element" : "coding",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "answer"
-                    },
-                      {
-                        "valueString" : "$this.value"
-                      }]
-                  },
-                  {
-                    "context" : "condition",
-                    "contextType" : "variable",
-                    "element" : "encounter",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.encounter"
-                      }]
-                  },
-                  {
-                    "context" : "condition",
-                    "contextType" : "variable",
-                    "element" : "subject",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.subject"
-                      }]
-                  },
-                  {
-                    "context" : "condition",
-                    "contextType" : "variable",
-                    "element" : "clinicalStatus",
-                    "transform" : "cc",
-                    "parameter" : [{
-                      "valueString" : "http://terminology.hl7.org/CodeSystem/condition-clinical"
-                    },
-                      {
-                        "valueString" : "active"
+                        "context": "bundle",
+                        "contextType": "variable",
+                        "element": "entry",
+                        "variable": "taskEntry"
                       },
                       {
-                        "valueString" : "Active"
-                      }]
-                  },
-                  {
-                    "context" : "condition",
-                    "contextType" : "variable",
-                    "element" : "verificationStatus",
-                    "transform" : "cc",
-                    "parameter" : [{
-                      "valueString" : "http://terminology.hl7.org/CodeSystem/condition-ver-status"
-                    },
-                      {
-                        "valueString" : "confirmed"
+                        "context": "taskEntry",
+                        "contextType": "variable",
+                        "element": "resource",
+                        "variable": "task",
+                        "transform": "create",
+                        "parameter": [
+                          {
+                            "valueString": "Task"
+                          }
+                        ]
                       },
                       {
-                        "valueString" : "Confirmed"
-                      }]
-                  },
-                  {
-                    "context" : "condition",
-                    "contextType" : "variable",
-                    "element" : "code",
-                    "variable" : "conditionCode"
-                  },
-                  {
-                    "context" : "conditionCode",
-                    "contextType" : "variable",
-                    "element" : "coding",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "answer"
-                    },
-                      {
-                        "valueString" : "$this.value"
-                      }]
-                  },
-                  {
-                    "context" : "condition",
-                    "contextType" : "variable",
-                    "element" : "asserter",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.author"
-                      }]
-                  },
-                  {
-                    "context" : "impression",
-                    "contextType" : "variable",
-                    "element" : "problem",
-                    "variable" : "impressionProblemRef",
-                    "transform" : "create",
-                    "parameter" : [{
-                      "valueString" : "Reference"
-                    }]
-                  },
-                  {
-                    "context" : "impressionProblemRef",
-                    "contextType" : "variable",
-                    "element" : "reference",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "condition"
-                    },
-                      {
-                        "valueString" : "'Condition/' + $this.id"
-                      }]
-                  },
-                  {
-                    "context" : "conditionEntry",
-                    "contextType" : "variable",
-                    "element" : "resource",
-                    "transform" : "copy",
-                    "parameter" : [{
-                      "valueId" : "condition"
-                    }]
-                  }]
-              }]
-            },
-              {
-                "name" : "rule_rec_ra",
-                "source" : [{
-                  "context" : "src",
-                  "element" : "item",
-                  "variable" : "recommendationItem",
-                  "condition" : "(linkId = 'recommendation')"
-                }],
-                "rule" : [{
-                  "name" : "rule_populate_ra",
-                  "source" : [{
-                    "context" : "recommendationItem",
-                    "element" : "answer",
-                    "listMode" : "first",
-                    "variable" : "answer"
-                  }],
-                  "target" : [{
-                    "context" : "ra",
-                    "contextType" : "variable",
-                    "element" : "id",
-                    "transform" : "uuid"
-                  },
-                    {
-                      "context" : "ra",
-                      "contextType" : "variable",
-                      "element" : "status",
-                      "transform" : "copy",
-                      "parameter" : [{
-                        "valueString" : "final"
-                      }]
-                    },
-                    {
-                      "context" : "ra",
-                      "contextType" : "variable",
-                      "element" : "subject",
-                      "transform" : "evaluate",
-                      "parameter" : [{
-                        "valueId" : "src"
-                      },
-                        {
-                          "valueString" : "$this.subject"
-                        }]
-                    },
-                    {
-                      "context" : "ra",
-                      "contextType" : "variable",
-                      "element" : "encounter",
-                      "transform" : "evaluate",
-                      "parameter" : [{
-                        "valueId" : "src"
-                      },
-                        {
-                          "valueString" : "$this.encounter"
-                        }]
-                    },
-                    {
-                      "context" : "ra",
-                      "contextType" : "variable",
-                      "element" : "performer",
-                      "transform" : "evaluate",
-                      "parameter" : [{
-                        "valueId" : "src"
-                      },
-                        {
-                          "valueString" : "$this.author"
-                        }]
-                    },
-                    {
-                      "context" : "ra",
-                      "contextType" : "variable",
-                      "element" : "prediction",
-                      "variable" : "prediction"
-                    },
-                    {
-                      "context" : "ra",
-                      "contextType" : "variable",
-                      "element" : "condition",
-                      "variable" : "raConditionRef",
-                      "transform" : "create",
-                      "parameter" : [{
-                        "valueString" : "Reference"
-                      }]
-                    },
-                    {
-                      "context" : "raConditionRef",
-                      "contextType" : "variable",
-                      "element" : "reference",
-                      "transform" : "evaluate",
-                      "parameter" : [{
-                        "valueId" : "condition"
-                      },
-                        {
-                          "valueString" : "'Condition/' + $this.id"
-                        }]
-                    },
-                    {
-                      "context" : "prediction",
-                      "contextType" : "variable",
-                      "element" : "outcome",
-                      "variable" : "predictionCC"
-                    },
-                    {
-                      "context" : "predictionCC",
-                      "contextType" : "variable",
-                      "element" : "coding",
-                      "transform" : "evaluate",
-                      "parameter" : [{
-                        "valueId" : "answer"
-                      },
-                        {
-                          "valueString" : "$this.value"
-                        }]
-                    },
-                    {
-                      "context" : "impression",
-                      "contextType" : "variable",
-                      "element" : "prognosisReference",
-                      "variable" : "impressionPrognosisRef",
-                      "transform" : "create",
-                      "parameter" : [{
-                        "valueString" : "Reference"
-                      }]
-                    },
-                    {
-                      "context" : "impressionPrognosisRef",
-                      "contextType" : "variable",
-                      "element" : "reference",
-                      "transform" : "evaluate",
-                      "parameter" : [{
-                        "valueId" : "ra"
-                      },
-                        {
-                          "valueString" : "'RiskAssessment/' + $this.id"
-                        }]
-                    },
-                    {
-                      "context" : "raEntry",
-                      "contextType" : "variable",
-                      "element" : "resource",
-                      "transform" : "copy",
-                      "parameter" : [{
-                        "valueId" : "ra"
-                      }]
-                    }]
-                }]
-              },
-              {
-                "name" : "rule_body_site",
-                "source" : [{
-                  "context" : "src",
-                  "element" : "item",
-                  "variable" : "bodySiteItem",
-                  "condition" : "(linkId = 'oral-cavity-site')"
-                }],
-                "rule" : [{
-                  "name" : "rule_condition_body_site",
-                  "source" : [{
-                    "context" : "bodySiteItem",
-                    "element" : "answer",
-                    "listMode" : "first",
-                    "variable" : "answer"
-                  }],
-                  "target" : [{
-                    "context" : "condition",
-                    "contextType" : "variable",
-                    "element" : "bodySite",
-                    "variable" : "bodyCC",
-                    "transform" : "create",
-                    "parameter" : [{
-                      "valueString" : "CodeableConcept"
-                    }]
-                  },
-                    {
-                      "context" : "bodyCC",
-                      "contextType" : "variable",
-                      "element" : "coding",
-                      "transform" : "evaluate",
-                      "parameter" : [{
-                        "valueId" : "answer"
-                      },
-                        {
-                          "valueString" : "$this.value"
-                        }]
-                    }]
-                }]
-              },
-              {
-                "name" : "rule_impression_note",
-                "source" : [{
-                  "context" : "src",
-                  "element" : "item",
-                  "variable" : "noteItem",
-                  "condition" : "(linkId = 'note')"
-                }],
-                "rule" : [{
-                  "name" : "rule_populate_impression_note",
-                  "source" : [{
-                    "context" : "noteItem",
-                    "element" : "answer",
-                    "listMode" : "first",
-                    "variable" : "answer"
-                  }],
-                  "target" : [{
-                    "context" : "impression",
-                    "contextType" : "variable",
-                    "element" : "summary",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "answer"
-                    },
-                      {
-                        "valueString" : "$this.value"
-                      }]
-                  }]
-                }]
-              }]
-          },
-            {
-              "name" : "rule_followup",
-              "source" : [{
-                "context" : "src",
-                "element" : "item",
-                "variable" : "recommendationItem",
-                "condition" : "(linkId = 'recommendation')"
-              }],
-              "rule" : [{
-                "name" : "rule_task_map",
-                "source" : [{
-                  "context" : "recommendationItem",
-                  "element" : "answer",
-                  "variable" : "answer"
-                }],
-                "target" : [{
-                  "context" : "bundle",
-                  "contextType" : "variable",
-                  "element" : "entry",
-                  "variable" : "taskEntry"
-                },
-                  {
-                    "context" : "taskEntry",
-                    "contextType" : "variable",
-                    "element" : "resource",
-                    "variable" : "task",
-                    "transform" : "create",
-                    "parameter" : [{
-                      "valueString" : "Task"
-                    }]
-                  },
-                  {
-                    "context" : "task",
-                    "contextType" : "variable",
-                    "element" : "id",
-                    "transform" : "uuid"
-                  },
-                  {
-                    "context" : "task",
-                    "contextType" : "variable",
-                    "element" : "encounter",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.encounter"
-                      }]
-                  },
-                  {
-                    "context" : "task",
-                    "contextType" : "variable",
-                    "element" : "for",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
-                      {
-                        "valueString" : "$this.subject"
-                      }]
-                  },
-                  {
-                    "context" : "task",
-                    "contextType" : "variable",
-                    "element" : "status",
-                    "transform" : "copy",
-                    "parameter" : [{
-                      "valueString" : "received"
-                    }]
-                  },
-                  {
-                    "context" : "task",
-                    "contextType" : "variable",
-                    "element" : "intent",
-                    "transform" : "copy",
-                    "parameter" : [{
-                      "valueString" : "order"
-                    }]
-                  },
-                  {
-                    "context" : "task",
-                    "contextType" : "variable",
-                    "element" : "priority",
-                    "transform" : "copy",
-                    "parameter" : [{
-                      "valueString" : "routine"
-                    }]
-                  },
-                  {
-                    "context" : "task",
-                    "contextType" : "variable",
-                    "element" : "code",
-                    "transform" : "cc",
-                    "parameter" : [{
-                      "valueString" : "http://hl7.org/fhir/CodeSystem/task-code"
-                    },
-                      {
-                        "valueString" : "fulfill"
+                        "context": "task",
+                        "contextType": "variable",
+                        "element": "id",
+                        "transform": "uuid"
                       },
                       {
-                        "valueString" : "Fulfill the focal request"
-                      }]
-                  },
-                  {
-                    "context" : "task",
-                    "contextType" : "variable",
-                    "element" : "description",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "answer"
-                    },
+                        "context": "task",
+                        "contextType": "variable",
+                        "element": "encounter",
+                        "transform": "evaluate",
+                        "parameter": [
+                          {
+                            "valueId": "src"
+                          },
+                          {
+                            "valueString": "$this.encounter"
+                          }
+                        ]
+                      },
                       {
-                        "valueString" : "'Follow up: ' + $this.value.display"
-                      }]
-                  },
-                  {
-                    "context" : "task",
-                    "contextType" : "variable",
-                    "element" : "authoredOn",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
+                        "context": "task",
+                        "contextType": "variable",
+                        "element": "for",
+                        "transform": "evaluate",
+                        "parameter": [
+                          {
+                            "valueId": "src"
+                          },
+                          {
+                            "valueString": "$this.subject"
+                          }
+                        ]
+                      },
                       {
-                        "valueString" : "now()"
-                      }]
-                  },
-                  {
-                    "context" : "task",
-                    "contextType" : "variable",
-                    "element" : "lastModified",
-                    "transform" : "evaluate",
-                    "parameter" : [{
-                      "valueId" : "src"
-                    },
+                        "context": "task",
+                        "contextType": "variable",
+                        "element": "status",
+                        "transform": "copy",
+                        "parameter": [
+                          {
+                            "valueString": "received"
+                          }
+                        ]
+                      },
                       {
-                        "valueString" : "now()"
-                      }]
-                  }]
-              }]
-            }]
-        }]
+                        "context": "task",
+                        "contextType": "variable",
+                        "element": "intent",
+                        "transform": "copy",
+                        "parameter": [
+                          {
+                            "valueString": "order"
+                          }
+                        ]
+                      },
+                      {
+                        "context": "task",
+                        "contextType": "variable",
+                        "element": "priority",
+                        "transform": "copy",
+                        "parameter": [
+                          {
+                            "valueString": "routine"
+                          }
+                        ]
+                      },
+                      {
+                        "context": "task",
+                        "contextType": "variable",
+                        "element": "code",
+                        "transform": "cc",
+                        "parameter": [
+                          {
+                            "valueString": "http://hl7.org/fhir/CodeSystem/task-code"
+                          },
+                          {
+                            "valueString": "fulfill"
+                          },
+                          {
+                            "valueString": "Fulfill the focal request"
+                          }
+                        ]
+                      },
+                      {
+                        "context": "task",
+                        "contextType": "variable",
+                        "element": "description",
+                        "transform": "evaluate",
+                        "parameter": [
+                          {
+                            "valueId": "answer"
+                          },
+                          {
+                            "valueString": "'Follow up: ' + $this.value.display"
+                          }
+                        ]
+                      },
+                      {
+                        "context": "task",
+                        "contextType": "variable",
+                        "element": "authoredOn",
+                        "transform": "evaluate",
+                        "parameter": [
+                          {
+                            "valueId": "src"
+                          },
+                          {
+                            "valueString": "now()"
+                          }
+                        ]
+                      },
+                      {
+                        "context": "task",
+                        "contextType": "variable",
+                        "element": "lastModified",
+                        "transform": "evaluate",
+                        "parameter": [
+                          {
+                            "valueId": "src"
+                          },
+                          {
+                            "valueString": "now()"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "request": {
         "method": "PUT",

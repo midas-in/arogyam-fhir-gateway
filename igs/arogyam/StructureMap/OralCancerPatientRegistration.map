@@ -17,7 +17,7 @@ group OralCancerPatientRegistration(source src: QuestionnaireResponse, target bu
     // Create a Patient resource
     src -> bundle.entry as entry, entry.resource = create('Patient') as patient, bundle.entry as encounterEntry, encounterEntry.resource = create("Encounter") as encounter then
         TransformPatient(src, patient),
-        TransformPatientEncounter(patient, encounter),
+        TransformPatientEncounter(src, patient, encounter),
         TransformPatientResource(src, patient, encounter, bundle) "rule_extract_patient_resources";
 }
 
@@ -304,7 +304,7 @@ group TransformScreeningMouth(source src: QuestionnaireResponse, source item: Ba
     };
 }
 
-group TransformPatientEncounter(source src: Patient, target encounter: Encounter) {
+group TransformPatientEncounter(source src: QuestionnaireResponse, source patient: Patient, target encounter: Encounter) {
     src -> encounter.id = uuid() "rule_set_encounter_id";
     src -> encounter.status = 'triaged' "rule_set_encounter_status";
     src -> encounter.class = c('http://terminology.hl7.org/CodeSystem/v3-ActCode', 'OBSENC', 'observation encounter') "rule_set_encounter_class";
@@ -313,7 +313,23 @@ group TransformPatientEncounter(source src: Patient, target encounter: Encounter
         src -> period.start = evaluate(src, now()) "rule_encounter_start";
         src -> period.end = evaluate(src, now()) "rule_encounter_end";
     } "rule_encounter_period";
-    src.id as patientId log $this -> encounter.subject = create('Reference') as subject, subject.reference = evaluate(patientId, 'Patient/' + $this) "rule_encounter_subject";
+    patient.id as patientId log $this -> encounter.subject = create('Reference') as subject, subject.reference = evaluate(patientId, 'Patient/' + $this) "rule_encounter_subject";
+
+    src.item as basicInfo where(linkId = 'basic-info-group') -> encounter.location as l, l.location = create('Reference') as location then {
+        // Extract location type
+        basicInfo.item as item where(linkId = 'location-physical-type') then {
+            item.answer first as answer then {
+                answer.value as coding where(code = 'field') then {
+                    coding -> location.reference = evaluate(patient, 'Location/physical-location-field') "set_rule_enc_location_field";
+                } "rule_enc_location_field";
+
+                answer.value as coding where(code = 'hospital') then {
+                    coding -> location.reference = evaluate(patient, 'Location/physical-location-hospital') "set_rule_enc_location_hospital";
+                } "rule_enc_location_hospital";
+            };
+        };
+    };
+
 }
 
 group TransformObservationMedia(source item: BackboneElement,  source patient: Patient, source encounter: Encounter, source observation: Observation, target media: media) {

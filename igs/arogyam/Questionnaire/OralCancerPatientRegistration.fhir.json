@@ -69,6 +69,42 @@
         {
           "extension": [
             {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "radio-button",
+                    "display": "Radio Button"
+                  }
+                ]
+              }
+            }
+          ],
+          "linkId": "location-physical-type",
+          "text": "Study setting",
+          "type": "choice",
+          "required": true,
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "https://terminology.midas.iisc.ac.in/CodeSystem/location-physical-type",
+                "code": "field",
+                "display": "Field/primary care"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "https://terminology.midas.iisc.ac.in/CodeSystem/location-physical-type",
+                "code": "hospital",
+                "display": "Hospital"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
               "url": "http://hl7.org/fhir/StructureDefinition/regex",
               "valueString": "^[a-zA-Z-æøåÆØÅÁÀÄÉÈÊÎÏÑÓÒÔÖÙÜáàäçéèêîïñóòôöùüÇČĐŊŠŦŽčđŋšŧž'’* ]*$"
             },
