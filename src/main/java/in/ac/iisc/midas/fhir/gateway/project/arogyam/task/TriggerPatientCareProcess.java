@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
@@ -32,16 +30,18 @@ public class TriggerPatientCareProcess {
 
     @PostMapping(value = "/api/incoming-webhook/{targetId}/encounter-change/{planDefinitionId}")
     public void onEncounterChange(@PathVariable String targetId, @PathVariable String planDefinitionId) {
-        var encounters = fetchEncounterWithCriteria(targetId);
-        if (encounters.isEmpty()) return;
+        var encounter = fetchEncounterWithCriteria(targetId);
+        while (encounter != null) {
+            var planDefinition = fetchPlanDefinition(targetId, planDefinitionId);
+            if (planDefinition == null) {
+                throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Invalid request");
+            }
+            handleEncounterOperation(targetId, encounter, planDefinition);
 
-        var planDefinition = fetchPlanDefinition(targetId, planDefinitionId);
-        if (planDefinition == null) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Invalid request");
+            var newEncounter = fetchEncounterWithCriteria(targetId);
+            if (newEncounter != null && newEncounter.getIdPart().equals(encounter.getIdPart())) break;
+            encounter = newEncounter;
         }
-
-        encounters
-                .forEach(encounter -> handleEncounterOperation(targetId, encounter, planDefinition));
     }
 
     private void handleEncounterOperation(String targetId, Encounter encounter, PlanDefinition planDefinition) {
@@ -97,7 +97,7 @@ public class TriggerPatientCareProcess {
         return target.getEntry().stream().map(Bundle.BundleEntryComponent::getResource);
     }
 
-    private List<Encounter> fetchEncounterWithCriteria(String targetId) {
+    private Encounter fetchEncounterWithCriteria(String targetId) {
         try {
             return targetProvider.get(targetId).getFhirClient()
                     .search()
@@ -113,10 +113,11 @@ public class TriggerPatientCareProcess {
                     .getEntry().stream()
                     .map(Bundle.BundleEntryComponent::getResource)
                     .map(r -> (Encounter) r)
-                    .collect(Collectors.toList());
+                    .findFirst()
+                    .orElse(null);
         } catch (Exception e) {
             log.error("Failed to fetch encounter", e);
-            return Collections.emptyList();
+            return null;
         }
     }
 
