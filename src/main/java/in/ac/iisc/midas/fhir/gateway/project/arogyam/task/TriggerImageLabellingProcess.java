@@ -41,9 +41,7 @@ public class TriggerImageLabellingProcess {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Invalid request");
         }
 
-        medias.stream()
-                .parallel()
-                .forEach(media -> handleMediaOperation(targetId, media, planDefinition));
+        medias.forEach(media -> handleMediaOperation(targetId, media, planDefinition));
     }
 
     private void handleMediaOperation(String targetId, Media media, PlanDefinition planDefinition) {

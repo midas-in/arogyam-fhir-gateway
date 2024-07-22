@@ -40,8 +40,7 @@ public class TriggerPatientCareProcess {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Invalid request");
         }
 
-        encounters.stream()
-                .parallel()
+        encounters
                 .forEach(encounter -> handleEncounterOperation(targetId, encounter, planDefinition));
     }
 
