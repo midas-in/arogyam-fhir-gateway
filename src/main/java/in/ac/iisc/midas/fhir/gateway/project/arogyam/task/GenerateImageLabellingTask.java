@@ -11,40 +11,40 @@ import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.utils.StructureMapUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-@RestController
 @AllArgsConstructor
 @Slf4j
-public class TriggerPatientCareProcess {
+@Component
+public class GenerateImageLabellingTask {
     private final ITargetProvider targetProvider;
     private final StructureMapUtilities structureMapUtilities;
     private final IWorkerContext workerContext;
 
-    @PostMapping(value = "/api/incoming-webhook/{targetId}/encounter-change/{planDefinitionId}")
-    public void onEncounterChange(@PathVariable String targetId, @PathVariable String planDefinitionId) {
-        var encounter = fetchEncounterWithCriteria(targetId);
-        while (encounter != null) {
+    public void generate(String targetId, String planDefinitionId) {
+        var media = fetchMediaWithCriteria(targetId);
+        while (media != null) {
             var planDefinition = fetchPlanDefinition(targetId, planDefinitionId);
             if (planDefinition == null) {
                 throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Invalid request");
             }
-            handleEncounterOperation(targetId, encounter, planDefinition);
+            handleMediaOperation(targetId, media, planDefinition);
 
-            var newEncounter = fetchEncounterWithCriteria(targetId);
-            if (newEncounter != null && newEncounter.getIdPart().equals(encounter.getIdPart())) break;
-            encounter = newEncounter;
+            var newMedia = fetchMediaWithCriteria(targetId);
+            if (newMedia != null && newMedia.getIdPart().equals(media.getIdPart())) break;
+            media = newMedia;
         }
     }
 
-    private void handleEncounterOperation(String targetId, Encounter encounter, PlanDefinition planDefinition) {
+    private void handleMediaOperation(String targetId, Media media, PlanDefinition planDefinition) {
+        var encounter = fetchEncounter(targetId, media.getEncounter().getReferenceElement().getIdPart());
+        if (encounter == null) return;
+
         var carePlan = (CarePlan) applyPlanDefinition(
                 targetId,
                 encounter,
@@ -53,35 +53,34 @@ public class TriggerPatientCareProcess {
         var resources = carePlan.getContained()
                 .stream()
                 .filter(r -> !Objects.equals(r.fhirType(), ResourceType.RequestGroup.name()))
-                .flatMap(t -> transform(targetId, encounter, t, planDefinition))
+                .flatMap(t -> transform(targetId, encounter, media, t, planDefinition))
                 .toList();
 
         var bundle = new Bundle().setType(Bundle.BundleType.TRANSACTION);
-        resources
-                .forEach(r -> {
-                    var request = new Bundle.BundleEntryRequestComponent()
-                            .setMethod(Bundle.HTTPVerb.PUT)
-                            .setUrl(String.format("%s/%s", r.fhirType(), r.getIdElement().toUnqualifiedVersionless().getIdPart()));
-                    bundle.addEntry().setResource(r).setRequest(request);
-                });
+        resources.forEach(r -> {
+            var request = new Bundle.BundleEntryRequestComponent()
+                    .setMethod(Bundle.HTTPVerb.PUT)
+                    .setUrl(String.format("%s/%s", r.fhirType(), r.getIdElement().toUnqualifiedVersionless().getIdPart()));
+            bundle.addEntry().setResource(r).setRequest(request);
+        });
 
         var txResult = targetProvider.get(targetId).getFhirClient()
                 .transaction()
                 .withBundle(bundle)
                 .execute();
 
-        log.info("Encounter processed for patient care : {}", encounter.getId());
+        log.info("Media processed for image labelling : {}", encounter.getId());
     }
 
     @NotNull
-    private Stream<Resource> transform(String targetId, Encounter encounter, Resource t, PlanDefinition planDefinition) {
+    private Stream<Resource> transform(String targetId, Encounter encounter, Media media, Resource t, PlanDefinition planDefinition) {
         if (StringUtils.isBlank(extractInstantiateCanonicalUrl(t))) return Stream.of(t);
 
         var structureMap = findStructureMapForTransform(targetId, planDefinition, t);
         if (structureMap == null) return Stream.of(t);
 
         var source = new Parameters();
-        source.addParameter().setName("context").setResource(encounter);
+        source.addParameter().setName("context").setResource(media);
         source.addParameter().setName("encounter").setResource(encounter);
         source.addParameter().setName("resource").setResource(t);
 
@@ -97,24 +96,35 @@ public class TriggerPatientCareProcess {
         return target.getEntry().stream().map(Bundle.BundleEntryComponent::getResource);
     }
 
-    private Encounter fetchEncounterWithCriteria(String targetId) {
+    private Media fetchMediaWithCriteria(String targetId) {
         try {
             return targetProvider.get(targetId).getFhirClient()
                     .search()
-                    .forResource(Encounter.class)
-                    .where(Encounter.STATUS.exactly().codes(
-                            Encounter.EncounterStatus.PLANNED.toCode(),
-                            Encounter.EncounterStatus.ARRIVED.toCode(),
-                            Encounter.EncounterStatus.TRIAGED.toCode(),
-                            Encounter.EncounterStatus.NULL.toCode()
-                    ))
+                    .forResource(Media.class)
+                    .where(Media.STATUS.exactly().codes(Media.MediaStatus.PREPARATION.toCode()))
+                    // Oral mucous membrane structure
+                    .and(Media.SITE.exactly().systemAndCode("http://www.snomed.org", "113277000"))
+                    .count(1)
                     .returnBundle(Bundle.class)
                     .execute()
                     .getEntry().stream()
                     .map(Bundle.BundleEntryComponent::getResource)
-                    .map(r -> (Encounter) r)
+                    .map(r -> (Media) r)
                     .findFirst()
                     .orElse(null);
+        } catch (Exception e) {
+            log.error("Failed to fetch media", e);
+            return null;
+        }
+    }
+
+    private Encounter fetchEncounter(String targetId, String encounterId) {
+        try {
+            return targetProvider.get(targetId).getFhirClient()
+                    .read()
+                    .resource(Encounter.class)
+                    .withId(encounterId)
+                    .execute();
         } catch (Exception e) {
             log.error("Failed to fetch encounter", e);
             return null;
@@ -192,6 +202,4 @@ public class TriggerPatientCareProcess {
             return null;
         }
     }
-
-
 }

@@ -79,5 +79,8 @@ project:
           path: StructureDefinition
           query-params:
             _id: "*"
-
-
+    task:
+      labelling-plan-definition: OralCancerLabelImage
+      screening-plan-definition: OralCancerPatientCare
+      labelling-enabled: false
+      screening-enabled: true

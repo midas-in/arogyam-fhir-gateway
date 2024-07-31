@@ -21,6 +21,13 @@
         ],
         "dynamicValue": [
           {
+            "path": "instantiatesUri",
+            "expression": {
+              "language": "text/fhirpath",
+              "expression": "'https://midas.iisc.ac.in/fhir/Task/oral-cancer-image-labelling'"
+            }
+          },
+          {
             "path": "owner",
             "expression": {
               "language": "text/cql-identifier",

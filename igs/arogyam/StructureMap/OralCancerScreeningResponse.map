@@ -68,6 +68,7 @@ group OralCancerScreeningResponse(source src : QuestionnaireResponse, target bun
     src.item as recommendationItem where(linkId = 'recommendation') then {
         recommendationItem.answer as answer -> bundle.entry as taskEntry, taskEntry.resource = create('Task') as task,
             task.id = uuid(),
+            task.instantiatesUri = 'https://midas.iisc.ac.in/fhir/Task/oral-cancer-screening-follow-up',
             task.encounter = evaluate(src,$this.encounter),
             task.for = evaluate(src,$this.subject),
             task.status = 'requested',
