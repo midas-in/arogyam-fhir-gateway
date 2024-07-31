@@ -36,7 +36,10 @@ public class GenerateImageLabellingTask {
             handleMediaOperation(targetId, media, planDefinition);
 
             var newMedia = fetchMediaWithCriteria(targetId);
-            if (newMedia != null && newMedia.getIdPart().equals(media.getIdPart())) break;
+            if (newMedia != null && newMedia.getIdPart().equals(media.getIdPart())) {
+                log.info("Same media received once again for generating labelling task");
+                break;
+            }
             media = newMedia;
         }
     }

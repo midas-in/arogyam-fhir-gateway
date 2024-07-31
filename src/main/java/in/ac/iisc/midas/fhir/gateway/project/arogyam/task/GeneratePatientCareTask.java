@@ -38,7 +38,10 @@ public class GeneratePatientCareTask {
             handleEncounterOperation(targetId, encounter, planDefinition);
 
             var newEncounter = fetchEncounterWithCriteria(targetId);
-            if (newEncounter != null && newEncounter.getIdPart().equals(encounter.getIdPart())) break;
+            if (newEncounter != null && newEncounter.getIdPart().equals(encounter.getIdPart())) {
+                log.info("Same encounter received once again for generating screening task");
+                break;
+            }
             encounter = newEncounter;
         }
     }
