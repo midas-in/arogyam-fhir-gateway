@@ -3,7 +3,7 @@
   "id" : "OralCancerScreeningTask",
   "text" : {
     "status" : "additional",
-    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningTask&quot; = 'OralCancerScreeningTask'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/Parameters&quot; as source\n\n\ngroup OralCancerScreeningTask(source src : Parameters, target bundle: Bundle) {\n    src -&gt;  evaluate(src, $this.parameter.where(name='context').resource) as encounter,\n            evaluate(src, $this.parameter.where(name='resource').resource) as task,\n            bundle.entry as bundleTaskEntry, bundleTaskEntry.resource = task,\n            bundle.entry as bundleEncounterEntry, bundleEncounterEntry.resource = encounter\n            then TransformEncounter(bundleEncounterEntry,encounter), TransformTask(bundleTaskEntry, task) &quot;rule_transform&quot; ;\n}\n\ngroup TransformTask(source input, target task: Task) {\n    input -&gt; task.id = uuid(),\n            task.status = 'requested',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = 'Task for specialist to screen patient',\n            task.authoredOn = evaluate(input ,now()),\n            task.lastModified = evaluate(input ,now()) &quot;rule_task_map&quot;;\n}\n\ngroup TransformEncounter(source input , target encounter: Encounter) {\n    input -&gt; encounter.status = 'in-progress' &quot;rule_encounter_map&quot;;\n}</pre></div>"
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningTask&quot; = 'OralCancerScreeningTask'\n\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\nuses &quot;http://hl7.org/fhir/StructureDefinition/Parameters&quot; as source\n\n\ngroup OralCancerScreeningTask(source src : Parameters, target bundle: Bundle) {\n    src -&gt;  evaluate(src, $this.parameter.where(name='context').resource) as encounter,\n            evaluate(src, $this.parameter.where(name='resource').resource) as task,\n            bundle.entry as bundleTaskEntry, bundleTaskEntry.resource = task,\n            bundle.entry as bundleEncounterEntry, bundleEncounterEntry.resource = encounter\n            then TransformEncounter(bundleEncounterEntry,encounter), TransformTask(bundleTaskEntry, task) &quot;rule_transform&quot; ;\n}\n\ngroup TransformTask(source input, target task: Task) {\n    input -&gt; task.id = uuid(),\n            task.instantiatesUri = 'https://midas.iisc.ac.in/fhir/Task/oral-cancer-screening-task',\n            task.status = 'requested',\n            task.intent = 'order',\n            task.priority = 'routine',\n            task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),\n            task.description = 'Task for specialist to screen patient',\n            task.authoredOn = evaluate(input ,now()),\n            task.lastModified = evaluate(input ,now()) &quot;rule_task_map&quot;;\n}\n\ngroup TransformEncounter(source input , target encounter: Encounter) {\n    input -&gt; encounter.status = 'in-progress' &quot;rule_encounter_map&quot;;\n}</pre></div>"
   },
   "url" : "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerScreeningTask",
   "name" : "OralCancerScreeningTask",
@@ -119,6 +119,15 @@
         "contextType" : "variable",
         "element" : "id",
         "transform" : "uuid"
+      },
+      {
+        "context" : "task",
+        "contextType" : "variable",
+        "element" : "instantiatesUri",
+        "transform" : "copy",
+        "parameter" : [{
+          "valueString" : "https://midas.iisc.ac.in/fhir/Task/oral-cancer-screening-task"
+        }]
       },
       {
         "context" : "task",

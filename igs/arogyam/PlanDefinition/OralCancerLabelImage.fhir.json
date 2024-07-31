@@ -1,56 +1,51 @@
 {
-    "resourceType": "PlanDefinition",
-    "id": "OralCancerLabelImage",
-    "url": "https://midas.iisc.ac.in/fhir/PlanDefinition/OralCancerLabelImage",
-    "version": "1",
-    "name": "Oral Cancer Image Label",
-    "title": "Oral Cancer Image Label",
-    "status": "active",
-    "description": "This defines the plan to assign task for data labelling",
-    "contained": [
-      {
-        "resourceType": "ActivityDefinition",
-        "url": "https://midas.iisc.ac.in/fhir/ActivityDefinition/oral-cancer-label-image",
-        "id": "oral-cancer-label-image",
-        "title": "Label Image",
-        "status": "active",
-        "description": "Task ordering reader to label the image",
-        "kind": "Task",
-        "library": [
-          "https://midas.iisc.ac.in/fhir/Library/OralCancerLabelImage|1.0.0"
-        ],
-        "dynamicValue": [
-          {
-            "path": "instantiatesUri",
-            "expression": {
-              "language": "text/fhirpath",
-              "expression": "'https://midas.iisc.ac.in/fhir/Task/oral-cancer-image-labelling'"
-            }
-          },
-          {
-            "path": "owner",
-            "expression": {
-              "language": "text/cql-identifier",
-              "expression": "Available Reader Reference"
-            }
-          },
-          {
-            "path": "focus",
-            "expression": {
-              "language": "text/cql-identifier",
-              "expression": "Image Labelling Questionnaire"
-            }
+  "resourceType": "PlanDefinition",
+  "id": "OralCancerLabelImage",
+  "url": "https://midas.iisc.ac.in/fhir/PlanDefinition/OralCancerLabelImage",
+  "version": "1",
+  "name": "Oral Cancer Image Label",
+  "title": "Oral Cancer Image Label",
+  "status": "active",
+  "description": "This defines the plan to assign task for data labelling",
+  "contained": [
+    {
+      "resourceType": "ActivityDefinition",
+      "url": "https://midas.iisc.ac.in/fhir/ActivityDefinition/oral-cancer-label-image",
+      "id": "oral-cancer-label-image",
+      "title": "Label Image",
+      "status": "active",
+      "description": "Task ordering reader to label the image",
+      "kind": "Task",
+      "library": [
+        "https://midas.iisc.ac.in/fhir/Library/OralCancerLabelImage|1.0.0"
+      ],
+      "dynamicValue": [
+        {
+          "path": "owner",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Available Reader Reference"
           }
-        ],
-        "transform": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageTask"
-      }
-    ],
-    "action": [
-      {
-        "prefix": "1",
-        "priority": "routine",
-        "definitionCanonical": "#oral-cancer-label-image"
-      }
-    ]
-  }
-  
+        },
+        {
+          "path": "focus",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Image Labelling Questionnaire"
+          }
+        }
+      ],
+      "transform": "https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageTask"
+    }
+  ],
+  "action": [
+    {
+      "prefix": "1",
+      "priority": "routine",
+      "definitionCanonical": "#oral-cancer-label-image"
+    }
+  ]
+}
+
+
+java -jar ./tools/hapi/validator_cli.jar  -ig igs/arogyam/StructureMap/OralCancerLabelImageTask.map -compile https://midas.iisc.ac.in/fhir/StructureMap/OralCancerLabelImageTask -version 4.0 -output igs/arogyam/StructureMap/OralCancerLabelImageTask.fhir.json -tx n/a

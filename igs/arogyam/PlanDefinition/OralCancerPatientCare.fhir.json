@@ -19,13 +19,6 @@
       "library": ["https://midas.iisc.ac.in/fhir/Library/OralCancerScreenPatient|1.0.0"],
       "dynamicValue": [
         {
-          "path": "instantiatesUri",
-          "expression": {
-            "language": "text/fhirpath",
-            "expression": "'https://midas.iisc.ac.in/fhir/Task/oral-cancer-screening'"
-          }
-        },
-        {
           "path": "owner",
           "expression": {
             "language": "text/cql-identifier",

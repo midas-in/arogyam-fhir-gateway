@@ -14,6 +14,7 @@ group OralCancerScreeningTask(source src : Parameters, target bundle: Bundle) {
 
 group TransformTask(source input, target task: Task) {
     input -> task.id = uuid(),
+            task.instantiatesUri = 'https://midas.iisc.ac.in/fhir/Task/oral-cancer-screening-task',
             task.status = 'requested',
             task.intent = 'order',
             task.priority = 'routine',

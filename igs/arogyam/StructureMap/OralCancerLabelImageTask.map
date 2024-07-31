@@ -15,6 +15,7 @@ group OralCancerLabelImageTask(source src : Parameters, target bundle: Bundle) {
 group TransformTask(source input, source media: Media, target task: Task) {
     input -> task.id = uuid(),
             task.status = 'requested',
+            task.instantiatesUri = 'https://midas.iisc.ac.in/fhir/Task/oral-cancer-image-labelling',
             task.intent = 'order',
             task.priority = 'routine',
             task.code = cc('http://hl7.org/fhir/CodeSystem/task-code','fulfill','Fulfill the focal request'),
