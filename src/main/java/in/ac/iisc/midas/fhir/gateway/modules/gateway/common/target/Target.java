@@ -14,6 +14,7 @@ public class Target {
     private String name;
     private Set<String> headersToForward = Set.of(
             "content-type",
+            "cache-control",
             "accept-encoding",
             "last-modified",
             "etag",
