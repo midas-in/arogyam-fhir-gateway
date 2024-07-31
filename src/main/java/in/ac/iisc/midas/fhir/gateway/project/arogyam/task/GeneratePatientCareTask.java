@@ -1,5 +1,6 @@
 package in.ac.iisc.midas.fhir.gateway.project.arogyam.task;
 
+import ca.uhn.fhir.context.FhirContext;
 import in.ac.iisc.midas.fhir.gateway.modules.gateway.common.target.ITargetProvider;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class GeneratePatientCareTask {
     private final ITargetProvider targetProvider;
     private final StructureMapUtilities structureMapUtilities;
     private final IWorkerContext workerContext;
+    private final FhirContext fhirContext;
 
     public void generate(String targetId, String planDefinitionId) {
         var encounter = fetchEncounterWithCriteria(targetId);
@@ -64,6 +66,7 @@ public class GeneratePatientCareTask {
                     bundle.addEntry().setResource(r).setRequest(request);
                 });
 
+        log.info(fhirContext.newJsonParser().encodeResourceToString(bundle));
         var txResult = targetProvider.get(targetId).getFhirClient()
                 .transaction()
                 .withBundle(bundle)
