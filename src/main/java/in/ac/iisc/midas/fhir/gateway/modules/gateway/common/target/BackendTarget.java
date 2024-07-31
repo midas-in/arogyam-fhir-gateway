@@ -37,7 +37,7 @@ public class BackendTarget {
         this.baseUrl = baseUrl;
         httpClient = HttpClientBuilder.create().build();
         this.fhirClient = fhirContext.newRestfulGenericClient(baseUrl);
-        this.fhirClient.registerInterceptor(new LoggingInterceptor());
+        this.fhirClient.registerInterceptor(new LoggingInterceptor(true));
         this.forwardHeadersToBackend = forwardHeaders;
         this.sendHeaderToFrontend = sendHeaderToFrontend;
     }
