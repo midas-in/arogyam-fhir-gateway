@@ -107,6 +107,7 @@ public class GeneratePatientCareTask {
             return targetProvider.get(targetId).getFhirClient()
                     .search()
                     .forResource(Encounter.class)
+                    .withAdditionalHeader("Cache-Control","no-cache")
                     .where(Encounter.STATUS.exactly().codes(
                             Encounter.EncounterStatus.PLANNED.toCode(),
                             Encounter.EncounterStatus.ARRIVED.toCode(),

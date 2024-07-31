@@ -105,6 +105,7 @@ public class GenerateImageLabellingTask {
             return targetProvider.get(targetId).getFhirClient()
                     .search()
                     .forResource(Media.class)
+                    .withAdditionalHeader("Cache-Control","no-cache")
                     .where(Media.STATUS.exactly().codes(Media.MediaStatus.PREPARATION.toCode()))
                     // Oral mucous membrane structure
                     .and(Media.SITE.exactly().systemAndCode("http://www.snomed.org", "113277000"))
