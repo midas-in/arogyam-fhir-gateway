@@ -42,6 +42,7 @@ public class GenerateImageLabellingTask {
     }
 
     private void handleMediaOperation(String targetId, Media media, PlanDefinition planDefinition) {
+        log.info("Generate label task for media " + media.getIdPart());
         var encounter = fetchEncounter(targetId, media.getEncounter().getReferenceElement().getIdPart());
         if (encounter == null) return;
 

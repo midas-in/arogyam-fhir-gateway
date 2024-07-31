@@ -42,6 +42,8 @@ public class GeneratePatientCareTask {
     }
 
     private void handleEncounterOperation(String targetId, Encounter encounter, PlanDefinition planDefinition) {
+        log.info("Generate screening patient task for encounter " + encounter.getIdPart());
+
         var carePlan = (CarePlan) applyPlanDefinition(
                 targetId,
                 encounter,
