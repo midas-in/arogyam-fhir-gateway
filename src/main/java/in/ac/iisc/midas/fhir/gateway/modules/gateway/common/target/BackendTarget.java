@@ -3,6 +3,7 @@ package in.ac.iisc.midas.fhir.gateway.modules.gateway.common.target;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ca.uhn.fhir.rest.server.servlet.ServletRequestDetails;
@@ -36,6 +37,7 @@ public class BackendTarget {
         this.baseUrl = baseUrl;
         httpClient = HttpClientBuilder.create().build();
         this.fhirClient = fhirContext.newRestfulGenericClient(baseUrl);
+        this.fhirClient.registerInterceptor(new LoggingInterceptor());
         this.forwardHeadersToBackend = forwardHeaders;
         this.sendHeaderToFrontend = sendHeaderToFrontend;
     }
