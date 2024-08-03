@@ -159,28 +159,14 @@
           "valueCoding": {
             "system": "http://snomed.info/sct",
             "code": "110570003",
-            "display": "Left maxillary vestibule"
-          }
-        },
-        {
-          "valueCoding": {
-            "system": "http://snomed.info/sct",
-            "code": "110570003",
-            "display": "Right maxillary vestibule"
+            "display": "Maxillary vestibule"
           }
         },
         {
           "valueCoding": {
             "system": "http://snomed.info/sct",
             "code": "110571004",
-            "display": "Left mandibular vestibule"
-          }
-        },
-        {
-          "valueCoding": {
-            "system": "http://snomed.info/sct",
-            "code": "110571004",
-            "display": "Right mandibular vestibule"
+            "display": "Mandibular vestibule"
           }
         },
         {
@@ -195,6 +181,69 @@
             "system": "http://snomed.info/sct",
             "code": "46353006",
             "display": "Labial mucosa of lower lip"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "66938003",
+            "display": "Dorsum of tongue"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "422005",
+            "display": "Ventral aspect of tongue"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "47975008",
+            "display": "Base of  tongue"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "38246006",
+            "display": "Left margin of tongue"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "15864000",
+            "display": "Right margin of tongue"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "36360002",
+            "display": "Floor of mouth"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "72914001",
+            "display": "Palate"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "85816001",
+            "display": "Retromolar trigone"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "394841004",
+            "display": "Other category"
           }
         }
       ]
