@@ -26,6 +26,10 @@ group TransformPatient(source src: QuestionnaireResponse , target patient:Patien
     // Generate a UUID for the Patient id
     src -> patient.id = uuid() "generate_patient_id";
     src -> patient.active = true "rule_patient_active";
+    src -> patient.extension as registrationDate,
+            registrationDate.url = 'https://midas.iisc.ac.in/fhir/StructureDefinition/patient-registraion-date',
+            registrationDate.value = evaluate(src, now()) "patient_registration";
+
     src.author as aut -> patient.generalPractitioner = aut "rule_patient_pra";
 
     src.item as basicInfo where(linkId = 'basic-info-group') -> patient.name = create("HumanName") as name, patient.address = create("Address") as address then {
