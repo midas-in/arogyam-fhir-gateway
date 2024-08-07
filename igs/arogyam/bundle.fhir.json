@@ -4,6 +4,23 @@
   "entry": [
     {
       "resource": {
+        "resourceType": "SearchParameter",
+        "id":"PatientRegistraionDate",
+        "title": "Patient registration date",
+        "base": [ "Patient" ],
+        "status": "active",
+        "code": "registration-date",
+        "type": "date",
+        "expression": "Patient.extension('https://midas.iisc.ac.in/fhir/StructureDefinition/patient-registraion-date')",
+        "xpathUsage": "normal"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "SearchParameter/PatientRegistraionDate"
+      }
+    },
+    {
+      "resource": {
         "resourceType": "CodeSystem",
         "id": "practitioner-role-type",
         "url": "https://midas.iisc.ac.in/fhir/CodeSystem/practitioner-role-type",
