@@ -303,7 +303,7 @@ group TransformScreeningMouth(source src: QuestionnaireResponse, source item: Ba
         screeningGroup.item as screeningImageGroup where(linkId = 'patient-screening-image-group') then {
             screeningImageGroup.item as imageItem then {
                 imageItem.answer first as answer -> bundle.entry as entry, entry.resource = create('Media') as media then
-                    TransformObservationMedia(imageItem, patient, enc, observation, media) "rule_patient_media";
+                    TransformObservationMedia(src, imageItem, patient, enc, observation, media) "rule_patient_media";
             };
         };
     };
@@ -318,6 +318,11 @@ group TransformPatientEncounter(source src: QuestionnaireResponse, source patien
         src -> period.start = evaluate(src, now()) "rule_encounter_start";
         src -> period.end = evaluate(src, now()) "rule_encounter_end";
     } "rule_encounter_period";
+
+    src.author as author-> encounter.participant as p,
+        p.actor = author,
+        p.type = cc('https://midas.iisc.ac.in/fhir/CodeSystem/treatment','pre-screener','Screening') "rule_enc_parti";
+
     patient.id as patientId log $this -> encounter.subject = create('Reference') as subject, subject.reference = evaluate(patientId, 'Patient/' + $this) "rule_encounter_subject";
 
     src.item as basicInfo where(linkId = 'basic-info-group') -> encounter.location as l, l.location = create('Reference') as location then {
@@ -337,13 +342,14 @@ group TransformPatientEncounter(source src: QuestionnaireResponse, source patien
 
 }
 
-group TransformObservationMedia(source item: BackboneElement,  source patient: Patient, source encounter: Encounter, source observation: Observation, target media: media) {
+group TransformObservationMedia(source src: QuestionnaireResponse, source item: BackboneElement,  source patient: Patient, source encounter: Encounter, source observation: Observation, target media: media) {
 
     item -> media.id = uuid() "rule_set_media_id";
     item -> media.status = 'preparation' "rule_set_media_status";
     item -> media.type = cc('http://terminology.hl7.org/CodeSystem/media-type','image', 'Image') "rule_set_media_type";
     item -> media.bodySite = cc('http://www.snomed.org','113277000', 'Oral mucous membrane structure') "rule_set_media_body_site";
     item -> media.view = cc('http://nema.org/dicom/dicm','XC', 'External-camera Photography') "rule_set_media_view";
+    src.author as author -> media.operator = author "rule_media_operator";
 
     item.answer first as answer then {
         answer.value as attachment -> media.content = attachment then {
